@@ -15,7 +15,7 @@ const FOOTER_LINKS = {
     { label: 'Blog', href: '/blog' },
   ],
   Company: [
-    { label: 'About RABINJA', href: '/about' },
+    { label: 'About RABINJA SQUAD', href: 'https://rabinjasquad.in' },
     { label: 'Careers', href: '/careers' },
     { label: 'Privacy Policy', href: '/privacy' },
     { label: 'Terms of Service', href: '/terms' },
@@ -42,7 +42,7 @@ export function Footer() {
                 <Zap size={18} className="text-white" strokeWidth={2.5} />
               </div>
               <div>
-                <div className="font-display font-bold text-lg leading-tight text-white">RABINJA</div>
+                <div className="font-display font-bold text-lg leading-tight text-white">RABINJA SQUAD</div>
                 <div className="gradient-brand font-display font-bold text-sm leading-tight">Projex</div>
               </div>
             </Link>
@@ -94,19 +94,19 @@ export function Footer() {
       {/* Bottom bar */}
       <div className="container-page py-5">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[var(--text-muted)]">
-          <span>© 2026 RABINJA LABS. All rights reserved.</span>
+          <span>© 2026 RABINJA SQUAD. All rights reserved.</span>
           <div className="flex items-center gap-4">
             <span className="flex items-center gap-1.5">
               <span className="w-2 h-2 rounded-full bg-[var(--green)] animate-pulse" />
               All systems operational
             </span>
             <a
-              href="https://rabinja.com"
+              href="https://rabinjasquad.in"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-1 hover:text-white transition-colors"
+              className="flex items-center gap-1 hover:text-white transition-colors text-[var(--purple)] font-medium"
             >
-              rabinja.com <ExternalLink size={11} />
+              rabinjasquad.in <ExternalLink size={11} />
             </a>
           </div>
         </div>
