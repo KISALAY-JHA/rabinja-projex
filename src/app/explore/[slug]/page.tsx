@@ -22,6 +22,10 @@ function formatCount(n: number) {
 
 type Tab = 'overview' | 'evaluation' | 'discussions' | 'comments';
 
+export function generateStaticParams() {
+  return SAMPLE_PROJECTS.map((p) => ({ slug: p.slug }));
+}
+
 export default function ProjectDetailPage({
   params,
 }: {

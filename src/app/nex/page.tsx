@@ -19,6 +19,7 @@ import {
   AlertTriangle
 } from 'lucide-react';
 import { SAMPLE_PROJECTS } from '@/lib/sample-data';
+import { evaluateWithNex } from '@/lib/nex-engine';
 
 interface Message {
   id: string;
@@ -122,32 +123,25 @@ NEX is not a conversational chatbot; it is an analytical judging engine designed
     setLoading(true);
 
     try {
-      const res = await fetch('/api/nex', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          message: promptToSend,
-          projectSlug: selectedSlug || undefined,
-          mode: selectedMode,
-          projectContext: privateDoc || undefined,
-        }),
-      });
+      // Simulate real-time neural processing latency
+      await new Promise((resolve) => setTimeout(resolve, 800));
 
-      const data = await res.json();
+      const evaluationOutput = evaluateWithNex(
+        selectedMode,
+        promptToSend,
+        selectedSlug || undefined,
+        privateDoc || undefined
+      );
 
-      if (res.ok) {
-        const nexMsg: Message = {
-          id: `nex-${Date.now()}`,
-          sender: 'nex',
-          mode: selectedMode,
-          text: data.content,
-          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-          note: data.note,
-        };
-        setMessages((prev) => [...prev, nexMsg]);
-      } else {
-        throw new Error(data.error || 'Evaluation failed');
-      }
+      const nexMsg: Message = {
+        id: `nex-${Date.now()}`,
+        sender: 'nex',
+        mode: selectedMode,
+        text: evaluationOutput,
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        note: 'Processed via NEX Autonomous Core (simulated engine). Real-time judge synthesis active.',
+      };
+      setMessages((prev) => [...prev, nexMsg]);
     } catch (err: any) {
       setMessages((prev) => [
         ...prev,

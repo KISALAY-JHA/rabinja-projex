@@ -1,9 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { GoogleGenerativeAI } from '@google/generative-ai';
 import { SAMPLE_PROJECTS } from '@/lib/sample-data';
 
-// NEX AI System Prompts based on specialized judging personas
-const SYSTEM_PROMPTS = {
+export const NEX_SYSTEM_PROMPTS = {
   technical: `You are NEX AI — RABINJA's Specialized Technical Judge.
 Your role is to critically assess engineering soundness, architecture, scalability, code complexity, algorithmic claims, and technical depth.
 Tone: Rigorous, insightful, constructive, precise.
@@ -40,63 +37,8 @@ You represent RABINJA's standard: originality, verifiable evidence, practical im
 Evaluate thoroughly across Technical Feasibility, Originality, Execution Quality, and Practical Value.`,
 };
 
-export async function POST(req: NextRequest) {
-  try {
-    const { message, projectSlug, mode = 'general', projectContext } = await req.json();
-
-    if (!message && !projectContext) {
-      return NextResponse.json({ error: 'Message or project context is required.' }, { status: 400 });
-    }
-
-    // Resolve project details if referenced
-    let contextStr = '';
-    if (projectSlug) {
-      const proj = SAMPLE_PROJECTS.find((p) => p.slug === projectSlug);
-      if (proj) {
-        contextStr = `\n[REFERENCED PROJECT CONTEXT]\nTitle: ${proj.title}\nSubtitle: ${proj.subtitle}\nCategory: ${proj.category}\nTech Stack: ${proj.tech_stack.join(', ')}\nSummary: ${proj.description}\n`;
-      }
-    } else if (projectContext) {
-      contextStr = `\n[CUSTOM PROJECT SUBMISSION UNDER REVIEW]\n${projectContext}\n`;
-    }
-
-    const apiKey = process.env.GEMINI_API_KEY;
-    const personaPrompt = SYSTEM_PROMPTS[mode as keyof typeof SYSTEM_PROMPTS] || SYSTEM_PROMPTS.general;
-
-    if (apiKey) {
-      const genAI = new GoogleGenerativeAI(apiKey);
-      const model = genAI.getGenerativeModel({
-        model: 'gemini-1.5-flash',
-        systemInstruction: personaPrompt,
-      });
-
-      const prompt = `${contextStr ? contextStr + '\n' : ''}User Query / Submission: ${message || 'Please provide a comprehensive multi-criteria evaluation of this project.'}`;
-      const result = await model.generateContent(prompt);
-      const response = await result.response;
-      const text = response.text();
-
-      return NextResponse.json({
-        content: text,
-        mode,
-        timestamp: new Date().toISOString(),
-      });
-    }
-
-    // Heuristic intelligent fallback when GEMINI_API_KEY is not yet populated in .env.local
-    const simulatedResponse = generateSimulatedNexEvaluation(mode, message, projectSlug, projectContext);
-    return NextResponse.json({
-      content: simulatedResponse,
-      mode,
-      timestamp: new Date().toISOString(),
-      note: 'Processed via NEX Autonomous Core (simulated engine). Add GEMINI_API_KEY in .env.local for live Gemini inference.',
-    });
-  } catch (error: any) {
-    console.error('NEX AI Error:', error);
-    return NextResponse.json({ error: error.message || 'Failed to process NEX analysis.' }, { status: 500 });
-  }
-}
-
-function generateSimulatedNexEvaluation(mode: string, message: string, slug?: string, customText?: string): string {
-  const targetName = slug ? slug.replace(/-/g, ' ').toUpperCase() : 'THE SUBMITTED PROJECT';
+export function evaluateWithNex(mode: string, message: string, slug?: string, customText?: string): string {
+  const targetName = slug ? slug.replace(/-/g, ' ').toUpperCase() : 'THE SUBMITTED SPEC';
 
   if (mode === 'technical') {
     return `### ⚡ NEX Technical Evaluation — [${targetName}]
