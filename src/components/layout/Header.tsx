@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import {
   Zap, Search, Menu, X, ChevronDown,
-  Sparkles, Trophy, Compass, User, BookOpen,
+  Sparkles, Trophy, Compass, User, BookOpen, Download, Smartphone,
 } from 'lucide-react';
 
 const NAV_LINKS = [
@@ -136,6 +136,16 @@ export function Header() {
               <span className="ml-auto font-mono text-xs opacity-60">⌘K</span>
             </Link>
 
+            {/* Install Web App CTA */}
+            <button
+              onClick={() => window.dispatchEvent(new Event('trigger-pwa-install'))}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-purple-500/10 border border-purple-500/30 text-purple-300 text-xs font-semibold hover:bg-purple-500/20 active:scale-95 transition-all shadow-sm"
+              title="Install RABINJA Projex as Web App"
+            >
+              <Smartphone size={13} className="text-purple-400" />
+              <span>App</span>
+            </button>
+
             {/* Login */}
             <Link
               href="/auth/login"
@@ -189,6 +199,16 @@ export function Header() {
               </Link>
             ))}
             <div className="pt-3 border-t border-[var(--border)] mt-2 flex flex-col gap-2">
+              <button
+                onClick={() => {
+                  setMenuOpen(false);
+                  window.dispatchEvent(new Event('trigger-pwa-install'));
+                }}
+                className="btn btn-secondary w-full justify-center flex items-center gap-2 border-purple-500/40 text-purple-300 font-semibold"
+              >
+                <Download size={15} />
+                Install Web App
+              </button>
               <Link href="/auth/login" className="btn btn-secondary w-full justify-center">Sign In</Link>
               <Link href="/auth/signup" className="btn btn-primary w-full justify-center">Join Free</Link>
             </div>
