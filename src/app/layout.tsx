@@ -5,6 +5,7 @@ import { Footer } from '@/components/layout/Footer';
 import { MobileNav } from '@/components/layout/MobileNav';
 import { LogoIntroSplash } from '@/components/layout/LogoIntroSplash';
 import { InstallPwaPrompt } from '@/components/layout/InstallPwaPrompt';
+import { AnimeFloatingCompanion } from '@/components/anime/AnimeFloatingCompanion';
 
 export const viewport: Viewport = {
   themeColor: '#000000',
@@ -60,7 +61,7 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
-          href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;1,14..32,400&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,400;0,600;0,700;1,700&family=Orbitron:wght@500;600;700;800;900&family=Rajdhani:wght@500;600;700&family=Share+Tech+Mono&display=swap"
           rel="stylesheet"
         />
         <link rel="manifest" href="/manifest.json" />
@@ -76,6 +77,7 @@ export default function RootLayout({
         <Header />
         <main className="flex-1 flex flex-col pt-14 sm:pt-16 w-full max-w-full overflow-x-hidden">{children}</main>
         <Footer />
+        <AnimeFloatingCompanion />
         <MobileNav />
       </body>
     </html>

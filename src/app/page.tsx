@@ -5,6 +5,7 @@ import {
   Code2, CheckCircle2, Smartphone
 } from 'lucide-react';
 import { SAMPLE_PROJECTS, SAMPLE_EVENTS } from '@/lib/sample-data';
+import { AnimeCharacterBay } from '@/components/anime/AnimeCharacterBay';
 
 const CATEGORY_MAP: Record<string, { icon: typeof Code2; color: string; cardClass: string }> = {
   HealthTech:    { icon: Heart,         color: 'var(--red)',    cardClass: 'card-red' },
@@ -91,6 +92,15 @@ export default function HomePage() {
               <Link href="/auth/signup" id="hero-signup-btn" className="btn btn-ghost text-xs sm:text-sm py-2.5 sm:py-3 px-4 font-mono text-cyan-300">
                 Verify Phone & Submit →
               </Link>
+            </div>
+
+            {/* Anime Character Showcase Bay (Ready for custom character artworks) */}
+            <div className="mt-8 sm:mt-12 px-2">
+              <AnimeCharacterBay
+                imageSrc="/logo.png"
+                callsign="UNIT: CYBER RABBIT // SQUAD COMMANDER"
+                status="ONLINE // READY FOR DECORATION"
+              />
             </div>
 
             {/* Realtime Operational Telemetry HUD (No fake sample counters) */}

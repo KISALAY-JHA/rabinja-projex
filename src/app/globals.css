@@ -68,10 +68,11 @@
   --transition-base: 220ms cubic-bezier(0.4,0,0.2,1);
   --transition-slow: 350ms cubic-bezier(0.4,0,0.2,1);
 
-  /* ── Typography ── */
-  --font-display: 'Syne', system-ui, sans-serif;
-  --font-sans:    'Inter', system-ui, sans-serif;
-  --font-mono:    'JetBrains Mono', ui-monospace, monospace;
+  /* ── Typography (Serious Cyber Anime Mecha HUD) ── */
+  --font-display: 'Orbitron', 'Chakra Petch', system-ui, sans-serif;
+  --font-heading: 'Chakra Petch', 'Orbitron', system-ui, sans-serif;
+  --font-sans:    'Rajdhani', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono:    'Share Tech Mono', 'JetBrains Mono', ui-monospace, monospace;
 }
 
 /* Register with Tailwind v4 */
@@ -96,8 +97,9 @@
   --color-glow-indigo: var(--indigo);
 
   --font-display: var(--font-display);
+  --font-heading: var(--font-heading);
   --font-sans:    var(--font-sans);
-  --font-mono: var(--font-mono);
+  --font-mono:    var(--font-mono);
 }
 
 /* ============================================================
@@ -120,8 +122,10 @@ body {
   background-color: #000000;
   color: var(--text-primary);
   font-family: var(--font-sans);
-  font-size: 15px;
-  line-height: 1.6;
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: 0.025em;
+  line-height: 1.55;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
@@ -494,4 +498,113 @@ a {
   .mobile-nav-offset {
     padding-bottom: 0;
   }
+}
+
+/* ============================================================
+   Serious Anime Mecha UI & Character Decoration System
+   ============================================================ */
+
+/* Chamfered angular mecha corners */
+.anime-chamfer {
+  clip-path: polygon(
+    10px 0%,
+    calc(100% - 10px) 0%,
+    100% 10px,
+    100% calc(100% - 10px),
+    calc(100% - 10px) 100%,
+    10px 100%,
+    0% calc(100% - 10px),
+    0% 10px
+  );
+}
+
+.anime-chamfer-lg {
+  clip-path: polygon(
+    18px 0%,
+    calc(100% - 18px) 0%,
+    100% 18px,
+    100% calc(100% - 18px),
+    calc(100% - 18px) 100%,
+    18px 100%,
+    0% calc(100% - 18px),
+    0% 18px
+  );
+}
+
+/* Anime character showcase bay */
+.anime-character-bay {
+  position: relative;
+  background: radial-gradient(circle at center, rgba(0, 212, 255, 0.12) 0%, rgba(5, 7, 14, 0.95) 70%, #000000 100%);
+  border: 1px solid rgba(0, 212, 255, 0.35);
+  box-shadow: 0 0 35px rgba(0, 212, 255, 0.2), inset 0 0 25px rgba(0, 212, 255, 0.1);
+}
+
+.anime-character-bay::before {
+  content: '⌖ TACTICAL DECOR // UNIT: RABINJA';
+  position: absolute;
+  top: 8px;
+  left: 12px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  color: #00D4FF;
+  opacity: 0.8;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.anime-character-bay::after {
+  content: '機動戦闘 SQUAD';
+  position: absolute;
+  bottom: 8px;
+  right: 12px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  color: #FF2D55;
+  opacity: 0.8;
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* Anime scanline overlay */
+.anime-scanlines {
+  background: linear-gradient(
+    rgba(18, 16, 16, 0) 50%,
+    rgba(0, 0, 0, 0.25) 50%
+  ), linear-gradient(
+    90deg,
+    rgba(255, 0, 0, 0.03),
+    rgba(0, 255, 0, 0.01),
+    rgba(0, 0, 255, 0.03)
+  );
+  background-size: 100% 4px, 6px 100%;
+}
+
+/* Anime floating animation */
+@keyframes animeFloat {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(0.5deg);
+  }
+}
+
+.animate-anime-float {
+  animation: animeFloat 5s ease-in-out infinite;
+}
+
+/* Anime energy pulse */
+@keyframes energyPulse {
+  0%, 100% {
+    filter: drop-shadow(0 0 15px rgba(0, 212, 255, 0.45));
+  }
+  50% {
+    filter: drop-shadow(0 0 30px rgba(0, 212, 255, 0.85)) drop-shadow(0 0 45px rgba(37, 99, 235, 0.5));
+  }
+}
+
+.animate-energy-pulse {
+  animation: energyPulse 3s ease-in-out infinite;
 }
