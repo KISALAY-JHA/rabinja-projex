@@ -37,9 +37,9 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-5 gap-10">
           {/* Brand column */}
           <div className="md:col-span-2 space-y-4">
-            <Link href="/" className="flex items-center gap-2 group w-fit">
-              <div className="w-9 h-9 bg-gradient-brand rounded-xl flex items-center justify-center">
-                <Zap size={18} className="text-white" strokeWidth={2.5} />
+            <Link href="/" className="flex items-center gap-3 group w-fit">
+              <div className="w-10 h-10 rounded-xl overflow-hidden border border-[var(--cyan)]/40 shadow-[0_0_15px_rgba(0,212,255,0.35)] bg-[#04060C] flex items-center justify-center shrink-0">
+                <img src="/logo.png" alt="RABINJA SQUAD" className="w-full h-full object-cover" />
               </div>
               <div>
                 <div className="font-display font-bold text-lg leading-tight text-white">RABINJA SQUAD</div>

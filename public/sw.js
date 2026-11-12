@@ -1,11 +1,15 @@
 // RABINJA Projex — Progressive Web App Service Worker
-const CACHE_NAME = 'rabinja-projex-v1';
+const CACHE_NAME = 'rabinja-projex-v2';
 const STATIC_ASSETS = [
   '/',
   '/manifest.json',
+  '/logo.png',
   '/icon-192.png',
   '/icon-512.png',
-  '/apple-touch-icon.png'
+  '/icon-maskable-192.png',
+  '/icon-maskable-512.png',
+  '/apple-touch-icon.png',
+  '/favicon.png'
 ];
 
 self.addEventListener('install', (event) => {
@@ -35,7 +39,6 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-  // Navigation & network-first strategy for dynamic pages, falling back to cache
   if (event.request.mode === 'navigate') {
     event.respondWith(
       fetch(event.request).catch(() => {
@@ -45,7 +48,6 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Stale-while-revalidate for static assets
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
       const fetchPromise = fetch(event.request).then((networkResponse) => {

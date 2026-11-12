@@ -7,7 +7,7 @@ import { LogoIntroSplash } from '@/components/layout/LogoIntroSplash';
 import { InstallPwaPrompt } from '@/components/layout/InstallPwaPrompt';
 
 export const viewport: Viewport = {
-  themeColor: '#09090B',
+  themeColor: '#04060C',
   width: 'device-width',
   initialScale: 1,
   maximumScale: 5,

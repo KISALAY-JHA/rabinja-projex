@@ -1,153 +1,20 @@
 // ============================================================
-// RABINJA PROJEX — Sample / Seed Data
-// Used for preview while Supabase is not yet connected
+// RABINJA PROJEX — Seed / Realtime Project Repository
+// Ready for live community & Rabinjathon project submissions
 // ============================================================
 
 import type { Database } from '@/lib/supabase/database.types';
 
 type Project = Database['public']['Tables']['projects']['Row'];
 
-export const SAMPLE_PROJECTS: (Project & { demo_url?: string | null; repo_url?: string | null; video_url?: string | null })[] = [
-  {
-    id: 'proj-001',
-    slug: 'neurolink-assist',
-    title: 'NeuroLink Assist',
-    subtitle: 'Brain-Computer Interface for Motor Disability Rehabilitation',
-    description: 'A non-invasive BCI system using consumer-grade EEG headsets combined with a custom-trained neural network to translate brain signals into device commands. The system achieves 94.7% command accuracy and has been tested with 12 patients in a 6-week clinical pilot at AIIMS. The firmware runs on a Raspberry Pi 4 with real-time signal processing at 256 Hz.',
-    thumbnail_url: null,
-    demo_url: 'https://neurolink.demo.rabinja.com',
-    repo_url: 'https://github.com/synapticlabs/neurolink-assist',
-    video_url: null,
-    tech_stack: ['Python', 'TensorFlow', 'Raspberry Pi', 'WebSockets', 'React Native'],
-    category: 'HealthTech',
-    tags: ['BCI', 'Accessibility', 'ML', 'Embedded'],
-    event_id: 'evt-001',
-    team_name: 'SynapticLabs',
-    team_members: ['Aryan Mehta', 'Priya Sharma', 'Dev Kapoor'],
-    status: 'featured',
-    views: 2341,
-    vote_count: 189,
-    created_at: '2026-10-12T09:00:00Z',
-    updated_at: '2026-11-01T12:00:00Z',
-  },
-  {
-    id: 'proj-002',
-    slug: 'carbontrack-ai',
-    title: 'CarbonTrack AI',
-    subtitle: 'Real-time Enterprise Carbon Footprint Intelligence',
-    description: 'An enterprise SaaS platform that connects to ERP systems, IoT sensors, and supply chain APIs to compute real-time scope 1, 2, and 3 emissions. Uses an AI recommendation engine to surface actionable decarbonization strategies with estimated cost/benefit ratios. Fully compliant with GHG Protocol standards and TCFD reporting.',
-    thumbnail_url: null,
-    demo_url: 'https://carbontrack.demo.rabinja.com',
-    repo_url: 'https://github.com/greenos/carbontrack-ai',
-    video_url: null,
-    tech_stack: ['Next.js', 'PostgreSQL', 'FastAPI', 'Apache Kafka', 'GPT-4o'],
-    category: 'CleanTech',
-    tags: ['Sustainability', 'AI', 'Enterprise', 'IoT'],
-    event_id: 'evt-001',
-    team_name: 'GreenOS',
-    team_members: ['Nisha Verma', 'Rohan Joshi', 'Kabir Singh', 'Aisha Rahman'],
-    status: 'published',
-    views: 1876,
-    vote_count: 143,
-    created_at: '2026-10-14T11:00:00Z',
-    updated_at: '2026-11-02T08:00:00Z',
-  },
-  {
-    id: 'proj-003',
-    slug: 'quantumvault',
-    title: 'QuantumVault',
-    subtitle: 'Post-Quantum Cryptography for Healthcare Data',
-    description: 'A HIPAA-compliant data storage and transmission system implementing NIST-selected post-quantum algorithms (CRYSTALS-Kyber for KEM, CRYSTALS-Dilithium for signatures). Benchmarked against RSA-4096 with 3.2× faster key generation and 94% smaller ciphertext on commodity hardware. Prototype deployed as a Kubernetes-native sidecar.',
-    thumbnail_url: null,
-    demo_url: 'https://quantumvault.demo.rabinja.com',
-    repo_url: 'https://github.com/postquantum/quantumvault',
-    video_url: null,
-    tech_stack: ['Rust', 'Go', 'Kubernetes', 'eBPF', 'CRYSTALS-Kyber'],
-    category: 'Cybersecurity',
-    tags: ['Post-Quantum', 'Cryptography', 'Healthcare', 'NIST'],
-    event_id: 'evt-001',
-    team_name: 'QuantumGuard',
-    team_members: ['Ritvik Nair', 'Meera Pillai'],
-    status: 'published' as const,
-    views: 1543,
-    vote_count: 98,
-    created_at: '2026-10-16T14:00:00Z',
-    updated_at: '2026-11-03T10:00:00Z',
-  },
-  {
-    id: 'proj-004',
-    slug: 'agrisense-iot',
-    title: 'AgriSense IoT',
-    subtitle: 'Precision Agriculture with Edge-AI Sensor Networks',
-    description: 'A LoRaWAN mesh sensor network with on-device TensorFlow Lite models for real-time soil health, pest detection, and micro-climate prediction. Deployed across 450 acres in Nashik district. The companion app provides hyper-local crop advisory in 7 regional languages using an LLM fine-tuned on ICAR agronomic data.',
-    thumbnail_url: null,
-    demo_url: 'https://agrisense.demo.rabinja.com',
-    repo_url: 'https://github.com/farmmind/agrisense-iot',
-    video_url: null,
-    tech_stack: ['TensorFlow Lite', 'LoRaWAN', 'React Native', 'AWS Greengrass', 'C++'],
-    category: 'AgriTech',
-    tags: ['IoT', 'EdgeAI', 'Agriculture', 'Multilingual'],
-    event_id: 'evt-001',
-    team_name: 'FarmMind',
-    team_members: ['Tanvi Gupta', 'Hardik Patel', 'Suresh Kumar'],
-    status: 'published' as const,
-    views: 1298,
-    vote_count: 87,
-    created_at: '2026-10-18T09:30:00Z',
-    updated_at: '2026-11-04T07:00:00Z',
-  },
-  {
-    id: 'proj-005',
-    slug: 'educhain',
-    title: 'EduChain',
-    subtitle: 'Tamper-Proof Academic Credential NFTs on Polygon',
-    description: 'A permissioned blockchain system for universities to issue, revoke, and verify academic credentials as soul-bound NFTs on Polygon zkEVM. Includes a zero-knowledge proof-based privacy layer so employers can verify qualifications without seeing full transcript details. Already partnered with 3 tier-1 universities in India.',
-    thumbnail_url: null,
-    demo_url: 'https://educhain.demo.rabinja.com',
-    repo_url: 'https://github.com/chaincred/educhain',
-    video_url: null,
-    tech_stack: ['Solidity', 'Polygon zkEVM', 'Next.js', 'IPFS', 'Circom'],
-    category: 'EdTech',
-    tags: ['Blockchain', 'ZK Proofs', 'Education', 'Web3'],
-    event_id: 'evt-001',
-    team_name: 'ChainCred',
-    team_members: ['Ananya Reddy', 'Mohit Sharma', 'Priyanka Das'],
-    status: 'published' as const,
-    views: 1102,
-    vote_count: 76,
-    created_at: '2026-10-20T15:00:00Z',
-    updated_at: '2026-11-05T09:00:00Z',
-  },
-  {
-    id: 'proj-006',
-    slug: 'swasth-ai',
-    title: 'Swasth AI',
-    subtitle: 'Multilingual Mental Health Companion for Rural India',
-    description: 'A conversational AI mental health support app for rural India, available in 12 languages including Hindi, Bengali, Tamil and Marathi. Uses a fine-tuned clinical LLM with cultural sensitivity training data from 50,000 anonymized consultation records. Integrates with Ayushman Bharat health IDs for seamless care continuity.',
-    thumbnail_url: null,
-    demo_url: 'https://swasth-ai.demo.rabinja.com',
-    repo_url: 'https://github.com/mindbridge/swasth-ai',
-    video_url: null,
-    tech_stack: ['Python', 'Llama 3.1', 'React Native', 'Firebase', 'Azure Speech'],
-    category: 'HealthTech',
-    tags: ['Mental Health', 'Multilingual', 'LLM', 'Rural'],
-    event_id: 'evt-002',
-    team_name: 'MindBridge',
-    team_members: ['Kavya Krishnan', 'Amit Saxena'],
-    status: 'published' as const,
-    views: 967,
-    vote_count: 64,
-    created_at: '2026-10-22T10:00:00Z',
-    updated_at: '2026-11-06T11:00:00Z',
-  },
-];
+export const SAMPLE_PROJECTS: (Project & { demo_url?: string | null; repo_url?: string | null; video_url?: string | null })[] = [];
 
 export const SAMPLE_EVENTS = [
   {
     id: 'evt-001',
     slug: 'rabinjathon-2026',
     name: 'Rabinjathon 2026',
-    description: 'The flagship annual innovation challenge by RABINJA LABS. Teams from across India compete across 7 verticals: HealthTech, CleanTech, Cybersecurity, AgriTech, EdTech, FinTech, and Deep Tech. With ₹25L prize pool and direct mentorship from leading industry experts.',
+    description: 'The flagship annual innovation challenge by RABINJA SQUAD. Teams from across India compete across 7 verticals: HealthTech, CleanTech, Cybersecurity, AgriTech, EdTech, FinTech, and Deep Tech. With ₹25L prize pool and direct mentorship from leading industry experts.',
     rules: null,
     criteria: {
       innovation: { weight: 25, label: 'Innovation & Originality' },
@@ -195,113 +62,38 @@ export interface SampleDiscussion {
   created_at: string;
 }
 
-export const SAMPLE_DISCUSSIONS: SampleDiscussion[] = [
-  {
-    id: 'disc-001',
-    project_id: 'proj-001',
-    user_id: 'user-anon-1',
-    author: { display_name: 'Ritesh M.', username: 'ritesh_ml', avatar_url: null },
-    title: 'What EEG hardware are you using — Muse or Emotiv?',
-    body: 'Really impressive accuracy numbers. We\'ve been trying similar work with the Emotiv EPOC+ but struggle with signal noise in mobile conditions. What filtering pipeline are you using?',
-    category: 'question' as const,
-    reply_count: 4,
-    upvote_count: 12,
-    created_at: '2026-11-02T09:30:00Z',
-  },
-  {
-    id: 'disc-002',
-    project_id: 'proj-001',
-    user_id: 'user-anon-2',
-    author: { display_name: 'Preethi A.', username: 'preethi_bio', avatar_url: null },
-    title: 'Is the clinical data from AIIMS available for academic research?',
-    body: 'We\'re working on a similar rehabilitation tool for speech disorders. Would love to collaborate on the dataset side if AIIMS data could be shared under a data-sharing agreement.',
-    category: 'idea' as const,
-    reply_count: 2,
-    upvote_count: 8,
-    created_at: '2026-11-03T14:00:00Z',
-  },
-  {
-    id: 'disc-003',
-    project_id: 'proj-002',
-    user_id: 'user-anon-3',
-    author: { display_name: 'Varun K.', username: 'varun_sustain', avatar_url: null },
-    title: 'Scope 3 coverage is rare — how did you handle upstream supplier data?',
-    body: 'Most enterprise carbon tools I\'ve seen only do scope 1 & 2. Scope 3 upstream is notoriously hard. Did you use estimation models or actual supplier data ingestion? What\'s the data freshness like?',
-    category: 'question' as const,
-    reply_count: 6,
-    upvote_count: 19,
-    created_at: '2026-11-04T11:00:00Z',
-  },
-];
+export const SAMPLE_DISCUSSIONS: SampleDiscussion[] = [];
 
-export const SAMPLE_COMMENTS = [
-  {
-    id: 'cmt-001',
-    project_id: 'proj-001',
-    parent_id: null,
-    user_id: 'user-anon-4',
-    author: { display_name: 'Shreya P.', username: 'shreya_p', avatar_url: null },
-    body: 'This is genuinely impressive. The 94.7% accuracy on a consumer-grade EEG is way better than what most academic labs achieve. What\'s your model architecture — are you using attention mechanisms for temporal features?',
-    created_at: '2026-11-01T16:00:00Z',
-    is_deleted: false,
-  },
-  {
-    id: 'cmt-002',
-    project_id: 'proj-001',
-    parent_id: 'cmt-001',
-    user_id: 'user-anon-5',
-    author: { display_name: 'Aryan M.', username: 'aryan_m', avatar_url: null },
-    body: 'Thanks Shreya! Yes — we use a compact EEGNet backbone with a custom temporal attention head. We\'ll publish the architecture details post-event.',
-    created_at: '2026-11-01T17:30:00Z',
-    is_deleted: false,
-  },
-  {
-    id: 'cmt-003',
-    project_id: 'proj-002',
-    parent_id: null,
-    user_id: 'user-anon-6',
-    author: { display_name: 'Aman T.', username: 'aman_t', avatar_url: null },
-    body: 'The GHG Protocol compliance is a huge differentiator for enterprise sales. Have you talked to any buyers yet, or is this still pre-revenue?',
-    created_at: '2026-11-02T13:00:00Z',
-    is_deleted: false,
-  },
-];
+export interface SampleComment {
+  id: string;
+  project_id: string;
+  parent_id: string | null;
+  user_id: string;
+  author: { display_name: string; username: string; avatar_url: string | null };
+  body: string;
+  created_at: string;
+  is_deleted: boolean;
+}
 
-export const SAMPLE_EVALUATIONS = [
-  {
-    id: 'eval-001',
-    project_id: 'proj-001',
-    judge_id: 'judge-001',
-    event_id: 'evt-001',
-    judge_name: 'Dr. Anand Krishnamurthy',
-    judge_title: 'Chief AI Officer, Manipal Hospitals',
-    scores: {
-      innovation: 24,
-      impact: 23,
-      technical: 22,
-      presentation: 21,
-    },
-    total_score: 90,
-    feedback: 'Exceptional clinical validation approach. The 6-week patient trial is rare at the hackathon stage. Command accuracy could improve with more training data, but the foundation is production-worthy.',
-    is_final: true,
-    created_at: '2026-11-08T10:00:00Z',
-  },
-  {
-    id: 'eval-002',
-    project_id: 'proj-002',
-    judge_id: 'judge-002',
-    event_id: 'evt-001',
-    judge_name: 'Ms. Riya Malhotra',
-    judge_title: 'Head of Sustainability, TCS',
-    scores: {
-      innovation: 22,
-      impact: 24,
-      technical: 20,
-      presentation: 23,
-    },
-    total_score: 89,
-    feedback: 'Scope 3 coverage is what sets this apart. The TCFD compliance is production-ready. Would recommend strengthening the data freshness SLAs and exploring offline-sync for manufacturing sites with poor connectivity.',
-    is_final: true,
-    created_at: '2026-11-08T11:00:00Z',
-  },
-];
+export const SAMPLE_COMMENTS: SampleComment[] = [];
+
+export interface SampleEvaluation {
+  id: string;
+  project_id: string;
+  judge_id: string;
+  event_id: string;
+  judge_name: string;
+  judge_title: string;
+  scores: {
+    innovation: number;
+    impact: number;
+    technical: number;
+    presentation: number;
+  };
+  total_score: number;
+  feedback: string;
+  is_final: boolean;
+  created_at: string;
+}
+
+export const SAMPLE_EVALUATIONS: SampleEvaluation[] = [];

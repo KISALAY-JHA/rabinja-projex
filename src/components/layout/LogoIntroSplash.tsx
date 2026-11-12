@@ -68,9 +68,12 @@ export function LogoIntroSplash({
           </button>
         </div>
 
-        {/* Top Text: by rabinjathon (Cool white typography) */}
-        <div className="text-center my-auto">
-          <h2 className="text-white font-display text-lg sm:text-2xl font-extrabold tracking-[0.25em] sm:tracking-[0.35em] uppercase drop-shadow-[0_0_20px_rgba(255,255,255,0.7)]">
+        {/* Top Text: by rabinjathon (Cool white typography + emblem) */}
+        <div className="text-center my-auto flex flex-col items-center gap-2.5">
+          <div className="w-11 h-11 rounded-2xl overflow-hidden border border-cyan-400/40 shadow-[0_0_20px_rgba(0,212,255,0.45)] bg-[#04060C]">
+            <img src="/logo.png" alt="RABINJA" className="w-full h-full object-cover" />
+          </div>
+          <h2 className="text-white font-display text-base sm:text-xl font-extrabold tracking-[0.25em] sm:tracking-[0.35em] uppercase drop-shadow-[0_0_20px_rgba(255,255,255,0.7)]">
             by rabinjathon
           </h2>
         </div>

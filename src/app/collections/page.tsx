@@ -70,41 +70,54 @@ export default function CollectionsPage() {
             Bookmarked Projects
           </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-            {savedProjects.map((p) => (
-              <div key={p.id} className="card p-5 group flex flex-col justify-between hover:border-[var(--purple)] transition-all">
-                <div>
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="badge badge-purple text-[10px]">{p.category}</span>
-                    <span className="text-xs font-mono text-[var(--green)]">▲ {p.vote_count}</span>
+          {savedProjects.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+              {savedProjects.map((p) => (
+                <div key={p.id} className="card p-5 group flex flex-col justify-between hover:border-[var(--cyan)] transition-all">
+                  <div>
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="badge badge-purple text-[10px]">{p.category}</span>
+                      <span className="text-xs font-mono text-[var(--green)]">▲ {p.vote_count}</span>
+                    </div>
+                    <Link href={`/explore/${p.slug}`}>
+                      <h3 className="font-display font-bold text-base text-white group-hover:text-[var(--cyan)] transition-colors mb-2">
+                        {p.title}
+                      </h3>
+                    </Link>
+                    <p className="text-xs text-[var(--text-muted)] line-clamp-2 mb-4">
+                      {p.subtitle || p.description}
+                    </p>
+                    <div className="flex flex-wrap gap-1 mb-4">
+                      {p.tech_stack.slice(0, 3).map((t) => (
+                        <span key={t} className="badge badge-gray text-[9px]">{t}</span>
+                      ))}
+                    </div>
                   </div>
-                  <Link href={`/explore/${p.slug}`}>
-                    <h3 className="font-display font-bold text-base text-white group-hover:text-[var(--purple)] transition-colors mb-2">
-                      {p.title}
-                    </h3>
-                  </Link>
-                  <p className="text-xs text-[var(--text-muted)] line-clamp-2 mb-4">
-                    {p.subtitle || p.description}
-                  </p>
-                  <div className="flex flex-wrap gap-1 mb-4">
-                    {p.tech_stack.slice(0, 3).map((t) => (
-                      <span key={t} className="badge badge-gray text-[9px]">{t}</span>
-                    ))}
-                  </div>
-                </div>
 
-                <div className="pt-3 border-t border-[var(--border)] flex items-center justify-between text-xs">
-                  <span className="text-[var(--text-muted)]">{p.team_name}</span>
-                  <Link
-                    href={`/explore/${p.slug}`}
-                    className="text-[var(--purple)] hover:text-white font-medium flex items-center gap-1 transition-colors"
-                  >
-                    View <ArrowRight size={12} />
-                  </Link>
+                  <div className="pt-3 border-t border-[var(--border)] flex items-center justify-between text-xs">
+                    <span className="text-[var(--text-muted)]">{p.team_name}</span>
+                    <Link
+                      href={`/explore/${p.slug}`}
+                      className="text-[var(--cyan)] hover:text-white font-medium flex items-center gap-1 transition-colors"
+                    >
+                      View <ArrowRight size={12} />
+                    </Link>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          ) : (
+            <div className="card p-8 text-center border-dashed border-[var(--border)]">
+              <Bookmark size={28} className="mx-auto mb-3 text-[var(--cyan)] opacity-60" />
+              <h4 className="font-display font-bold text-white text-base mb-1">No Bookmarked Projects Yet</h4>
+              <p className="text-xs text-[var(--text-muted)] max-w-sm mx-auto mb-4 leading-relaxed">
+                Bookmark projects as you browse the explore feed to save them to your personal intelligence repository.
+              </p>
+              <Link href="/explore" className="btn btn-secondary text-xs">
+                Explore Projects
+              </Link>
+            </div>
+          )}
         </div>
       </div>
     </div>

@@ -76,7 +76,9 @@ export default function ExplorePage() {
             Explore Projects
           </h1>
           <p className="text-[var(--text-secondary)] max-w-xl">
-            Browse {SAMPLE_PROJECTS.length}+ groundbreaking projects from India's most innovative teams.
+            {SAMPLE_PROJECTS.length > 0
+              ? `Browse ${SAMPLE_PROJECTS.length}+ groundbreaking projects from India's most innovative teams.`
+              : "Discover, evaluate, and showcase groundbreaking engineering projects from India's most innovative teams."}
           </p>
 
           {/* Search bar */}
@@ -177,10 +179,22 @@ export default function ExplorePage() {
 
         {/* Grid */}
         {filtered.length === 0 ? (
-          <div className="text-center py-24">
-            <Zap size={40} className="mx-auto mb-4 text-[var(--text-muted)]" />
-            <h3 className="font-display text-xl font-bold text-white mb-2">No projects found</h3>
-            <p className="text-[var(--text-muted)]">Try a different search or category filter.</p>
+          <div className="text-center py-20 card p-8 max-w-lg mx-auto border-[var(--cyan)]/30 bg-[var(--bg-surface)]">
+            <div className="w-14 h-14 rounded-2xl bg-gradient-brand mx-auto mb-4 flex items-center justify-center shadow-lg">
+              <Zap size={24} className="text-[#04060C]" />
+            </div>
+            <h3 className="font-display text-xl font-bold text-white mb-2">No Projects Published Yet</h3>
+            <p className="text-[var(--text-muted)] text-sm mb-6 leading-relaxed">
+              Be the first innovation team to showcase your codebase, simulate judge evaluations with NEX AI, and claim rank #1.
+            </p>
+            <div className="flex items-center justify-center gap-3">
+              <Link href="/auth/signup" className="btn btn-primary text-xs">
+                Submit Your Project
+              </Link>
+              <Link href="/nex" className="btn btn-secondary text-xs">
+                Simulate NEX AI
+              </Link>
+            </div>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">

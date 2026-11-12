@@ -109,9 +109,7 @@ export function InstallPwaPrompt() {
         <div className="fixed bottom-20 md:bottom-6 left-4 right-4 md:left-auto md:right-6 md:max-w-md z-[9990] animate-bounce-in">
           <div className="glass-strong border border-purple-500/40 rounded-2xl p-4 shadow-[0_10px_40px_rgba(168,85,247,0.3)] bg-[#09090B]/95 backdrop-blur-xl">
             <div className="flex items-start gap-3">
-              <div className="w-12 h-12 rounded-xl bg-gradient-brand flex items-center justify-center shrink-0 shadow-lg">
-                <Smartphone className="text-white" size={24} />
-              </div>
+              <img src="/icon-192.png" alt="RABINJA Projex" className="w-12 h-12 rounded-xl object-cover border border-cyan-400/40 shadow-[0_0_15px_rgba(0,212,255,0.3)] shrink-0" />
 
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-1.5">
@@ -158,9 +156,7 @@ export function InstallPwaPrompt() {
         <div className="fixed bottom-20 left-4 right-4 z-[9990] animate-fade-up">
           <div className="glass-strong border border-cyan-500/40 rounded-2xl p-4 shadow-[0_10px_40px_rgba(6,182,212,0.25)] bg-[#09090B]/95 backdrop-blur-xl">
             <div className="flex items-start gap-3">
-              <div className="w-11 h-11 rounded-xl bg-gradient-brand flex items-center justify-center shrink-0">
-                <Sparkles className="text-white" size={20} />
-              </div>
+              <img src="/apple-touch-icon.png" alt="RABINJA Projex" className="w-11 h-11 rounded-xl object-cover border border-cyan-400/40 shadow-[0_0_15px_rgba(0,212,255,0.3)] shrink-0" />
 
               <div className="flex-1 min-w-0">
                 <h4 className="text-white font-display font-bold text-sm flex items-center gap-1.5">

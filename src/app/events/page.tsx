@@ -122,36 +122,49 @@ export default function EventsPage() {
                 </Link>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {eventProjects.map((p, idx) => (
-                  <div key={p.id} className="card p-5 group hover:border-[var(--purple)]/60 transition-all flex flex-col justify-between">
-                    <div>
-                      <div className="flex items-center justify-between mb-3">
-                        <span className="badge badge-purple text-[10px]">{p.category}</span>
-                        <span className="badge badge-amber text-[10px] font-mono">Rank #{idx + 1}</span>
+              {eventProjects.length > 0 ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {eventProjects.map((p, idx) => (
+                    <div key={p.id} className="card p-5 group hover:border-[var(--cyan)]/60 transition-all flex flex-col justify-between">
+                      <div>
+                        <div className="flex items-center justify-between mb-3">
+                          <span className="badge badge-purple text-[10px]">{p.category}</span>
+                          <span className="badge badge-amber text-[10px] font-mono">Rank #{idx + 1}</span>
+                        </div>
+                        <Link href={`/explore/${p.slug}`} className="block">
+                          <h3 className="font-display font-bold text-lg text-white group-hover:text-[var(--cyan)] transition-colors mb-2">
+                            {p.title}
+                          </h3>
+                        </Link>
+                        <p className="text-xs text-[var(--text-muted)] line-clamp-2 mb-4 leading-relaxed">
+                          {p.subtitle || p.description}
+                        </p>
                       </div>
-                      <Link href={`/explore/${p.slug}`} className="block">
-                        <h3 className="font-display font-bold text-lg text-white group-hover:text-[var(--purple)] transition-colors mb-2">
-                          {p.title}
-                        </h3>
-                      </Link>
-                      <p className="text-xs text-[var(--text-muted)] line-clamp-2 mb-4 leading-relaxed">
-                        {p.subtitle || p.description}
-                      </p>
-                    </div>
 
-                    <div className="pt-3 border-t border-[var(--border)] flex items-center justify-between text-xs">
-                      <span className="text-[var(--text-muted)]">by <strong className="text-white">{p.team_name}</strong></span>
-                      <Link
-                        href={`/explore/${p.slug}`}
-                        className="text-[var(--purple)] hover:text-white font-medium flex items-center gap-1 transition-colors"
-                      >
-                        Details <ArrowRight size={12} />
-                      </Link>
+                      <div className="pt-3 border-t border-[var(--border)] flex items-center justify-between text-xs">
+                        <span className="text-[var(--text-muted)]">by <strong className="text-white">{p.team_name}</strong></span>
+                        <Link
+                          href={`/explore/${p.slug}`}
+                          className="text-[var(--cyan)] hover:text-white font-medium flex items-center gap-1 transition-colors"
+                        >
+                          Details <ArrowRight size={12} />
+                        </Link>
+                      </div>
                     </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="card p-8 text-center border-dashed border-[var(--border)]">
+                  <Trophy size={32} className="mx-auto mb-3 text-[var(--amber)] opacity-70" />
+                  <h4 className="font-display font-bold text-white text-base mb-1">Submissions In Progress</h4>
+                  <p className="text-xs text-[var(--text-muted)] max-w-sm mx-auto mb-4 leading-relaxed">
+                    Teams are actively preparing their codebase and evaluations for Rabinjathon 2026. Submissions will appear live on the leaderboard.
+                  </p>
+                  <Link href="/auth/signup" className="btn btn-primary text-xs">
+                    Register Your Team & Submit
+                  </Link>
+                </div>
+              )}
             </div>
           </div>
 

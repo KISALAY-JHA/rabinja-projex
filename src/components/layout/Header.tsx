@@ -69,9 +69,9 @@ export function Header() {
       <div className="container-page">
         <div className="flex items-center justify-between h-16">
           {/* ── Logo ── */}
-          <Link href="/" className="flex items-center gap-2 group" id="header-logo">
-            <div className="w-8 h-8 bg-gradient-brand rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
-              <Zap size={16} className="text-white" strokeWidth={2.5} />
+          <Link href="/" className="flex items-center gap-2.5 group" id="header-logo">
+            <div className="w-9 h-9 rounded-xl overflow-hidden border border-[var(--cyan)]/40 shadow-[0_0_15px_rgba(0,212,255,0.35)] group-hover:scale-105 transition-transform bg-[#04060C] flex items-center justify-center shrink-0">
+              <img src="/logo.png" alt="RABINJA Projex" className="w-full h-full object-cover" />
             </div>
             <span className="font-display font-800 text-lg tracking-tight">
               <span className="text-white">RABINJA</span>
