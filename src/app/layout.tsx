@@ -70,11 +70,11 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="apple-mobile-web-app-title" content="RABINJA Projex" />
       </head>
-      <body className="min-h-full flex flex-col bg-bg-primary text-text-primary antialiased mobile-nav-offset">
+      <body className="min-h-full flex flex-col bg-bg-primary text-text-primary antialiased mobile-nav-offset overflow-x-hidden w-full max-w-full">
         <LogoIntroSplash />
         <InstallPwaPrompt />
         <Header />
-        <main className="flex-1 flex flex-col pt-16">{children}</main>
+        <main className="flex-1 flex flex-col pt-14 sm:pt-16 w-full max-w-full overflow-x-hidden">{children}</main>
         <Footer />
         <MobileNav />
       </body>

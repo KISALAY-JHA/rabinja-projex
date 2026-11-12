@@ -4,8 +4,8 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import {
-  Search, Menu, X, ChevronDown,
-  Sparkles, Trophy, Compass, User, BookOpen, Download, Smartphone,
+  Menu, X, ChevronDown,
+  Sparkles, Trophy, Compass, BookOpen, Download, Smartphone,
   CheckCircle2, LogOut
 } from 'lucide-react';
 
@@ -88,18 +88,18 @@ export function Header() {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled ? 'glass-strong border-b border-cyan-500/20 bg-black/90' : 'bg-transparent'
+      className={`fixed top-0 left-0 right-0 w-full max-w-full z-50 transition-all duration-300 overflow-x-hidden ${
+        scrolled ? 'glass-strong border-b border-cyan-500/20 bg-black/95' : 'bg-transparent'
       }`}
     >
-      <div className="container-page px-3 sm:px-6">
-        <div className="flex items-center justify-between h-16">
+      <div className="w-full max-w-7xl mx-auto px-2.5 sm:px-6">
+        <div className="flex items-center justify-between h-14 sm:h-16 w-full">
           {/* ── Logo ── */}
           <Link href="/" className="flex items-center gap-2 group shrink-0" id="header-logo">
-            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl overflow-hidden border border-cyan-400/50 shadow-[0_0_15px_rgba(0,212,255,0.4)] group-hover:scale-105 transition-transform bg-black flex items-center justify-center shrink-0">
+            <div className="w-7 h-7 sm:w-9 sm:h-9 rounded-xl overflow-hidden border border-cyan-400/50 shadow-[0_0_15px_rgba(0,212,255,0.4)] group-hover:scale-105 transition-transform bg-black flex items-center justify-center shrink-0">
               <img src="/logo.png" alt="RABINJA Projex" className="w-full h-full object-cover" />
             </div>
-            <span className="font-display font-extrabold text-base sm:text-lg tracking-tight">
+            <span className="font-display font-extrabold text-sm sm:text-lg tracking-tight whitespace-nowrap">
               <span className="text-white">RABINJA</span>
               <span className="gradient-brand ml-1">Projex</span>
             </span>
@@ -153,16 +153,16 @@ export function Header() {
             {/* Install Web App CTA */}
             <button
               onClick={() => window.dispatchEvent(new Event('trigger-pwa-install'))}
-              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-cyan-500/10 border border-cyan-500/40 text-cyan-300 text-xs font-mono font-bold hover:bg-cyan-500/20 active:scale-95 transition-all shadow-[0_0_10px_rgba(0,212,255,0.2)]"
+              className="flex items-center gap-1 px-2 py-1 sm:px-2.5 sm:py-1.5 rounded-lg bg-cyan-500/10 border border-cyan-500/40 text-cyan-300 text-[11px] sm:text-xs font-mono font-bold hover:bg-cyan-500/20 active:scale-95 transition-all shadow-[0_0_10px_rgba(0,212,255,0.2)]"
               title="Install RABINJA Projex as Web App"
             >
-              <Smartphone size={13} className="text-cyan-400" />
+              <Smartphone size={12} className="text-cyan-400" />
               <span>App</span>
             </button>
 
-            {/* Authenticated user status vs Login buttons */}
+            {/* Desktop Only Auth Actions (Never overflow on mobile phones!) */}
             {authUser ? (
-              <div className="hidden sm:flex items-center gap-2 pl-1">
+              <div className="hidden md:flex items-center gap-2 pl-1">
                 <Link
                   href="/profile"
                   className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/40 text-emerald-400 text-xs font-mono font-semibold"
@@ -179,41 +179,41 @@ export function Header() {
                 </button>
               </div>
             ) : (
-              <>
+              <div className="hidden md:flex items-center gap-2">
                 <Link
                   href="/auth/login"
                   id="header-login-btn"
-                  className="hidden md:flex btn btn-secondary text-xs font-mono uppercase tracking-wider py-1.5 px-3"
+                  className="btn btn-secondary text-xs font-mono uppercase tracking-wider py-1.5 px-3"
                 >
                   Sign In
                 </Link>
                 <Link
                   href="/auth/signup"
                   id="header-signup-btn"
-                  className="hidden sm:flex btn btn-primary text-xs font-mono uppercase tracking-wider py-1.5 px-3.5 shadow-[0_0_15px_rgba(0,212,255,0.3)]"
+                  className="btn btn-primary text-xs font-mono uppercase tracking-wider py-1.5 px-3.5 shadow-[0_0_15px_rgba(0,212,255,0.3)]"
                 >
                   Join Squad
                 </Link>
-              </>
+              </div>
             )}
 
             {/* Mobile menu toggle */}
             <button
-              className="md:hidden p-2 text-zinc-300 hover:text-white"
+              className="md:hidden p-1.5 sm:p-2 text-zinc-300 hover:text-white shrink-0"
               onClick={() => setMenuOpen(!menuOpen)}
               aria-label="Toggle menu"
               id="header-mobile-menu-btn"
             >
-              {menuOpen ? <X size={22} className="text-cyan-400" /> : <Menu size={22} />}
+              {menuOpen ? <X size={20} className="text-cyan-400" /> : <Menu size={20} />}
             </button>
           </div>
         </div>
       </div>
 
-      {/* ── Mobile Menu ── */}
+      {/* ── Mobile Menu (Full drawer on phones) ── */}
       {menuOpen && (
-        <div className="md:hidden glass-strong border-t border-cyan-500/30 bg-black/95 animate-fade-up">
-          <div className="container-page py-4 px-4 flex flex-col gap-1.5">
+        <div className="md:hidden glass-strong border-t border-cyan-500/30 bg-black/98 animate-fade-up w-full">
+          <div className="w-full px-4 py-4 flex flex-col gap-1.5">
             {NAV_LINKS.map((item) => (
               <Link
                 key={item.href}
