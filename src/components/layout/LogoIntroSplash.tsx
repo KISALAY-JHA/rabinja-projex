@@ -20,7 +20,7 @@ export function LogoIntroSplash({
     setIsFading(true);
     setTimeout(() => {
       setIsVisible(false);
-    }, 500);
+    }, 450);
   };
 
   const toggleSound = () => {
@@ -36,15 +36,15 @@ export function LogoIntroSplash({
   return (
     <div
       onClick={dismissSplash}
-      className={`fixed inset-0 z-[9999] bg-black flex flex-col justify-between items-center select-none cursor-pointer transition-opacity duration-500 ${
+      className={`fixed inset-0 z-[9999] bg-black flex flex-col justify-between items-center select-none cursor-pointer transition-opacity duration-500 overflow-hidden ${
         isFading ? 'opacity-0 pointer-events-none' : 'opacity-100'
       }`}
       style={{ touchAction: 'none' }}
     >
       {/* ── TOP SECTION (Solid Black Area) ── */}
-      <div className="w-full flex-1 flex flex-col justify-between items-center pt-8 pb-4 px-6 z-20">
+      <div className="w-full flex-1 flex flex-col justify-between items-center pt-6 pb-2 px-4 z-20">
         {/* Floating action buttons in top-right */}
-        <div className="w-full flex justify-end items-center gap-3">
+        <div className="w-full flex justify-end items-center gap-2.5">
           <button
             onClick={(e) => {
               e.stopPropagation();
@@ -69,8 +69,8 @@ export function LogoIntroSplash({
         </div>
 
         {/* Top Text: by rabinjathon (Cool white typography + emblem) */}
-        <div className="text-center my-auto flex flex-col items-center gap-2.5">
-          <div className="w-11 h-11 rounded-2xl overflow-hidden border border-cyan-400/40 shadow-[0_0_20px_rgba(0,212,255,0.45)] bg-[#04060C]">
+        <div className="text-center my-auto flex flex-col items-center gap-2">
+          <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl overflow-hidden border border-cyan-400/40 shadow-[0_0_20px_rgba(0,212,255,0.45)] bg-[#04060C]">
             <img src="/logo.png" alt="RABINJA" className="w-full h-full object-cover" />
           </div>
           <h2 className="text-white font-display text-base sm:text-xl font-extrabold tracking-[0.25em] sm:tracking-[0.35em] uppercase drop-shadow-[0_0_20px_rgba(255,255,255,0.7)]">
@@ -79,8 +79,8 @@ export function LogoIntroSplash({
         </div>
       </div>
 
-      {/* ── MIDDLE SECTION (Video spanning full 100% breadth of screen) ── */}
-      <div className="w-full bg-black relative flex items-center justify-center overflow-hidden">
+      {/* ── MIDDLE SECTION (Video uncropped, full breadth of screen) ── */}
+      <div className="w-full bg-black relative flex items-center justify-center shrink-0">
         <video
           ref={videoRef}
           src={videoUrl}
@@ -88,21 +88,21 @@ export function LogoIntroSplash({
           muted={isMuted}
           playsInline
           onEnded={dismissSplash}
-          className="w-full h-auto max-h-[55vh] sm:max-h-[65vh] object-cover sm:object-contain block"
+          className="w-full h-auto object-contain block mx-auto max-h-[60vh]"
         />
       </div>
 
       {/* ── BOTTOM SECTION (Solid Black Area) ── */}
-      <div className="w-full flex-1 flex flex-col justify-between items-center pt-4 pb-8 px-6 z-20">
+      <div className="w-full flex-1 flex flex-col justify-between items-center pt-2 pb-6 px-4 z-20">
         {/* Bottom Text: for rabinjathon (Cool white typography) */}
         <div className="text-center my-auto">
-          <h2 className="text-white font-display text-lg sm:text-2xl font-extrabold tracking-[0.25em] sm:tracking-[0.35em] uppercase drop-shadow-[0_0_20px_rgba(255,255,255,0.7)]">
+          <h2 className="text-white font-display text-base sm:text-xl font-extrabold tracking-[0.25em] sm:tracking-[0.35em] uppercase drop-shadow-[0_0_20px_rgba(255,255,255,0.7)]">
             for rabinjathon
           </h2>
         </div>
 
         {/* Tap to enter hint */}
-        <p className="text-[11px] font-mono tracking-wider text-zinc-500 uppercase">
+        <p className="text-[10px] sm:text-[11px] font-mono tracking-wider text-zinc-500 uppercase">
           Tap anywhere or Skip to enter
         </p>
       </div>

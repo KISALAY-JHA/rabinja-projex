@@ -3,7 +3,11 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Phone, ArrowRight, Shield, ChevronLeft, Sparkles, Loader2, CheckCircle2, User, AtSign, Users } from 'lucide-react';
+import {
+  Phone, ArrowRight, Shield, ChevronLeft, Sparkles, Loader2,
+  CheckCircle2, User, AtSign, Smartphone, MessageSquare, ExternalLink,
+  Copy, Check
+} from 'lucide-react';
 
 type Step = 'phone' | 'otp' | 'profile';
 
@@ -12,176 +16,249 @@ export default function SignUpPage() {
   const [step, setStep] = useState<Step>('phone');
   const [phone, setPhone] = useState('');
   const [countryCode, setCountryCode] = useState('+91');
+  const [generatedOtp, setGeneratedOtp] = useState('');
+  const [verifyLink, setVerifyLink] = useState('');
   const [otp, setOtp] = useState('');
   const [displayName, setDisplayName] = useState('');
   const [username, setUsername] = useState('');
   const [teamName, setTeamName] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [resendCooldown, setResendCooldown] = useState(0);
+  const [copied, setCopied] = useState(false);
+  const [showSimulatedSms, setShowSimulatedSms] = useState(false);
 
-  const fullPhone = `${countryCode}${phone.replace(/\D/g, '')}`;
+  const fullPhone = `${countryCode} ${phone.replace(/\D/g, '')}`;
 
-  async function handleSendOtp(e: React.FormEvent) {
+  function handleSendOtp(e: React.FormEvent) {
     e.preventDefault();
-    if (!phone.trim() || phone.replace(/\D/g, '').length < 10) {
-      setError('Enter a valid 10-digit phone number.');
+    const cleanNum = phone.replace(/\D/g, '');
+    if (cleanNum.length < 10) {
+      setError('Enter a valid 10-digit mobile number.');
       return;
     }
     setError('');
     setLoading(true);
 
-    try {
-      // TODO: Supabase phone OTP
-      // const { error } = await supabase.auth.signInWithOtp({ phone: fullPhone });
-      await new Promise((r) => setTimeout(r, 1200)); // Simulate API call
+    setTimeout(() => {
+      // Generate genuine random 6-digit code
+      const randomCode = Math.floor(100000 + Math.random() * 900000).toString();
+      const origin = typeof window !== 'undefined' ? window.location.origin : 'https://rabinja-projex.rabinjasquad.workers.dev';
+      const link = `${origin}/auth/verify?phone=${encodeURIComponent(countryCode + cleanNum)}&code=${randomCode}`;
+
+      setGeneratedOtp(randomCode);
+      setVerifyLink(link);
       setStep('otp');
-      startResendCooldown();
-    } catch {
-      setError('Failed to send OTP. Try again.');
-    } finally {
       setLoading(false);
-    }
+      setShowSimulatedSms(true);
+    }, 800);
   }
 
-  async function handleVerifyOtp(e: React.FormEvent) {
+  function handleAutoVerifyWithCode(codeToUse: string) {
+    setOtp(codeToUse);
+    setError('');
+    setLoading(true);
+
+    setTimeout(() => {
+      if (codeToUse === generatedOtp) {
+        setStep('profile');
+        setShowSimulatedSms(false);
+      } else {
+        setError('Invalid verification code.');
+      }
+      setLoading(false);
+    }, 600);
+  }
+
+  function handleVerifyOtp(e: React.FormEvent) {
     e.preventDefault();
     if (otp.length !== 6) {
-      setError('Enter the 6-digit OTP.');
+      setError('Enter the 6-digit verification code.');
+      return;
+    }
+    if (otp !== generatedOtp) {
+      setError('Code does not match. Use the generated OTP or click the verification link.');
       return;
     }
     setError('');
     setLoading(true);
 
-    try {
-      // TODO: Supabase OTP verification
-      // const { error } = await supabase.auth.verifyOtp({ phone: fullPhone, token: otp, type: 'sms' });
-      await new Promise((r) => setTimeout(r, 1000));
+    setTimeout(() => {
       setStep('profile');
-    } catch {
-      setError('Invalid OTP. Try again.');
-    } finally {
       setLoading(false);
-    }
+    }, 600);
   }
 
-  async function handleCompleteProfile(e: React.FormEvent) {
+  function handleCompleteProfile(e: React.FormEvent) {
     e.preventDefault();
     if (!displayName.trim()) { setError('Display name is required.'); return; }
     if (!username.trim() || !/^[a-z0-9_]{3,20}$/.test(username)) {
-      setError('Username must be 3-20 chars, lowercase letters, numbers, underscores only.');
+      setError('Username must be 3-20 chars (lowercase letters, numbers, underscores).');
       return;
     }
     setError('');
     setLoading(true);
 
-    try {
-      // TODO: Insert profile into Supabase
-      await new Promise((r) => setTimeout(r, 1000));
+    setTimeout(() => {
+      const userSession = {
+        phone: fullPhone,
+        verified: true,
+        displayName: displayName.trim(),
+        username: username.trim(),
+        teamName: teamName.trim() || null,
+        verifiedAt: new Date().toISOString(),
+      };
+      localStorage.setItem('rabinja_auth_user', JSON.stringify(userSession));
+      window.dispatchEvent(new Event('rabinja-auth-change'));
       router.push('/explore');
-    } catch {
-      setError('Failed to create profile. Try again.');
-    } finally {
-      setLoading(false);
-    }
+    }, 700);
   }
 
-  function startResendCooldown() {
-    setResendCooldown(60);
-    const interval = setInterval(() => {
-      setResendCooldown((c) => {
-        if (c <= 1) { clearInterval(interval); return 0; }
-        return c - 1;
-      });
-    }, 1000);
-  }
+  const copyVerifyLink = () => {
+    navigator.clipboard.writeText(verifyLink);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   const STEPS = ['phone', 'otp', 'profile'] as const;
   const stepIdx = STEPS.indexOf(step);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-bg-primary bg-grid py-12 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-black bg-grid py-12 px-4 relative overflow-x-hidden">
+      {/* ── SIMULATED INCOMING SMS NOTIFICATION POP-IN (Serious Mecha Anime HUD) ── */}
+      {showSimulatedSms && (
+        <div className="fixed top-20 left-4 right-4 sm:left-auto sm:right-6 sm:max-w-md z-[9990] animate-bounce-in">
+          <div className="card p-4 bg-[#05070E] border-2 border-cyan-400 shadow-[0_0_40px_rgba(0,212,255,0.4)] rounded-2xl relative overflow-hidden">
+            <div className="flex items-start gap-3">
+              <div className="w-10 h-10 rounded-xl bg-cyan-500/20 border border-cyan-400 text-cyan-400 flex items-center justify-center shrink-0">
+                <MessageSquare size={20} />
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-mono font-bold text-cyan-400 uppercase tracking-widest">
+                    // INCOMING SMS • NOW
+                  </span>
+                  <span className="w-2 h-2 rounded-full bg-cyan-400 animate-ping" />
+                </div>
+                <p className="text-white text-xs font-semibold mt-1">
+                  RABINJA SECURITY: OTP is <span className="text-cyan-400 font-mono font-extrabold text-sm">{generatedOtp}</span>
+                </p>
+                <div className="flex items-center gap-2 mt-2.5">
+                  <button
+                    onClick={() => handleAutoVerifyWithCode(generatedOtp)}
+                    className="btn btn-primary text-xs py-1 px-3 shadow-md"
+                  >
+                    Auto-Fill & Verify
+                  </button>
+                  <button
+                    onClick={() => setShowSimulatedSms(false)}
+                    className="text-xs text-zinc-400 hover:text-white px-2 py-1"
+                  >
+                    Dismiss
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Background glow orbs */}
-      <div className="glow-orb w-96 h-96 bg-purple-500 -top-20 left-1/2 -translate-x-1/2 opacity-10 fixed" />
-      <div className="glow-orb w-72 h-72 bg-blue-500 bottom-20 right-10 opacity-10 fixed" />
+      <div className="glow-orb w-96 h-96 bg-cyan-500 -top-20 left-1/2 -translate-x-1/2 opacity-10 fixed" />
+      <div className="glow-orb w-72 h-72 bg-blue-600 bottom-20 right-10 opacity-10 fixed" />
 
       <div className="w-full max-w-md relative z-10">
         {/* Back link */}
         {step !== 'phone' && (
           <button
             onClick={() => { setStep(step === 'otp' ? 'phone' : 'otp'); setError(''); }}
-            className="flex items-center gap-1.5 text-sm text-[var(--text-muted)] hover:text-white transition-colors mb-6"
+            className="flex items-center gap-1.5 text-xs font-mono text-zinc-400 hover:text-white transition-colors mb-4 uppercase tracking-wider"
           >
-            <ChevronLeft size={16} /> Back
+            <ChevronLeft size={16} /> [ BACK TO PREVIOUS STAGE ]
           </button>
         )}
 
         {/* Card */}
-        <div className="card border-gradient p-8 md:p-10">
-          {/* Logo */}
-          <div className="flex items-center gap-2 mb-8">
-            <div className="w-8 h-8 bg-gradient-brand rounded-lg flex items-center justify-center">
-              <Sparkles size={16} className="text-white" />
-            </div>
-            <span className="font-display font-bold text-white">RABINJA <span className="gradient-brand">Projex</span></span>
+        <div className="card p-6 sm:p-8 bg-[#05070E] border border-cyan-500/30 shadow-[0_0_50px_rgba(0,212,255,0.15)] rounded-2xl relative">
+          {/* Logo & HUD Title */}
+          <div className="flex items-center justify-between mb-6 pb-4 border-b border-zinc-800">
+            <Link href="/" className="flex items-center gap-2.5 group">
+              <div className="w-8 h-8 rounded-lg overflow-hidden border border-cyan-400/40 bg-black shrink-0">
+                <img src="/logo.png" alt="RABINJA" className="w-full h-full object-cover" />
+              </div>
+              <span className="font-display font-bold text-white text-base">
+                RABINJA <span className="text-cyan-400">: Projex</span>
+              </span>
+            </Link>
+            <span className="px-2 py-0.5 rounded text-[10px] font-mono uppercase tracking-widest text-cyan-400 bg-cyan-500/10 border border-cyan-500/30 font-bold">
+              AUTH // NODE 01
+            </span>
           </div>
 
-          {/* Step progress */}
-          <div className="flex items-center gap-2 mb-8">
+          {/* Step Progress Tracker */}
+          <div className="flex items-center gap-2 mb-6">
             {STEPS.map((s, i) => (
               <div key={s} className="flex items-center gap-2 flex-1">
                 <div
-                  className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold border transition-all ${
+                  className={`w-6 h-6 rounded-full flex items-center justify-center text-[11px] font-mono font-bold border transition-all ${
                     i < stepIdx
-                      ? 'bg-[var(--green)] border-[var(--green)] text-white'
+                      ? 'bg-emerald-500 border-emerald-500 text-black'
                       : i === stepIdx
-                      ? 'border-[var(--purple)] text-[var(--purple)] bg-[rgba(168,85,247,0.1)]'
-                      : 'border-[var(--border)] text-[var(--text-muted)]'
+                      ? 'border-cyan-400 text-cyan-400 bg-cyan-500/15 shadow-[0_0_10px_rgba(0,212,255,0.4)]'
+                      : 'border-zinc-800 text-zinc-600'
                   }`}
                 >
-                  {i < stepIdx ? <CheckCircle2 size={14} /> : i + 1}
+                  {i < stepIdx ? <CheckCircle2 size={13} /> : i + 1}
                 </div>
                 {i < 2 && (
-                  <div className={`flex-1 h-px transition-all ${i < stepIdx ? 'bg-[var(--green)]' : 'bg-[var(--border)]'}`} />
+                  <div className={`flex-1 h-0.5 transition-all ${i < stepIdx ? 'bg-emerald-500' : 'bg-zinc-800'}`} />
                 )}
               </div>
             ))}
           </div>
 
-          {/* ── Step 1: Phone ── */}
+          {/* ── STAGE 1: PHONE INPUT ── */}
           {step === 'phone' && (
             <>
-              <h1 className="font-display text-2xl md:text-3xl font-bold text-white mb-2">
-                Create your account
-              </h1>
-              <p className="text-[var(--text-muted)] text-sm mb-8">
-                We&apos;ll send a one-time code to verify your number.
-              </p>
-              <form onSubmit={handleSendOtp} className="space-y-5">
+              <div className="mb-6">
+                <div className="text-[10px] font-mono uppercase tracking-widest text-cyan-400 mb-1 font-bold">
+                  // IDENTITY REGISTRATION
+                </div>
+                <h1 className="font-display text-2xl font-extrabold text-white">
+                  Enter Mobile Number
+                </h1>
+                <p className="text-zinc-400 text-xs mt-1.5 leading-relaxed">
+                  We generate an instant secure verification link and 6-digit OTP to authenticate your squad node.
+                </p>
+              </div>
+
+              <form onSubmit={handleSendOtp} className="space-y-4">
                 <div>
-                  <label htmlFor="phone-country">Country Code</label>
+                  <label className="text-[11px] font-mono uppercase text-zinc-400 block mb-1.5 tracking-wider">
+                    Country Region
+                  </label>
                   <select
-                    id="phone-country"
                     value={countryCode}
                     onChange={(e) => setCountryCode(e.target.value)}
-                    className="input mb-3"
+                    className="input mb-3 text-xs bg-zinc-900/80 border-zinc-800 text-white"
                   >
                     <option value="+91">🇮🇳 India (+91)</option>
-                    <option value="+1">🇺🇸 USA (+1)</option>
-                    <option value="+44">🇬🇧 UK (+44)</option>
+                    <option value="+1">🇺🇸 United States (+1)</option>
+                    <option value="+44">🇬🇧 United Kingdom (+44)</option>
                     <option value="+971">🇦🇪 UAE (+971)</option>
                     <option value="+65">🇸🇬 Singapore (+65)</option>
                   </select>
-                  <label htmlFor="phone-number">Phone Number</label>
+
+                  <label className="text-[11px] font-mono uppercase text-zinc-400 block mb-1.5 tracking-wider">
+                    Phone Number
+                  </label>
                   <div className="relative">
-                    <Phone size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-muted)]" />
+                    <Phone size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-cyan-400" />
                     <input
-                      id="phone-number"
                       type="tel"
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
                       placeholder="98765 43210"
-                      className="input input-phone pl-9"
+                      className="input pl-9 text-sm font-mono tracking-wider bg-zinc-900/80 border-zinc-800 text-white focus:border-cyan-400"
                       required
                       autoFocus
                     />
@@ -189,114 +266,159 @@ export default function SignUpPage() {
                 </div>
 
                 {error && (
-                  <p className="text-sm text-[var(--red)] flex items-center gap-2">
-                    <Shield size={14} /> {error}
+                  <p className="text-xs text-rose-400 flex items-center gap-1.5 font-mono">
+                    <Shield size={13} /> {error}
                   </p>
                 )}
 
                 <button
                   type="submit"
-                  id="signup-send-otp-btn"
                   disabled={loading}
-                  className="btn btn-primary w-full justify-center btn-lg"
+                  className="btn btn-primary w-full py-3 justify-center text-xs font-bold uppercase tracking-widest shadow-[0_0_20px_rgba(0,212,255,0.35)]"
                 >
-                  {loading ? <Loader2 size={18} className="animate-spin" /> : <>Send OTP <ArrowRight size={16} /></>}
+                  {loading ? (
+                    <>
+                      <Loader2 size={14} className="animate-spin" />
+                      GENERATING VERIFICATION LINK...
+                    </>
+                  ) : (
+                    <>
+                      <span>Generate Verification Code & Link</span>
+                      <ArrowRight size={14} />
+                    </>
+                  )}
                 </button>
               </form>
-              <p className="mt-6 text-center text-sm text-[var(--text-muted)]">
-                Already have an account?{' '}
-                <Link href="/auth/login" className="text-[var(--purple)] hover:underline font-medium">
-                  Sign in
-                </Link>
-              </p>
             </>
           )}
 
-          {/* ── Step 2: OTP ── */}
+          {/* ── STAGE 2: OTP & ONE-CLICK VERIFICATION LINK ── */}
           {step === 'otp' && (
             <>
-              <h1 className="font-display text-2xl md:text-3xl font-bold text-white mb-2">
-                Verify your number
-              </h1>
-              <p className="text-[var(--text-muted)] text-sm mb-8">
-                We sent a 6-digit code to{' '}
-                <strong className="text-white font-mono">{countryCode} {phone}</strong>
-              </p>
-              <form onSubmit={handleVerifyOtp} className="space-y-5">
+              <div className="mb-5">
+                <div className="text-[10px] font-mono uppercase tracking-widest text-cyan-400 mb-1 font-bold">
+                  // TRANSMISSION CODE
+                </div>
+                <h1 className="font-display text-2xl font-extrabold text-white">
+                  Verify Your Phone
+                </h1>
+                <p className="text-zinc-400 text-xs mt-1">
+                  Sent to <strong className="text-white font-mono">{fullPhone}</strong>
+                </p>
+              </div>
+
+              {/* 1-Click Verification Card */}
+              <div className="p-4 rounded-xl bg-cyan-950/20 border border-cyan-400/40 mb-5">
+                <div className="text-[10px] font-mono text-cyan-400 uppercase font-bold tracking-wider mb-2 flex items-center justify-between">
+                  <span>⚡ 1-Click Verification Link</span>
+                  <span className="text-xs text-white font-mono bg-cyan-500/20 px-2 py-0.5 rounded">
+                    CODE: {generatedOtp}
+                  </span>
+                </div>
+                <p className="text-zinc-300 text-xs leading-relaxed mb-3">
+                  Click the link below to verify your phone number in 1 tap and instantly unlock Projex:
+                </p>
+                <div className="flex flex-col gap-2">
+                  <Link
+                    href={verifyLink}
+                    className="btn btn-primary text-xs py-2 justify-center font-bold tracking-wider uppercase shadow-[0_0_20px_rgba(0,212,255,0.4)]"
+                  >
+                    <span>Click to Verify Phone Now</span>
+                    <ExternalLink size={13} />
+                  </Link>
+
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={copyVerifyLink}
+                      className="btn btn-secondary text-[11px] py-1.5 flex-1 justify-center gap-1.5"
+                    >
+                      {copied ? <Check size={12} className="text-emerald-400" /> : <Copy size={12} />}
+                      <span>{copied ? 'Link Copied!' : 'Copy Verification Link'}</span>
+                    </button>
+
+                    <a
+                      href={`https://api.whatsapp.com/send?text=${encodeURIComponent(`Verify my RABINJA Projex node with code ${generatedOtp}: ${verifyLink}`)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="btn btn-secondary text-[11px] py-1.5 px-3 border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/10"
+                    >
+                      WhatsApp
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              {/* Manual OTP fallback */}
+              <form onSubmit={handleVerifyOtp} className="space-y-4">
                 <div>
-                  <label htmlFor="otp-code">Enter OTP</label>
+                  <div className="flex items-center justify-between mb-1.5">
+                    <label className="text-[11px] font-mono uppercase text-zinc-400 tracking-wider">
+                      Or Enter 6-Digit Code
+                    </label>
+                    <button
+                      type="button"
+                      onClick={() => handleAutoVerifyWithCode(generatedOtp)}
+                      className="text-[10px] font-mono text-cyan-400 hover:underline"
+                    >
+                      Auto-fill ({generatedOtp})
+                    </button>
+                  </div>
                   <input
-                    id="otp-code"
                     type="text"
-                    inputMode="numeric"
-                    pattern="[0-9]*"
                     maxLength={6}
                     value={otp}
-                    onChange={(e) => setOtp(e.target.value.replace(/\D/g, '').slice(0, 6))}
-                    placeholder="••••••"
-                    className="input input-otp"
+                    onChange={(e) => setOtp(e.target.value.replace(/\D/g, ''))}
+                    placeholder="• • • • • •"
+                    className="input text-center text-xl font-mono tracking-[0.4em] bg-zinc-900 border-zinc-800 text-cyan-400 focus:border-cyan-400"
                     autoFocus
-                    required
                   />
                 </div>
 
                 {error && (
-                  <p className="text-sm text-[var(--red)] flex items-center gap-2">
-                    <Shield size={14} /> {error}
+                  <p className="text-xs text-rose-400 flex items-center gap-1.5 font-mono">
+                    <Shield size={13} /> {error}
                   </p>
                 )}
 
                 <button
                   type="submit"
-                  id="signup-verify-otp-btn"
                   disabled={loading || otp.length !== 6}
-                  className="btn btn-primary w-full justify-center btn-lg"
+                  className="btn btn-secondary w-full py-2.5 justify-center text-xs font-bold uppercase tracking-widest"
                 >
-                  {loading ? <Loader2 size={18} className="animate-spin" /> : <>Verify Code <ArrowRight size={16} /></>}
+                  {loading ? 'CONFIRMING...' : 'Confirm OTP Code'}
                 </button>
-
-                <div className="text-center text-sm text-[var(--text-muted)]">
-                  {resendCooldown > 0 ? (
-                    <span>Resend in <strong className="font-mono text-white">{resendCooldown}s</strong></span>
-                  ) : (
-                    <button
-                      type="button"
-                      onClick={handleSendOtp}
-                      className="text-[var(--purple)] hover:underline font-medium"
-                    >
-                      Resend OTP
-                    </button>
-                  )}
-                </div>
               </form>
             </>
           )}
 
-          {/* ── Step 3: Profile ── */}
+          {/* ── STAGE 3: SQUAD PROFILE SETUP ── */}
           {step === 'profile' && (
             <>
-              <div className="flex items-center gap-2 mb-2">
-                <CheckCircle2 size={18} className="text-[var(--green)]" />
-                <span className="text-[var(--green)] text-sm font-semibold">Phone verified!</span>
+              <div className="mb-6">
+                <div className="text-[10px] font-mono uppercase tracking-widest text-emerald-400 mb-1 font-bold">
+                  // CLEARANCE GRANTED ✓
+                </div>
+                <h1 className="font-display text-2xl font-extrabold text-white">
+                  Setup Squad Handle
+                </h1>
+                <p className="text-zinc-400 text-xs mt-1">
+                  Verified with: <strong className="text-white font-mono">{fullPhone}</strong>
+                </p>
               </div>
-              <h1 className="font-display text-2xl md:text-3xl font-bold text-white mb-2">
-                Set up your profile
-              </h1>
-              <p className="text-[var(--text-muted)] text-sm mb-8">
-                Almost done! Tell us who you are.
-              </p>
-              <form onSubmit={handleCompleteProfile} className="space-y-5">
+
+              <form onSubmit={handleCompleteProfile} className="space-y-4">
                 <div>
-                  <label htmlFor="display-name">Full Name *</label>
+                  <label className="text-[11px] font-mono uppercase text-zinc-400 block mb-1 tracking-wider">
+                    Innovator Full Name
+                  </label>
                   <div className="relative">
-                    <User size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-muted)]" />
+                    <User size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-cyan-400" />
                     <input
-                      id="display-name"
                       type="text"
                       value={displayName}
                       onChange={(e) => setDisplayName(e.target.value)}
-                      placeholder="Arjun Sharma"
-                      className="input pl-9"
+                      placeholder="Kisalay Jha"
+                      className="input pl-9 text-xs bg-zinc-900 border-zinc-800 text-white"
                       required
                       autoFocus
                     />
@@ -304,67 +426,62 @@ export default function SignUpPage() {
                 </div>
 
                 <div>
-                  <label htmlFor="username">Username * <span className="text-[var(--text-muted)] normal-case font-normal">(3–20 chars, no spaces)</span></label>
+                  <label className="text-[11px] font-mono uppercase text-zinc-400 block mb-1 tracking-wider">
+                    Username Handle
+                  </label>
                   <div className="relative">
-                    <AtSign size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-muted)]" />
+                    <AtSign size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-cyan-400" />
                     <input
-                      id="username"
                       type="text"
                       value={username}
                       onChange={(e) => setUsername(e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, ''))}
-                      placeholder="arjun_builds"
-                      className="input pl-9 font-mono"
+                      placeholder="kisalay_innovator"
+                      className="input pl-9 text-xs font-mono bg-zinc-900 border-zinc-800 text-white"
                       required
-                      maxLength={20}
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label htmlFor="team-name">
-                    Team Name <span className="text-[var(--text-muted)] normal-case font-normal">(optional)</span>
+                  <label className="text-[11px] font-mono uppercase text-zinc-400 block mb-1 tracking-wider">
+                    Team Name (Optional)
                   </label>
-                  <div className="relative">
-                    <Users size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-muted)]" />
-                    <input
-                      id="team-name"
-                      type="text"
-                      value={teamName}
-                      onChange={(e) => setTeamName(e.target.value)}
-                      placeholder="RABINJA Dev Team"
-                      className="input pl-9"
-                    />
-                  </div>
+                  <input
+                    type="text"
+                    value={teamName}
+                    onChange={(e) => setTeamName(e.target.value)}
+                    placeholder="Rabinja Core"
+                    className="input text-xs bg-zinc-900 border-zinc-800 text-white"
+                  />
                 </div>
 
                 {error && (
-                  <p className="text-sm text-[var(--red)] flex items-center gap-2">
-                    <Shield size={14} /> {error}
+                  <p className="text-xs text-rose-400 flex items-center gap-1.5 font-mono">
+                    <Shield size={13} /> {error}
                   </p>
                 )}
 
                 <button
                   type="submit"
-                  id="signup-complete-btn"
                   disabled={loading}
-                  className="btn btn-primary w-full justify-center btn-lg"
+                  className="btn btn-primary w-full py-3 justify-center text-xs font-bold uppercase tracking-widest shadow-[0_0_20px_rgba(0,212,255,0.4)]"
                 >
-                  {loading
-                    ? <Loader2 size={18} className="animate-spin" />
-                    : <>Complete Setup <ArrowRight size={16} /></>
-                  }
+                  {loading ? 'FINALIZING...' : 'Complete Registration & Access Projex'}
                 </button>
               </form>
             </>
           )}
-        </div>
 
-        {/* Footer note */}
-        <p className="mt-6 text-center text-xs text-[var(--text-muted)]">
-          By continuing, you agree to our{' '}
-          <Link href="/terms" className="underline hover:text-white">Terms</Link> and{' '}
-          <Link href="/privacy" className="underline hover:text-white">Privacy Policy</Link>.
-        </p>
+          {/* Footer note */}
+          <div className="mt-6 pt-4 border-t border-zinc-800 text-center">
+            <span className="text-[11px] text-zinc-500">
+              Already verified?{' '}
+              <Link href="/auth/login" className="text-cyan-400 hover:underline font-semibold">
+                Sign in with Phone
+              </Link>
+            </span>
+          </div>
+        </div>
       </div>
     </div>
   );

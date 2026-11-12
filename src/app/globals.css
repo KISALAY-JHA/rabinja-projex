@@ -1,17 +1,18 @@
 @import "tailwindcss";
 
 /* ============================================================
-   RABINJA PROJEX — Cyber Anime Cosmic Design System
-   Tuned to match the official Electric Blue Cyber Rabbit emblem
+   RABINJA PROJEX — Serious Cyber Anime Mecha HUD System
+   Base: Pure Pitch Black (#000000)
+   Accents: Electric Cyan (#00D4FF), Hyper Cobalt (#2563EB), Red Flare (#FF2D55)
    ============================================================ */
 
 :root {
-  /* ── Core Backgrounds (Deep Cosmic Void) ── */
-  --bg-primary:   #04060C;
-  --bg-surface:   #080D1A;
-  --bg-surface-2: #0E1528;
-  --bg-surface-3: #16223D;
-  --bg-overlay:   rgba(4,6,12,0.88);
+  /* ── Core Backgrounds (Pure Pitch Black Main) ── */
+  --bg-primary:   #000000;
+  --bg-surface:   #05070E;
+  --bg-surface-2: #090E1C;
+  --bg-surface-3: #10182C;
+  --bg-overlay:   rgba(0,0,0,0.92);
 
   /* ── Text ── */
   --text-primary:   #F8FAFC;
@@ -20,9 +21,9 @@
   --text-disabled:  #334155;
 
   /* ── Borders (Cyber Neon Infused) ── */
-  --border:        rgba(0,212,255,0.12);
-  --border-hover:  rgba(0,212,255,0.28);
-  --border-active: rgba(0,212,255,0.45);
+  --border:        rgba(0,212,255,0.15);
+  --border-hover:  rgba(0,212,255,0.35);
+  --border-active: rgba(0,212,255,0.6);
 
   /* ── Neon Accent Colors (Logo Palette) ── */
   --cyan:   #00D4FF; /* Electric orbital cyan */
@@ -44,16 +45,16 @@
   --glow-green:  0 0 20px rgba(16,185,129,0.5), 0 0 60px rgba(16,185,129,0.15);
   --glow-amber:  0 0 20px rgba(245,158,11,0.5), 0 0 60px rgba(245,158,11,0.15);
 
-  /* ── NEX AI brand (Electric Cyan -> Tech Cobalt -> Eye Red) ── */
+  /* ── NEX AI brand ── */
   --nex-primary:   #00D4FF;
   --nex-secondary: #2563EB;
   --nex-glow: 0 0 30px rgba(0,212,255,0.6), 0 0 80px rgba(37,99,235,0.3);
 
   /* ── Shadows ── */
-  --shadow-sm: 0 1px 3px rgba(0,0,0,0.6);
-  --shadow-md: 0 4px 14px rgba(0,0,0,0.7);
-  --shadow-lg: 0 8px 28px rgba(0,0,0,0.85);
-  --shadow-xl: 0 16px 56px rgba(0,0,0,0.92);
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.8);
+  --shadow-md: 0 4px 14px rgba(0,0,0,0.9);
+  --shadow-lg: 0 8px 28px rgba(0,0,0,0.95);
+  --shadow-xl: 0 16px 56px rgba(0,0,0,0.98);
 
   /* ── Radii ── */
   --radius-sm: 6px;
@@ -96,11 +97,11 @@
 
   --font-display: var(--font-display);
   --font-sans:    var(--font-sans);
-  --font-mono:    var(--font-mono);
+  --font-mono: var(--font-mono);
 }
 
 /* ============================================================
-   Base Reset & Global Styles
+   Base Reset & Zero Horizontal Scroll Guarantee
    ============================================================ */
 
 *, *::before, *::after {
@@ -110,10 +111,13 @@
 html {
   scroll-behavior: smooth;
   color-scheme: dark;
+  overflow-x: hidden;
+  max-width: 100vw;
+  width: 100%;
 }
 
 body {
-  background-color: var(--bg-primary);
+  background-color: #000000;
   color: var(--text-primary);
   font-family: var(--font-sans);
   font-size: 15px;
@@ -121,13 +125,16 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
+  max-width: 100vw;
+  width: 100%;
+  position: relative;
 }
 
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-display);
   font-weight: 700;
   letter-spacing: -0.02em;
-  line-height: 1.1;
+  line-height: 1.15;
   color: var(--text-primary);
 }
 
@@ -148,18 +155,49 @@ a {
 }
 
 /* Scrollbar */
-::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-track { background: var(--bg-primary); }
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: #000000; }
 ::-webkit-scrollbar-thumb {
-  background: var(--bg-surface-3);
+  background: #16203B;
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover { background: rgba(0,212,255,0.4); }
 
 /* ============================================================
-   Glow Utilities
+   Serious Anime / Mecha HUD Elements
    ============================================================ */
 
+.hud-panel {
+  position: relative;
+  background: #05070E;
+  border: 1px solid rgba(0, 212, 255, 0.25);
+}
+
+.hud-panel::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  width: 8px;
+  height: 8px;
+  border-top: 2px solid #00D4FF;
+  border-left: 2px solid #00D4FF;
+  pointer-events: none;
+}
+
+.hud-panel::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  right: -1px;
+  width: 8px;
+  height: 8px;
+  border-bottom: 2px solid #00D4FF;
+  border-right: 2px solid #00D4FF;
+  pointer-events: none;
+}
+
+/* Glow Utilities */
 .glow-red    { box-shadow: var(--glow-red); }
 .glow-purple { box-shadow: var(--glow-purple); }
 .glow-blue   { box-shadow: var(--glow-blue); }
@@ -175,10 +213,7 @@ a {
 .text-glow-green  { text-shadow: 0 0 20px rgba(16,185,129,0.7); }
 .text-glow-cyan   { text-shadow: 0 0 20px rgba(0,212,255,0.75); }
 
-/* ============================================================
-   Gradient Utilities
-   ============================================================ */
-
+/* Gradient Utilities */
 .gradient-brand {
   background: linear-gradient(135deg, #00D4FF 0%, #38BDF8 40%, #2563EB 100%);
   -webkit-background-clip: text;
@@ -266,8 +301,8 @@ a {
 
 .btn-primary {
   background: linear-gradient(135deg, #00D4FF 0%, #2563EB 100%);
-  color: #04060C;
-  font-weight: 700;
+  color: #000000;
+  font-weight: 800;
   box-shadow: 0 0 15px rgba(0,212,255,0.35);
 }
 .btn-primary:hover:not(:disabled) {
@@ -321,7 +356,7 @@ a {
   border-radius: 9999px;
   font-family: var(--font-mono);
   font-size: 0.6875rem;
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
 }
@@ -341,7 +376,7 @@ a {
 .input {
   width: 100%;
   padding: 0.625rem 0.875rem;
-  background: var(--bg-surface-2);
+  background: #080D1A;
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
   color: var(--text-primary);
@@ -353,7 +388,7 @@ a {
 
 .input:focus {
   border-color: var(--cyan);
-  box-shadow: 0 0 0 3px rgba(0,212,255,0.15);
+  box-shadow: 0 0 0 3px rgba(0,212,255,0.18);
 }
 
 /* ============================================================
@@ -361,14 +396,14 @@ a {
    ============================================================ */
 
 .glass {
-  background: rgba(8, 13, 26, 0.75);
+  background: rgba(5, 7, 14, 0.8);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid var(--border);
 }
 
 .glass-strong {
-  background: rgba(4, 6, 12, 0.9);
+  background: rgba(0, 0, 0, 0.92);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border: 1px solid var(--border);
@@ -390,7 +425,7 @@ a {
   border-radius: 9999px;
   filter: blur(80px);
   pointer-events: none;
-  opacity: 0.22;
+  opacity: 0.18;
 }
 
 /* Neon accent line */
@@ -402,8 +437,8 @@ a {
 
 /* Section spacing */
 .section-spacing {
-  padding-top: 5rem;
-  padding-bottom: 5rem;
+  padding-top: 4.5rem;
+  padding-bottom: 4.5rem;
 }
 
 /* Container */
@@ -412,8 +447,14 @@ a {
   max-width: 1280px;
   margin-left: auto;
   margin-right: auto;
-  padding-left: 1.25rem;
-  padding-right: 1.25rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+@media (min-width: 640px) {
+  .container-page {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
 }
 
 /* Ticker animation */
@@ -423,7 +464,7 @@ a {
 }
 
 .animate-ticker {
-  animation: ticker 40s linear infinite;
+  animation: ticker 35s linear infinite;
 }
 
 .animate-ticker:hover {
@@ -447,7 +488,7 @@ a {
 
 /* Mobile nav offset */
 .mobile-nav-offset {
-  padding-bottom: 4rem;
+  padding-bottom: 4.5rem;
 }
 @media (min-width: 768px) {
   .mobile-nav-offset {
