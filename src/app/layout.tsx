@@ -70,6 +70,14 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="apple-mobile-web-app-title" content="RABINJA Projex" />
+        {/* Google AdSense Script (Automatic when NEXT_PUBLIC_ADSENSE_CLIENT_ID is provided) */}
+        {process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID && (
+          <script
+            async
+            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID}`}
+            crossOrigin="anonymous"
+          />
+        )}
       </head>
       <body className="min-h-full flex flex-col bg-bg-primary text-text-primary antialiased mobile-nav-offset overflow-x-hidden w-full max-w-full">
         <LogoIntroSplash />

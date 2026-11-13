@@ -49,7 +49,7 @@ export function AnimeFloatingCompanion() {
 
           <div className="flex items-center justify-between pt-2 border-t border-zinc-800 text-[10px] font-mono text-zinc-400">
             <span>SYNC: 100%</span>
-            <span className="text-cyan-400 font-bold">// システム稼働中</span>
+            <span className="text-cyan-400 font-bold">// SYSTEM ONLINE</span>
           </div>
         </div>
       ) : (

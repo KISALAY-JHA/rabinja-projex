@@ -1,11 +1,13 @@
 'use client';
 
-import { useState } from 'react';
-import { ExternalLink, Sparkles, Megaphone, X } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { Sparkles, ExternalLink, X, Info } from 'lucide-react';
 
 interface AdSlotProps {
-  /** Format of the ad unit */
-  format?: 'banner' | 'native-card' | 'mobile-inline' | 'sidebar';
+  /** Google AdSense Ad Slot ID (from your Google AdSense console) */
+  adSlotId?: string;
+  /** Format of the ad slot */
+  format?: 'banner' | 'native-card' | 'feed-inline' | 'sidebar' | 'mobile-inline';
   /** Optional custom title for sponsor */
   title?: string;
   /** Optional custom description */
@@ -14,114 +16,121 @@ interface AdSlotProps {
   href?: string;
   /** Image or badge label */
   sponsorLabel?: string;
+  /** Custom fallback title */
+  fallbackTitle?: string;
+  /** Custom fallback description */
+  fallbackDescription?: string;
+  /** Custom fallback target link */
+  fallbackHref?: string;
+  className?: string;
 }
 
 export function AdSlot({
-  format = 'native-card',
-  title = 'Accelerate Your AI Engineering on Cloud GPU Clusters',
-  description = 'Deploy high-performance Llama 3, PyTorch, and Deep Learning models with instant serverless inference and 99.9% uptime.',
-  href = 'https://cloud.google.com',
+  adSlotId,
+  format = 'feed-inline',
+  title,
+  description,
+  href,
   sponsorLabel = 'Official Technology Sponsor',
+  fallbackTitle = 'Deploy Scalable AI Architectures on Cloud GPU Clusters',
+  fallbackDescription = 'High-throughput inference for PyTorch, Llama 3, and DeepTech models with 99.9% enterprise uptime.',
+  fallbackHref = 'https://cloud.google.com',
+  className = '',
 }: AdSlotProps) {
   const [closed, setClosed] = useState(false);
+  const [adsenseLoaded, setAdsenseLoaded] = useState(false);
+
+  const displayTitle = title || fallbackTitle;
+  const displayDesc = description || fallbackDescription;
+  const displayLink = href || fallbackHref;
+
+  const clientId = process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID;
+
+  useEffect(() => {
+    if (clientId && adSlotId) {
+      try {
+        // @ts-ignore
+        (window.adsbygoogle = window.adsbygoogle || []).push({});
+        setAdsenseLoaded(true);
+      } catch (err) {
+        console.error('AdSense display error:', err);
+      }
+    }
+  }, [clientId, adSlotId]);
 
   if (closed) return null;
 
-  // 1. Native Sponsored Card (Looks organic, matches Dark Neon Design System)
-  if (format === 'native-card') {
-    return (
-      <div className="card p-5 relative overflow-hidden group border-[var(--purple)]/30 bg-gradient-to-br from-purple-950/20 via-[var(--bg-surface)] to-blue-950/20 hover:border-[var(--purple)]/60 transition-all">
-        {/* Subtle Sponsor Badge */}
-        <div className="flex items-center justify-between mb-3">
-          <div className="flex items-center gap-1.5">
-            <span className="badge badge-purple text-[10px] tracking-wider uppercase font-semibold">
-              <Megaphone size={11} className="mr-1" /> {sponsorLabel}
-            </span>
-          </div>
-          <span className="text-[10px] text-[var(--text-muted)] tracking-wider uppercase">Promoted</span>
-        </div>
-
-        <h3 className="font-display font-bold text-base text-white group-hover:text-[var(--purple)] transition-colors mb-2">
-          {title}
-        </h3>
-
-        <p className="text-xs text-[var(--text-secondary)] leading-relaxed mb-4">
-          {description}
-        </p>
-
-        <div className="pt-3 border-t border-[var(--border)] flex items-center justify-between">
-          <span className="text-[11px] text-[var(--text-muted)]">Verified Partner</span>
-          <a
-            href={href}
-            target="_blank"
-            rel="noopener noreferrer sponsored"
-            className="btn btn-secondary text-xs px-3 py-1 text-white hover:text-[var(--purple)] flex items-center gap-1"
-          >
-            <span>Learn More</span>
-            <ExternalLink size={12} />
-          </a>
-        </div>
-      </div>
-    );
-  }
-
-  // 2. Responsive Horizontal Banner (For explore feed, homepage breaks, detail page)
-  if (format === 'banner' || format === 'mobile-inline') {
-    return (
-      <div className="card p-4 sm:p-5 border-[var(--border)] bg-[var(--bg-surface-2)]/80 relative flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 my-6">
-        <div className="flex items-start gap-3">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-500/20 to-purple-500/20 border border-[var(--amber)]/30 flex items-center justify-center shrink-0 text-[var(--amber)]">
-            <Sparkles size={18} />
-          </div>
-          <div>
-            <div className="flex items-center gap-2 mb-1">
-              <span className="badge badge-amber text-[9px]">PROMOTED</span>
-              <h4 className="font-semibold text-white text-sm">{title}</h4>
-            </div>
-            <p className="text-xs text-[var(--text-secondary)] line-clamp-2 max-w-2xl">
-              {description}
-            </p>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-3 self-end sm:self-center shrink-0">
-          <a
-            href={href}
-            target="_blank"
-            rel="noopener noreferrer sponsored"
-            className="btn btn-primary text-xs px-4 py-2"
-          >
-            Claim Offer <ExternalLink size={12} />
-          </a>
-          <button
-            onClick={() => setClosed(true)}
-            className="text-[var(--text-muted)] hover:text-white p-1"
-            aria-label="Dismiss ad"
-          >
-            <X size={14} />
-          </button>
-        </div>
-      </div>
-    );
-  }
-
-  // 3. Compact Sidebar Ad
   return (
-    <div className="card p-4 border-[var(--border)] bg-[var(--bg-surface)] space-y-3">
-      <div className="flex items-center justify-between text-[10px] text-[var(--text-muted)] uppercase tracking-wider">
-        <span>Sponsor</span>
-        <button onClick={() => setClosed(true)} className="hover:text-white"><X size={12} /></button>
+    <div className={`w-full my-4 select-none ${className}`}>
+      {/* Top Header: "ADVERTISEMENT" (Moctale Batch 1 Screen 1 Style) */}
+      <div className="flex items-center justify-between px-1 mb-1.5">
+        <span className="text-[10px] font-mono tracking-widest text-zinc-500 uppercase font-semibold">
+          ADVERTISEMENT
+        </span>
+        <div className="flex items-center gap-1.5 text-[10px] font-mono text-zinc-600">
+          <Info size={11} />
+          <span>Sponsored</span>
+        </div>
       </div>
-      <h4 className="font-semibold text-white text-xs leading-snug">{title}</h4>
-      <p className="text-[11px] text-[var(--text-secondary)] leading-relaxed">{description}</p>
-      <a
-        href={href}
-        target="_blank"
-        rel="noopener noreferrer sponsored"
-        className="btn btn-secondary text-xs w-full justify-center py-1.5"
-      >
-        Visit Sponsor <ExternalLink size={11} />
-      </a>
+
+      {/* Ad Container */}
+      <div className="relative rounded-2xl bg-zinc-950 border border-zinc-800/90 overflow-hidden shadow-md">
+        {/* If Google AdSense client ID & slot ID are provided */}
+        {clientId && adSlotId ? (
+          <div className="w-full min-h-[100px] flex items-center justify-center overflow-hidden py-2">
+            <ins
+              className="adsbygoogle"
+              style={{ display: 'block', width: '100%' }}
+              data-ad-client={clientId}
+              data-ad-slot={adSlotId}
+              data-ad-format="auto"
+              data-full-width-responsive="true"
+            />
+          </div>
+        ) : (
+          /* Native High-Converting Ad Banner (Matches Moctale Screen 1 style) */
+          <div className="p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-gradient-to-r from-zinc-950 via-zinc-900/60 to-cyan-950/20">
+            <div className="flex items-start gap-3 min-w-0">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500/20 to-blue-500/20 border border-cyan-500/30 flex items-center justify-center shrink-0 text-cyan-400">
+                <Sparkles size={20} />
+              </div>
+              <div className="min-w-0">
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-cyan-950/80 text-cyan-300 border border-cyan-500/30 uppercase tracking-wider">
+                    PROMOTED
+                  </span>
+                  <h4 className="text-xs sm:text-sm font-bold text-white truncate">
+                    {displayTitle}
+                  </h4>
+                </div>
+                <p className="text-[11px] text-zinc-400 line-clamp-2 leading-relaxed">
+                  {displayDesc}
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2.5 self-end sm:self-center shrink-0">
+              <a
+                href={displayLink}
+                target="_blank"
+                rel="noopener noreferrer sponsored"
+                className="px-3.5 py-1.5 rounded-full bg-white text-black font-mono font-bold text-xs hover:bg-zinc-200 transition-colors shadow-sm flex items-center gap-1.5"
+              >
+                <span>Open</span>
+                <ExternalLink size={12} />
+              </a>
+              <button
+                onClick={() => setClosed(true)}
+                className="w-7 h-7 rounded-full bg-zinc-900 text-zinc-500 hover:text-white flex items-center justify-center transition-colors"
+                title="Dismiss ad"
+                aria-label="Dismiss"
+              >
+                <X size={12} />
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
