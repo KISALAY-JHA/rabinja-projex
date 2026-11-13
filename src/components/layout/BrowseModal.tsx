@@ -13,12 +13,12 @@ interface BrowseModalProps {
 }
 
 const TRACKS = [
-  { name: 'HealthTech', icon: Heart, color: 'text-rose-400', bg: 'hover:border-rose-500/40 hover:bg-rose-500/5', href: '/explore?category=HealthTech' },
-  { name: 'CleanTech', icon: Leaf, color: 'text-emerald-400', bg: 'hover:border-emerald-500/40 hover:bg-emerald-500/5', href: '/explore?category=CleanTech' },
-  { name: 'Cybersecurity', icon: Shield, color: 'text-purple-400', bg: 'hover:border-purple-500/40 hover:bg-purple-500/5', href: '/explore?category=Cybersecurity' },
-  { name: 'DeepTech', icon: Cpu, color: 'text-cyan-400', bg: 'hover:border-cyan-500/40 hover:bg-cyan-500/5', href: '/explore?category=DeepTech' },
-  { name: 'EdTech', icon: GraduationCap, color: 'text-amber-400', bg: 'hover:border-amber-500/40 hover:bg-amber-500/5', href: '/explore?category=EdTech' },
-  { name: 'FinTech', icon: Coins, color: 'text-emerald-400', bg: 'hover:border-emerald-500/40 hover:bg-emerald-500/5', href: '/explore?category=FinTech' },
+  { name: '⭐ RABINJA Originals', icon: Sparkles, color: 'text-cyan-400', bg: 'hover:border-cyan-500/40 hover:bg-cyan-500/10', href: '/explore?category=RABINJA Original' },
+  { name: 'Hardware & IoT', icon: Zap, color: 'text-amber-400', bg: 'hover:border-amber-500/40 hover:bg-amber-500/5', href: '/explore?tag=Hardware' },
+  { name: 'Health & Wellness', icon: Heart, color: 'text-rose-400', bg: 'hover:border-rose-500/40 hover:bg-rose-500/5', href: '/explore?tag=Mental Health' },
+  { name: 'FinTech & Wealth', icon: Coins, color: 'text-emerald-400', bg: 'hover:border-emerald-500/40 hover:bg-emerald-500/5', href: '/explore?tag=FinTech' },
+  { name: 'IP & Cryptography', icon: Shield, color: 'text-purple-400', bg: 'hover:border-purple-500/40 hover:bg-purple-500/5', href: '/explore?tag=Cryptography' },
+  { name: 'Social & Neural', icon: Cpu, color: 'text-cyan-300', bg: 'hover:border-cyan-500/40 hover:bg-cyan-500/5', href: '/explore?tag=Social Connection' },
 ];
 
 const SPECIAL_COLLECTIONS = [

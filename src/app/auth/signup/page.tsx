@@ -98,19 +98,20 @@ export default function SignUpPage() {
     setError('');
     setLoading(true);
 
-    setTimeout(() => {
-      const userSession = {
-        phone: fullPhone,
-        verified: true,
-        displayName: displayName.trim(),
-        username: username.trim(),
-        teamName: teamName.trim() || null,
-        verifiedAt: new Date().toISOString(),
-      };
-      localStorage.setItem('rabinja_auth_user', JSON.stringify(userSession));
-      window.dispatchEvent(new Event('rabinja-auth-change'));
-      router.push('/explore');
-    }, 700);
+    const userObj = {
+      id: `usr_${Date.now()}`,
+      phone: fullPhone,
+      displayName: displayName.trim(),
+      username: username.trim(),
+      teamName: teamName.trim() || null,
+      isVerified: true,
+      createdAt: new Date().toISOString(),
+    };
+
+    localStorage.setItem('rabinja_auth_user', JSON.stringify(userObj));
+    window.dispatchEvent(new Event('rabinja-auth-change'));
+    setLoading(false);
+    router.push('/profile');
   }
 
   const copyVerifyLink = () => {

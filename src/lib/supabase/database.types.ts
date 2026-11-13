@@ -80,6 +80,19 @@ export interface Database {
         Insert: Omit<Database['public']['Tables']['votes']['Row'], 'id' | 'created_at'>;
         Update: never;
       };
+      ratings: {
+        Row: {
+          id: string;
+          created_at: string;
+          user_id: string;
+          project_id: string;
+          user_name: string;
+          rating: number;
+          review: string | null;
+        };
+        Insert: Omit<Database['public']['Tables']['ratings']['Row'], 'id' | 'created_at'>;
+        Update: Partial<Omit<Database['public']['Tables']['ratings']['Insert'], 'id' | 'created_at'>>;
+      };
       comments: {
         Row: {
           id: string;

@@ -96,7 +96,7 @@ export function NexVivaInterface() {
             <div className={`w-3 h-3 rounded-full ${sessionActive ? 'bg-error animate-ping' : 'bg-text-muted'}`} />
             <div>
               <h3 className="font-bold text-sm text-text-primary">
-                Live Viva Session • SafeRoute AI Defense
+                Live Viva Session • Projex Architecture Defense
               </h3>
               <p className="text-[11px] text-text-muted">
                 Turn-taking judge simulation with real-time rubric tracking

@@ -54,7 +54,7 @@ export function MoreMenuModal({ isOpen, onClose, authUser, onLogout }: MoreMenuM
           <div className="p-4 rounded-2xl bg-zinc-950 border border-zinc-800 flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 rounded-full bg-gradient-to-tr from-cyan-600 to-blue-600 flex items-center justify-center font-bold text-white text-base shadow-[0_0_15px_rgba(0,212,255,0.3)]">
-                {authUser.displayName ? authUser.displayName.slice(0, 2).toUpperCase() : 'KJ'}
+                {authUser.displayName ? authUser.displayName.slice(0, 2).toUpperCase() : 'IN'}
               </div>
               <div>
                 <h3 className="text-sm font-bold text-white">

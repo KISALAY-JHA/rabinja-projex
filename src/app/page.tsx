@@ -151,61 +151,88 @@ export default function HomePage() {
       </div>
 
       {/* ════════════════════════════════════════════════════════
-          FEATURED PROJECT SECTION
+          FEATURED PROJECT SECTION (RABINJA BRAND ORIGINAL)
           ════════════════════════════════════════════════════════ */}
       <section className="section-spacing w-full" aria-labelledby="featured-heading">
         <div className="container-page">
           <div className="flex items-center justify-between mb-6">
             <div>
               <div className="flex items-center gap-2 mb-1.5">
-                <Star size={15} className="text-amber-400" />
-                <span className="text-[11px] font-mono font-bold text-amber-400 uppercase tracking-widest">
-                  // GENESIS RUNWAY
+                <Star size={15} className="text-cyan-400" />
+                <span className="text-[11px] font-mono font-bold text-cyan-400 uppercase tracking-widest">
+                  // RABINJA BRAND ECOSYSTEM
                 </span>
               </div>
               <h2 id="featured-heading" className="font-display text-xl sm:text-2xl md:text-3xl font-bold text-white">
-                Platform Submissions
+                Official Brand Projects
               </h2>
             </div>
             <Link href="/explore" className="btn btn-ghost text-xs hidden sm:flex">
-              Browse all <ArrowRight size={13} />
+              Explore All 8 Inventions <ArrowRight size={13} />
             </Link>
           </div>
 
-          {featuredProject ? (
+          {featuredProject && (
             <Link href={`/explore/${featuredProject.slug}`}>
-              <div className="card p-6 sm:p-8 bg-[#05070E] border border-cyan-500/30">
-                <h3 className="font-display text-xl sm:text-2xl font-bold text-white">{featuredProject.title}</h3>
-                <p className="text-zinc-400 text-xs mt-1">{featuredProject.subtitle}</p>
+              <div className="hud-panel p-6 sm:p-8 rounded-3xl bg-[#05070E] border-2 border-cyan-500/40 hover:border-cyan-400 transition-all shadow-[0_0_40px_rgba(0,212,255,0.15)] group relative overflow-hidden">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                  <div className="max-w-2xl text-left">
+                    <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-400/40 text-[10px] font-mono text-cyan-300 font-bold uppercase tracking-widest mb-3">
+                      <Sparkles size={11} className="text-cyan-400" />
+                      FLAGSHIP // {featuredProject.category}
+                    </div>
+                    <h3 className="font-display text-2xl sm:text-4xl font-extrabold text-white group-hover:text-cyan-300 transition-colors mb-2">
+                      {featuredProject.title}
+                    </h3>
+                    <p className="text-zinc-300 text-xs sm:text-sm leading-relaxed mb-4">
+                      {featuredProject.subtitle}
+                    </p>
+                    <div className="flex flex-wrap gap-2">
+                      {featuredProject.tech_stack.map((t) => (
+                        <span key={t} className="px-2.5 py-0.5 rounded-lg bg-zinc-900 border border-zinc-800 text-[11px] font-mono text-cyan-400">
+                          {t}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col sm:flex-row md:flex-col gap-2 shrink-0">
+                    <span className="btn btn-primary text-xs py-2.5 px-4 font-bold shadow-[0_0_15px_rgba(0,212,255,0.3)]">
+                      Inspect Architecture →
+                    </span>
+                    <span className="text-[11px] font-mono text-zinc-500 text-center">
+                      Verified RABINJA Part
+                    </span>
+                  </div>
+                </div>
               </div>
             </Link>
-          ) : (
-            /* Genuine empty state: no fake samples */
-            <div className="hud-panel p-6 sm:p-10 text-center max-w-3xl mx-auto rounded-2xl border border-cyan-500/30 bg-[#05070E] shadow-[0_0_40px_rgba(0,212,255,0.12)]">
-              <div className="w-14 h-14 rounded-2xl bg-gradient-brand mx-auto mb-4 flex items-center justify-center shadow-[0_0_20px_rgba(0,212,255,0.4)]">
-                <Sparkles size={24} className="text-black" />
-              </div>
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-[10px] font-mono text-cyan-400 uppercase tracking-widest font-bold mb-3">
-                // PLATFORM GENESIS: READY FOR REAL SUBMISSIONS
-              </div>
-              <h3 className="font-display text-xl sm:text-2xl font-extrabold text-white mb-2">
-                Showcase Runway Open
-              </h3>
-              <p className="text-zinc-300 text-xs sm:text-sm max-w-lg mx-auto mb-6 leading-relaxed">
-                No mock or fake projects. Be among the first genuine innovators to verify your phone, showcase your repository, and simulate live autonomous judging with NEX AI.
-              </p>
-              <div className="flex flex-wrap items-center justify-center gap-3">
-                <Link href="/auth/signup" className="btn btn-primary text-xs py-2.5 px-4 font-bold uppercase tracking-wider shadow-[0_0_15px_rgba(0,212,255,0.35)]">
-                  <Smartphone size={14} />
-                  Verify Phone & Submit Project
-                </Link>
-                <Link href="/nex" className="btn btn-secondary text-xs py-2.5 px-4">
-                  <Sparkles size={14} className="text-cyan-400" />
-                  Try NEX AI Judge
-                </Link>
-              </div>
-            </div>
           )}
+
+          {/* Quick Grid of other RABINJA Projects */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mt-6">
+            {SAMPLE_PROJECTS.slice(1, 5).map((p) => (
+              <Link key={p.id} href={`/explore/${p.slug}`} className="group block">
+                <div className="p-4 rounded-2xl bg-[#05070E] border border-cyan-500/20 hover:border-cyan-400 hover:shadow-[0_0_20px_rgba(0,212,255,0.2)] transition-all h-full flex flex-col justify-between text-left">
+                  <div>
+                    <span className="text-[9px] font-mono text-cyan-400 uppercase font-bold tracking-wider block mb-1">
+                      {p.category}
+                    </span>
+                    <h4 className="font-display text-sm font-bold text-white group-hover:text-cyan-300 transition-colors">
+                      {p.title}
+                    </h4>
+                    <p className="text-[11px] text-zinc-400 line-clamp-2 mt-1">
+                      {p.subtitle}
+                    </p>
+                  </div>
+                  <div className="mt-3 pt-2 border-t border-zinc-900 flex items-center justify-between text-[10px] font-mono text-zinc-500">
+                    <span>{p.team_name}</span>
+                    <span className="text-cyan-400 group-hover:translate-x-0.5 transition-transform">→</span>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
         </div>
       </section>
 

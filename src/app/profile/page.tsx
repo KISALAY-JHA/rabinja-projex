@@ -6,26 +6,32 @@ import { useSearchParams } from 'next/navigation';
 import {
   User, CheckCircle2, Bookmark, HeartPulse, Send, Settings,
   LogOut, Shield, ChevronRight, Smartphone, ArrowRight, Flame,
-  Trophy, ExternalLink, Edit3, Film
+  Trophy, ExternalLink, Edit3, Film, UserPlus, LogIn, Sparkles
 } from 'lucide-react';
 import { ProfileHealthTab } from '@/components/profile/ProfileHealthTab';
 import { SubmissionsTab } from '@/components/profile/SubmissionsTab';
-import { SAMPLE_PROJECTS } from '@/lib/sample-data';
+import { getStoredUser, clearStoredUser } from '@/lib/api-client';
 
 function ProfileContent() {
   const searchParams = useSearchParams();
-  const initialTab = searchParams.get('tab') as 'overview' | 'submissions' | 'health' | 'settings' || 'overview';
+  const initialTab = (searchParams.get('tab') as 'overview' | 'submissions' | 'health' | 'settings') || 'overview';
   const [activeTab, setActiveTab] = useState<'overview' | 'submissions' | 'health' | 'settings'>(initialTab);
 
   const [user, setUser] = useState<{
+    id?: string;
     phone: string;
-    displayName?: string;
-    username?: string;
+    displayName: string;
+    username: string;
+    teamName?: string | null;
+    role?: string;
+    isVerified?: boolean;
+    createdAt?: string;
   } | null>(null);
 
   const [savedCount, setSavedCount] = useState(0);
   const [submissionsCount, setSubmissionsCount] = useState(0);
   const [disableIntro, setDisableIntro] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const tabParam = searchParams.get('tab');
@@ -36,12 +42,8 @@ function ProfileContent() {
 
   useEffect(() => {
     const loadProfile = () => {
-      try {
-        const stored = localStorage.getItem('rabinja_auth_user');
-        if (stored) setUser(JSON.parse(stored));
-      } catch {
-        setUser(null);
-      }
+      const stored = getStoredUser();
+      setUser(stored);
 
       try {
         const saved = JSON.parse(localStorage.getItem('rabinja_saved_projects') || '[]');
@@ -62,6 +64,8 @@ function ProfileContent() {
       } catch {
         setDisableIntro(false);
       }
+
+      setLoading(false);
     };
 
     loadProfile();
@@ -74,19 +78,103 @@ function ProfileContent() {
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem('rabinja_auth_user');
+    clearStoredUser();
     setUser(null);
-    window.dispatchEvent(new Event('rabinja-auth-change'));
   };
 
-  const displayName = user?.displayName || 'Kisalay Jha';
-  const username = user?.username || 'kisalay_jha';
-  const phone = user?.phone || '+91 ••••• ••••07';
-  const initials = displayName.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase() || 'KJ';
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-black text-white pt-24 pb-24 flex items-center justify-center">
+        <div className="flex flex-col items-center gap-3">
+          <div className="w-8 h-8 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin" />
+          <span className="font-mono text-xs text-zinc-400">Verifying session...</span>
+        </div>
+      </div>
+    );
+  }
+
+  // ═════════════════════════════════════════════════════════════════
+  // NO PROFILE EXISTS BEFORE CREATION (Real Working App, No Fake User)
+  // ═════════════════════════════════════════════════════════════════
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-black text-white pt-20 pb-24 px-4 flex items-center justify-center">
+        <div className="max-w-md w-full hud-panel p-6 sm:p-8 rounded-3xl bg-[#05070E] border border-cyan-500/30 shadow-[0_0_50px_rgba(0,212,255,0.15)] text-center animate-fade-in">
+          {/* Brand Emblem */}
+          <div className="w-16 h-16 rounded-2xl bg-gradient-brand mx-auto mb-5 flex items-center justify-center shadow-[0_0_25px_rgba(0,212,255,0.4)]">
+            <User size={30} className="text-black" />
+          </div>
+
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-[10px] font-mono text-cyan-400 uppercase tracking-widest font-bold mb-3">
+            // AUTHENTIC ACCESS: NO PRE-SEEDED PROFILES
+          </div>
+
+          <h1 className="font-display text-2xl sm:text-3xl font-extrabold text-white mb-3">
+            Create Your Profile
+          </h1>
+
+          <p className="text-xs sm:text-sm text-zinc-300 leading-relaxed mb-6">
+            In RABINJA Projex, profiles only exist when you create them. Sign up for free or sign in to establish your verified builder identity, cast votes, submit star ratings, start technical discussions, and showcase your innovations.
+          </p>
+
+          <div className="space-y-3">
+            <Link
+              href="/auth/signup"
+              className="btn btn-primary w-full justify-center py-3 text-xs sm:text-sm font-bold tracking-wider shadow-[0_0_20px_rgba(0,212,255,0.35)]"
+            >
+              <UserPlus size={16} />
+              Sign Up for Free
+            </Link>
+
+            <Link
+              href="/auth/login"
+              className="btn btn-secondary w-full justify-center py-3 text-xs sm:text-sm font-mono"
+            >
+              <LogIn size={16} />
+              Sign In to Existing Account
+            </Link>
+          </div>
+
+          <div className="mt-8 pt-5 border-t border-zinc-900 grid grid-cols-2 gap-3 text-left">
+            <div className="p-3 rounded-xl bg-zinc-950/80 border border-zinc-800">
+              <span className="text-[11px] font-mono text-cyan-400 font-bold block mb-1">
+                ✓ True Voting & Ratings
+              </span>
+              <span className="text-[10px] text-zinc-500">
+                Real community-driven ratings with zero inflated mock numbers.
+              </span>
+            </div>
+            <div className="p-3 rounded-xl bg-zinc-950/80 border border-zinc-800">
+              <span className="text-[11px] font-mono text-emerald-400 font-bold block mb-1">
+                ✓ Free Innovator Node
+              </span>
+              <span className="text-[10px] text-zinc-500">
+                Full access to discuss architectures and submit projects.
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ═════════════════════════════════════════════════════════════════
+  // AUTHENTICATED USER PROFILE (Real user data)
+  // ═════════════════════════════════════════════════════════════════
+  const displayName = user.displayName;
+  const username = user.username;
+  const phone = user.phone;
+  const initials = displayName
+    .split(' ')
+    .filter(Boolean)
+    .map((n) => n[0])
+    .join('')
+    .slice(0, 2)
+    .toUpperCase() || 'IN';
 
   return (
     <div className="min-h-screen bg-black text-white pt-16 pb-24">
-      {/* ── User Header Card (Moctale Batch 1 Screen 6 Style) ── */}
+      {/* ── User Header Card ── */}
       <div className="border-b border-zinc-800/80 bg-zinc-950/80 px-4 py-6 max-w-2xl mx-auto">
         <div className="flex items-start justify-between">
           {/* Avatar circle */}
@@ -94,7 +182,7 @@ function ProfileContent() {
             {initials}
           </div>
 
-          {/* Stats on Right (Moctale 0 Reviews / 0 Collections Style) */}
+          {/* Stats on Right */}
           <div className="flex items-center gap-4 sm:gap-6 text-center">
             <button onClick={() => setActiveTab('submissions')} className="group">
               <div className="text-base sm:text-xl font-bold font-mono text-white group-hover:text-cyan-400 transition-colors">
@@ -122,59 +210,59 @@ function ProfileContent() {
               {displayName}
             </h1>
             <CheckCircle2 size={16} className="text-cyan-400 fill-cyan-400/20" />
+            <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 font-bold uppercase ml-1">
+              Verified Innovator
+            </span>
           </div>
           <p className="text-xs font-mono text-cyan-400">@{username}</p>
 
           <div className="flex items-center gap-3 text-xs text-zinc-400 mt-2">
-            <span>0 Followers</span>
-            <span>•</span>
-            <span>0 Following</span>
-            <span>•</span>
-            <span className="text-zinc-500">Joined this month</span>
+            <span>Verified Phone: <strong className="text-white font-mono">{phone}</strong></span>
+            {user.teamName && (
+              <>
+                <span>•</span>
+                <span>Team: <strong className="text-white">{user.teamName}</strong></span>
+              </>
+            )}
           </div>
 
-          {/* Edit Profile / Phone Auth CTA */}
+          {/* Profile Actions */}
           <div className="mt-4 flex items-center gap-2">
-            {!user ? (
-              <Link
-                href="/auth/signup"
-                className="flex-1 py-2 rounded-xl bg-cyan-400 text-black font-mono font-bold text-xs text-center shadow-[0_0_15px_rgba(0,212,255,0.3)] active:scale-95 transition-all"
-              >
-                Verify Phone Identity
-              </Link>
-            ) : (
-              <button
-                onClick={() => setActiveTab('settings')}
-                className="flex-1 py-2 rounded-xl bg-zinc-900 border border-zinc-700 hover:border-zinc-500 text-zinc-200 font-mono font-medium text-xs text-center active:scale-95 transition-all"
-              >
-                Edit Profile
-              </button>
-            )}
+            <button
+              onClick={() => setActiveTab('settings')}
+              className="flex-1 py-2 rounded-xl bg-zinc-900 border border-zinc-700 hover:border-zinc-500 text-zinc-200 font-mono font-medium text-xs text-center active:scale-95 transition-all"
+            >
+              Edit Profile
+            </button>
+            <button
+              onClick={handleLogout}
+              className="py-2 px-3 rounded-xl bg-red-950/40 border border-red-800/40 hover:border-red-600 text-red-300 font-mono text-xs flex items-center gap-1 active:scale-95 transition-all"
+              title="Sign Out"
+            >
+              <LogOut size={13} />
+              <span>Sign Out</span>
+            </button>
           </div>
         </div>
 
-        {/* "Interested In" Card (Moctale Ramayana Preview Style) */}
+        {/* Brand Ecosystem Link */}
         <div className="mt-5 pt-4 border-t border-zinc-900">
           <div className="text-[11px] font-mono uppercase tracking-wider text-zinc-500 mb-2">
-            Currently Interested In
+            RABINJA Ecosystem Track
           </div>
           <Link
-            href="/events"
-            className="flex items-center gap-3 p-3 rounded-2xl bg-zinc-900/60 border border-zinc-800 hover:border-cyan-500/40 transition-all group"
+            href="/explore"
+            className="flex items-center gap-3 p-3 rounded-2xl bg-zinc-900/60 border border-cyan-500/30 hover:border-cyan-400 transition-all group"
           >
-            <div className="w-12 h-14 rounded-xl overflow-hidden bg-zinc-800 shrink-0 border border-zinc-700">
-              <img
-                src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=200&q=80"
-                alt="Rabinjathon 2026"
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform"
-              />
+            <div className="w-10 h-10 rounded-xl overflow-hidden bg-black shrink-0 border border-cyan-400/40 p-1 flex items-center justify-center">
+              <img src="/logo.png" alt="RABINJA" className="w-full h-full object-contain" />
             </div>
             <div className="min-w-0 flex-1">
               <h4 className="text-xs font-bold text-white truncate group-hover:text-cyan-300 transition-colors">
-                Rabinjathon 2026
+                RABINJA Original Projects
               </h4>
               <p className="text-[11px] text-zinc-400 truncate mt-0.5">
-                Active Flagship Challenge • ₹25L Prize Pool
+                8 Official Brand Inventions • Verified Real Peer Review
               </p>
             </div>
             <ChevronRight size={16} className="text-zinc-600 group-hover:text-cyan-400 transition-colors shrink-0" />
@@ -182,7 +270,7 @@ function ProfileContent() {
         </div>
       </div>
 
-      {/* ── Segmented Profile Tabs (Moctale Screen 6 Icons Style) ── */}
+      {/* ── Segmented Profile Tabs ── */}
       <div className="max-w-2xl mx-auto px-4 mt-3">
         <div className="grid grid-cols-4 gap-1 p-1 rounded-2xl bg-zinc-950 border border-zinc-800">
           <button
@@ -247,104 +335,82 @@ function ProfileContent() {
                 Connected Phone Node: <span className="font-mono text-cyan-400">{phone}</span>
               </p>
               <p className="text-[11px] text-zinc-500 mt-1">
-                Verified builders receive cryptographic attestations on every NEX AI evaluation.
+                Verified member of RABINJA Projex ecosystem. Active to vote, rate, and open technical inquiries.
               </p>
             </div>
 
-            <div className="p-4 rounded-2xl bg-zinc-950 border border-zinc-800 flex items-center justify-between">
-              <div>
-                <h4 className="text-sm font-bold text-white">NEX AI Autonomous Judge</h4>
-                <p className="text-xs text-zinc-400 mt-0.5">
-                  Ready to benchmark your code architecture and viva questions.
-                </p>
-              </div>
-              <Link
-                href="/nex"
-                className="px-3.5 py-1.5 rounded-full bg-cyan-400 text-black text-xs font-mono font-bold hover:bg-cyan-300 transition-colors shrink-0"
-              >
-                Launch NEX →
+            <div className="p-4 rounded-2xl bg-zinc-950 border border-zinc-800">
+              <h3 className="text-xs font-mono uppercase tracking-wider text-zinc-400 mb-2">
+                Ecosystem Activity
+              </h3>
+              <p className="text-xs text-zinc-300 mb-3">
+                Saved Projects: <strong className="text-white font-mono">{savedCount}</strong>
+              </p>
+              <Link href="/explore" className="btn btn-secondary text-xs py-2 px-3 inline-flex">
+                Explore Projects →
               </Link>
             </div>
           </div>
         )}
 
-        {activeTab === 'submissions' && <SubmissionsTab />}
+        {activeTab === 'submissions' && (
+          <div className="animate-fade-in">
+            <SubmissionsTab />
+          </div>
+        )}
 
-        {activeTab === 'health' && <ProfileHealthTab />}
+        {activeTab === 'health' && (
+          <div className="animate-fade-in">
+            <ProfileHealthTab />
+          </div>
+        )}
 
         {activeTab === 'settings' && (
-          <div className="space-y-3.5 max-w-xl mx-auto animate-fade-in text-left">
-            {/* Startup Video Intro Toggle */}
-            <div className="p-4 rounded-2xl bg-zinc-950 border border-zinc-800 flex items-center justify-between">
-              <div className="pr-3">
-                <h4 className="text-xs font-bold text-white flex items-center gap-1.5">
-                  <Film size={15} className="text-cyan-400" />
-                  <span>Startup Video Intro</span>
-                </h4>
-                <p className="text-[11px] text-zinc-400 mt-0.5">
-                  {disableIntro ? 'Intro video is turned OFF on startup' : 'Intro video plays when opening app'}
-                </p>
-              </div>
-              <button
-                type="button"
-                onClick={() => {
-                  const next = !disableIntro;
-                  setDisableIntro(next);
-                  try {
-                    if (next) {
-                      localStorage.setItem('rabinja_disable_intro', 'true');
-                    } else {
-                      localStorage.removeItem('rabinja_disable_intro');
-                    }
-                  } catch {}
-                }}
-                className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                  !disableIntro ? 'bg-cyan-500' : 'bg-zinc-800'
-                }`}
-                role="switch"
-                aria-checked={!disableIntro}
-              >
-                <span
-                  className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-black shadow-lg ring-0 transition duration-200 ease-in-out ${
-                    !disableIntro ? 'translate-x-5' : 'translate-x-0'
-                  }`}
-                />
-              </button>
-            </div>
-
-            {/* Username Change Rule Card (Moctale Batch 2 Screen 1 Style) */}
+          <div className="space-y-4 animate-fade-in text-left">
             <div className="p-4 rounded-2xl bg-zinc-950 border border-zinc-800">
-              <h3 className="text-sm font-bold text-white mb-2">Change Username</h3>
-              <ul className="text-xs text-zinc-400 space-y-1 list-disc list-inside mb-4">
-                <li>Users with an active strike cannot change their username.</li>
-                <li>Usernames can only be changed once every 30 days.</li>
-              </ul>
-              <div className="space-y-2">
-                <span className="text-[10px] font-mono text-zinc-500 uppercase">Current Username</span>
-                <input
-                  type="text"
-                  disabled
-                  value={`@${username}`}
-                  className="w-full px-3.5 py-2 bg-zinc-900 border border-zinc-800 rounded-xl text-xs text-zinc-400 font-mono"
-                />
+              <h3 className="text-xs font-mono uppercase tracking-wider text-zinc-400 mb-3">
+                Account Settings
+              </h3>
+              <div className="space-y-3 text-xs">
+                <div>
+                  <span className="text-zinc-500 block mb-1 font-mono">Display Name</span>
+                  <input
+                    type="text"
+                    value={displayName}
+                    readOnly
+                    className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-white font-mono"
+                  />
+                </div>
+                <div>
+                  <span className="text-zinc-500 block mb-1 font-mono">Username</span>
+                  <input
+                    type="text"
+                    value={`@${username}`}
+                    readOnly
+                    className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-cyan-400 font-mono"
+                  />
+                </div>
+                <div>
+                  <span className="text-zinc-500 block mb-1 font-mono">Phone</span>
+                  <input
+                    type="text"
+                    value={phone}
+                    readOnly
+                    className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-zinc-300 font-mono"
+                  />
+                </div>
+              </div>
+
+              <div className="mt-5 pt-4 border-t border-zinc-900">
                 <button
-                  onClick={() => alert('Username cooldown is active. Next modification available in 30 days.')}
-                  className="mt-2 px-4 py-2 rounded-xl bg-white text-black font-mono font-bold text-xs hover:bg-zinc-200 transition-colors"
+                  onClick={handleLogout}
+                  className="btn btn-secondary text-xs text-red-400 border-red-900/40 hover:border-red-600"
                 >
-                  Proceed
+                  <LogOut size={13} />
+                  Sign Out of Account
                 </button>
               </div>
             </div>
-
-            {user && (
-              <button
-                onClick={handleLogout}
-                className="w-full p-3.5 rounded-2xl bg-rose-950/20 border border-rose-900/40 text-rose-300 font-mono text-xs font-bold hover:bg-rose-950/40 transition-colors flex items-center justify-center gap-2"
-              >
-                <LogOut size={14} />
-                <span>Disconnect & Logout</span>
-              </button>
-            )}
           </div>
         )}
       </div>
@@ -354,11 +420,13 @@ function ProfileContent() {
 
 export default function ProfilePage() {
   return (
-    <Suspense fallback={
-      <div className="min-h-screen bg-black flex items-center justify-center text-cyan-400 font-mono text-xs">
-        LOADING PROFILE HUB...
-      </div>
-    }>
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-black text-white pt-24 pb-24 flex items-center justify-center">
+          <div className="w-8 h-8 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin" />
+        </div>
+      }
+    >
       <ProfileContent />
     </Suspense>
   );

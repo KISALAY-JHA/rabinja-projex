@@ -53,9 +53,9 @@ export function SubmitProjectModal({ isOpen, onClose, onSubmitted }: SubmitProje
       team_members: [teamName.trim() || 'Lead Builder'],
       status: 'published' as const,
       submission_status: 'pending', // for user submissions tracker
-      views: 1,
-      vote_count: 1,
-      nex_score: 9.0,
+      views: 0,
+      vote_count: 0,
+      nex_score: null,
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
     };
@@ -69,31 +69,25 @@ export function SubmitProjectModal({ isOpen, onClose, onSubmitted }: SubmitProje
       // ignore
     }
 
-    // 2. Try Supabase insert if backend configured
+    // 2. Post to backend API
     try {
-      const supabase = createClient();
-      await (supabase.from('projects') as any).insert([
-        {
-          id: newProject.id,
-          slug: newProject.slug,
+      const authUser = JSON.parse(localStorage.getItem('rabinja_auth_user') || '{}');
+      await fetch('/api/projects', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
           title: newProject.title,
           subtitle: newProject.subtitle,
           description: newProject.description,
-          thumbnail_url: newProject.thumbnail_url,
-          demo_url: newProject.demo_url,
-          repo_url: newProject.repo_url,
-          video_url: newProject.video_url,
           tech_stack: newProject.tech_stack,
           category: newProject.category,
-          tags: newProject.tags,
-          event_id: newProject.event_id,
-          team_name: newProject.team_name,
-          team_members: newProject.team_members,
-          status: newProject.status,
-        }
-      ]);
+          demo_url: newProject.demo_url,
+          repo_url: newProject.repo_url,
+          userId: authUser.id || 'community-builder',
+        }),
+      });
     } catch {
-      // Offline / Local resilience fallback active
+      // fallback
     }
 
     setSubmitting(false);

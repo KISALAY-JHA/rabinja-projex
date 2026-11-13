@@ -81,16 +81,18 @@ export default function LoginPage() {
   }
 
   function completeLogin() {
+    const cleanNum = phone.replace(/\D/g, '');
     const userSession = {
+      id: `usr_${cleanNum}`,
       phone: fullPhone,
-      verified: true,
-      displayName: `Innovator ${phone.slice(-4)}`,
-      username: `user_${phone.replace(/\D/g, '').slice(-4)}`,
+      displayName: `Innovator ${cleanNum.slice(-4) || 'Node'}`,
+      username: `user_${cleanNum.slice(-4) || 'node'}`,
+      isVerified: true,
       verifiedAt: new Date().toISOString(),
     };
     localStorage.setItem('rabinja_auth_user', JSON.stringify(userSession));
     window.dispatchEvent(new Event('rabinja-auth-change'));
-    router.push('/explore');
+    router.push('/profile');
   }
 
   const copyVerifyLink = () => {

@@ -1,120 +1,114 @@
 'use client';
 
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Bookmark, FolderPlus, ArrowRight, Eye, TrendingUp, Sparkles, Code2 } from 'lucide-react';
-import { SAMPLE_PROJECTS } from '@/lib/sample-data';
+import { Bookmark, FolderPlus, ArrowRight, Eye, TrendingUp, Sparkles, Code2, Compass } from 'lucide-react';
+import { RABINJA_PROJECTS, type ProjectItem } from '@/lib/sample-data';
+import { getStoredUser } from '@/lib/api-client';
 
 export default function CollectionsPage() {
-  const savedProjects = SAMPLE_PROJECTS.slice(0, 3);
+  const [savedIds, setSavedIds] = useState<string[]>([]);
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    try {
+      const stored = JSON.parse(localStorage.getItem('rabinja_saved_projects') || '[]');
+      setSavedIds(stored);
+    } catch {
+      setSavedIds([]);
+    }
+    setIsLoaded(true);
+  }, []);
+
+  const savedProjects = RABINJA_PROJECTS.filter(
+    (p) => savedIds.includes(p.id) || savedIds.includes(p.slug)
+  );
 
   return (
-    <div className="min-h-screen bg-[var(--bg-primary)]">
+    <div className="min-h-screen bg-black text-white pt-16 pb-24">
       {/* ── Subheader ── */}
-      <div className="border-b border-[var(--border)] bg-[var(--bg-surface)] py-10">
+      <div className="border-b border-zinc-800/80 bg-zinc-950/80 py-10">
         <div className="container-page flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
             <div className="flex items-center gap-2 mb-2">
-              <span className="badge badge-purple text-xs">
+              <span className="badge badge-purple text-xs font-mono">
                 <Bookmark size={12} /> PERSONAL REPOSITORY
               </span>
             </div>
-            <h1 className="font-display text-3xl md:text-4xl font-bold text-white mb-2">
-              Saved Collections
+            <h1 className="font-display text-3xl md:text-4xl font-extrabold text-white mb-2">
+              Saved Innovations
             </h1>
-            <p className="text-sm text-[var(--text-secondary)]">
-              Curate, organize, and study groundbreaking Rabinjathon architectures and benchmark projects.
+            <p className="text-sm text-zinc-400">
+              Your bookmarked RABINJA projects, architectures, and technical references.
             </p>
           </div>
-
-          <button className="btn btn-primary self-start md:self-auto text-xs">
-            <FolderPlus size={14} /> New Collection
-          </button>
         </div>
       </div>
 
-      {/* ── Collections Grid ── */}
+      {/* ── Collections Content ── */}
       <div className="container-page py-10 space-y-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-          <div className="card p-6 border-[var(--purple)]/40 bg-[var(--bg-surface)]">
-            <div className="flex items-center justify-between mb-3">
-              <span className="badge badge-purple text-[10px]">Active Collection</span>
-              <span className="text-xs text-[var(--text-muted)] font-mono">{savedProjects.length} Projects</span>
-            </div>
-            <h3 className="font-display font-bold text-lg text-white mb-1">
-              Deep Tech & AI Architecture
-            </h3>
-            <p className="text-xs text-[var(--text-muted)] mb-4">
-              High-ranking systems analyzed with NEX AI for distributed throughput and LLM optimizations.
-            </p>
-            <div className="text-xs text-[var(--text-secondary)] flex items-center gap-2">
-              <span>Updated recently</span>
-              <span>•</span>
-              <span className="text-[var(--cyan)]">Private Access</span>
-            </div>
-          </div>
-
-          <div className="card p-6 border-[var(--border)] bg-[var(--bg-surface)] flex flex-col justify-center items-center text-center border-dashed">
-            <FolderPlus size={28} className="text-[var(--text-muted)] mb-3" />
-            <h4 className="font-display font-bold text-white text-sm mb-1">Create Custom Folder</h4>
-            <p className="text-xs text-[var(--text-muted)] mb-4 max-w-xs">
-              Segment projects by tech stack, competition track, or evaluation scores.
-            </p>
-            <button className="btn btn-secondary text-xs">Create Folder</button>
-          </div>
-        </div>
-
         {/* Saved Projects List */}
         <div>
-          <h2 className="font-display text-xl font-bold text-white mb-5 flex items-center gap-2">
-            <Sparkles size={18} className="text-[var(--amber)]" />
-            Bookmarked Projects
-          </h2>
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="font-display text-xl font-bold text-white flex items-center gap-2">
+              <Sparkles size={18} className="text-cyan-400" />
+              Bookmarked Projects ({savedProjects.length})
+            </h2>
+            <Link href="/explore" className="btn btn-ghost text-xs text-cyan-400">
+              Browse All Projects →
+            </Link>
+          </div>
 
           {savedProjects.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
               {savedProjects.map((p) => (
-                <div key={p.id} className="card p-5 group flex flex-col justify-between hover:border-[var(--cyan)] transition-all">
+                <div key={p.id} className="card p-5 group flex flex-col justify-between bg-[#05070E] border border-cyan-500/30 hover:border-cyan-400 transition-all rounded-2xl">
                   <div>
                     <div className="flex items-center justify-between mb-3">
                       <span className="badge badge-purple text-[10px]">{p.category}</span>
-                      <span className="text-xs font-mono text-[var(--green)]">▲ {p.vote_count}</span>
+                      <span className="text-xs font-mono text-emerald-400">▲ {p.vote_count} votes</span>
                     </div>
                     <Link href={`/explore/${p.slug}`}>
-                      <h3 className="font-display font-bold text-base text-white group-hover:text-[var(--cyan)] transition-colors mb-2">
+                      <h3 className="font-display font-bold text-base text-white group-hover:text-cyan-400 transition-colors mb-2">
                         {p.title}
                       </h3>
                     </Link>
-                    <p className="text-xs text-[var(--text-muted)] line-clamp-2 mb-4">
+                    <p className="text-xs text-zinc-400 line-clamp-2 mb-4 leading-relaxed">
                       {p.subtitle || p.description}
                     </p>
                     <div className="flex flex-wrap gap-1 mb-4">
                       {p.tech_stack.slice(0, 3).map((t) => (
-                        <span key={t} className="badge badge-gray text-[9px]">{t}</span>
+                        <span key={t} className="px-2 py-0.5 rounded-md bg-zinc-900 border border-zinc-800 text-[10px] font-mono text-cyan-300">
+                          {t}
+                        </span>
                       ))}
                     </div>
                   </div>
 
-                  <div className="pt-3 border-t border-[var(--border)] flex items-center justify-between text-xs">
-                    <span className="text-[var(--text-muted)]">{p.team_name}</span>
+                  <div className="pt-3 border-t border-zinc-900 flex items-center justify-between text-xs font-mono text-zinc-500">
+                    <span>{p.team_name}</span>
                     <Link
                       href={`/explore/${p.slug}`}
-                      className="text-[var(--cyan)] hover:text-white font-medium flex items-center gap-1 transition-colors"
+                      className="text-cyan-400 hover:text-white flex items-center gap-1"
                     >
-                      View <ArrowRight size={12} />
+                      Inspect <ArrowRight size={12} />
                     </Link>
                   </div>
                 </div>
               ))}
             </div>
           ) : (
-            <div className="card p-8 text-center border-dashed border-[var(--border)]">
-              <Bookmark size={28} className="mx-auto mb-3 text-[var(--cyan)] opacity-60" />
-              <h4 className="font-display font-bold text-white text-base mb-1">No Bookmarked Projects Yet</h4>
-              <p className="text-xs text-[var(--text-muted)] max-w-sm mx-auto mb-4 leading-relaxed">
-                Bookmark projects as you browse the explore feed to save them to your personal intelligence repository.
+            <div className="hud-panel p-10 text-center max-w-xl mx-auto rounded-3xl bg-[#05070E] border border-zinc-800">
+              <Bookmark size={36} className="mx-auto mb-3 text-cyan-400 opacity-60" />
+              <h3 className="font-display text-lg font-bold text-white mb-2">
+                No Bookmarked Projects Yet
+              </h3>
+              <p className="text-xs text-zinc-400 leading-relaxed max-w-md mx-auto mb-6">
+                Explore the 8 official RABINJA Brand innovations and tap the bookmark icon on any project card to save it here.
               </p>
-              <Link href="/explore" className="btn btn-secondary text-xs">
-                Explore Projects
+              <Link href="/explore" className="btn btn-primary text-xs py-2.5 px-5 font-bold">
+                <Compass size={14} />
+                Explore RABINJA Innovations
               </Link>
             </div>
           )}
