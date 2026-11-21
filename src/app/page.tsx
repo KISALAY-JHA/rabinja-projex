@@ -37,40 +37,30 @@ export default function HomePage() {
         <div className="glow-orb w-72 sm:w-96 h-72 sm:h-96 bg-[var(--cyan)] -top-20 -right-20 pointer-events-none" />
         <div className="glow-orb w-60 sm:w-80 h-60 sm:h-80 bg-[var(--cobalt)] bottom-10 left-10 pointer-events-none" />
 
-        <div className="container-page relative z-10 pt-12 sm:pt-20 pb-12 sm:pb-20">
+        <div className="container-page relative z-10 pt-3 sm:pt-6 pb-12 sm:pb-20">
           <div className="max-w-4xl mx-auto text-center px-1">
-            {/* Logo Emblem Pill */}
-            <div className="inline-flex items-center gap-2.5 p-1.5 pr-4 mb-5 rounded-full hud-panel bg-black/90 shadow-[0_0_20px_rgba(0,212,255,0.3)] animate-fade-in border border-cyan-400/40">
-              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full overflow-hidden border border-cyan-400/60 shrink-0">
-                <img src="/logo.png" alt="RABINJA Projex" className="w-full h-full object-cover" />
+            {/* High-Impact Tactical Anime Command Strip (Eliminates empty space & duplicate logos) */}
+            <div className="flex flex-wrap items-center justify-center gap-2 mb-3.5">
+              <div className="inline-flex items-center gap-1.5 sm:gap-2 px-3 py-1 rounded-full bg-cyan-950/60 border border-cyan-400/40 text-[10px] sm:text-xs font-mono font-bold text-cyan-300 shadow-[0_0_15px_rgba(0,212,255,0.3)]">
+                <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-cyan-400 animate-ping" />
+                <span>新世代 // NEX AI 2.4</span>
+                <span className="text-zinc-600">|</span>
+                <span className="text-emerald-400">PHONE VERIFIED</span>
               </div>
-              <span className="text-[11px] sm:text-xs font-mono font-bold tracking-wider text-white uppercase">
-                RABINJA <span className="text-[var(--cyan)]">: Projex</span>
-              </span>
-              <span className="hidden sm:inline-block w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
-            </div>
 
-            {/* Live event badge */}
-            {activeEvent && (
-              <div className="block mb-5">
+              {activeEvent && (
                 <Link
                   href={`/events/${activeEvent.slug}`}
-                  className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-cyan-500/30 bg-[#05070E] text-xs sm:text-sm text-zinc-300 hover:border-cyan-400 hover:text-white transition-all group max-w-full truncate"
+                  className="inline-flex items-center gap-1.5 sm:gap-2 px-3 py-1 rounded-full border border-rose-500/40 bg-rose-950/30 text-[10px] sm:text-xs text-zinc-200 hover:border-rose-400 hover:text-white transition-all group max-w-full truncate shadow-[0_0_15px_rgba(255,45,85,0.2)]"
                   id="hero-event-badge"
                 >
-                  <span className="w-2 h-2 rounded-full bg-rose-500 animate-ping shrink-0" />
-                  <span className="font-mono font-bold text-rose-500 text-[11px]">LIVE EVENT</span>
-                  <span className="truncate">{activeEvent.name}</span>
-                  <ChevronRight size={13} className="group-hover:translate-x-0.5 transition-transform shrink-0" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse shrink-0" />
+                  <span className="font-mono font-bold text-rose-400 uppercase tracking-wider text-[9px] sm:text-[10px]">LIVE:</span>
+                  <span className="truncate max-w-[130px] sm:max-w-none">{activeEvent.name}</span>
+                  <span className="text-amber-400 font-mono font-bold text-[10px] sm:text-xs">₹25L</span>
+                  <ChevronRight size={12} className="group-hover:translate-x-0.5 transition-transform shrink-0 text-rose-400" />
                 </Link>
-              </div>
-            )}
-
-            {/* Sub-header tactical eyebrow */}
-            <div className="mb-2">
-              <span className="text-[10px] font-mono tracking-[0.25em] text-cyan-400 font-bold uppercase block mb-1">
-                // 新世代 • NEXT-GEN INNOVATION ARENA
-              </span>
+              )}
             </div>
 
             {/* Headline with responsive mobile text scaling */}

@@ -81,9 +81,9 @@ export default function ExplorePage() {
   }, [activeTab, selectedTrack, query, projectsList]);
 
   return (
-    <div className="min-h-screen bg-black text-white pb-24 pt-16">
+    <div className="min-h-screen bg-black text-white pb-24 pt-2 sm:pt-4">
       {/* ── Brand Header Banner ── */}
-      <div className="px-3 sm:px-4 pt-4 pb-2 max-w-4xl mx-auto">
+      <div className="px-3 sm:px-4 pt-1 pb-2 max-w-4xl mx-auto">
         <div className="p-3.5 rounded-2xl bg-gradient-to-r from-[#05070E] via-zinc-950 to-[#05070E] border border-cyan-500/30 flex items-center justify-between gap-3 shadow-[0_0_30px_rgba(0,212,255,0.12)]">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-xl overflow-hidden bg-black border border-cyan-400/50 p-1 shrink-0 flex items-center justify-center">

@@ -187,7 +187,7 @@ function ProfileContent() {
     .toUpperCase() || 'IN';
 
   return (
-    <div className="min-h-screen bg-black text-white pt-16 pb-24">
+    <div className="min-h-screen bg-black text-white pt-3 sm:pt-6 pb-24">
       {/* ── User Header Card ── */}
       <div className="border-b border-zinc-800/80 bg-zinc-950/80 px-4 py-6 max-w-2xl mx-auto">
         <div className="flex items-start justify-between">

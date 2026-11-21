@@ -160,7 +160,7 @@ NEX is not a conversational chatbot; it is an analytical judging engine designed
   return (
     <div className="min-h-screen bg-[var(--bg-primary)] flex flex-col">
       {/* ── Subheader ── */}
-      <div className="border-b border-[var(--border)] bg-[var(--bg-surface)] py-4 px-6 sticky top-16 z-20">
+      <div className="border-b border-[var(--border)] bg-[var(--bg-surface)] py-2.5 sm:py-4 px-3 sm:px-6 sticky top-14 sm:top-16 z-20">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-xl bg-gradient-brand flex items-center justify-center shadow-[0_0_15px_rgba(168,85,247,0.4)]">
