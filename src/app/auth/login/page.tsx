@@ -5,8 +5,9 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import {
   Phone, ArrowRight, Shield, ChevronLeft, Loader2,
-  ExternalLink, MessageSquare, Check, Copy
+  ExternalLink, MessageSquare, Check, Copy, ShieldCheck
 } from 'lucide-react';
+import { setStoredUser, apiFetchProfileByPhone } from '@/lib/api-client';
 
 type Step = 'phone' | 'otp';
 
@@ -80,18 +81,24 @@ export default function LoginPage() {
     }, 500);
   }
 
-  function completeLogin() {
+  async function completeLogin() {
     const cleanNum = phone.replace(/\D/g, '');
+    let existingProfile = null;
+    try {
+      existingProfile = await apiFetchProfileByPhone(fullPhone);
+    } catch {}
+
     const userSession = {
-      id: `usr_${cleanNum}`,
+      id: existingProfile?.id || `usr_${cleanNum}`,
       phone: fullPhone,
-      displayName: `Innovator ${cleanNum.slice(-4) || 'Node'}`,
-      username: `user_${cleanNum.slice(-4) || 'node'}`,
+      displayName: existingProfile?.displayName || `Innovator ${cleanNum.slice(-4) || 'Node'}`,
+      username: existingProfile?.username || `user_${cleanNum.slice(-4) || 'node'}`,
+      teamName: existingProfile?.teamName || null,
+      role: existingProfile?.role || 'user',
       isVerified: true,
       verifiedAt: new Date().toISOString(),
     };
-    localStorage.setItem('rabinja_auth_user', JSON.stringify(userSession));
-    window.dispatchEvent(new Event('rabinja-auth-change'));
+    setStoredUser(userSession);
     router.push('/profile');
   }
 
@@ -183,6 +190,17 @@ export default function LoginPage() {
                 <p className="text-zinc-400 text-xs mt-1.5">
                   Enter your registered mobile number to receive your login code or 1-tap link.
                 </p>
+
+                {/* ── SECURITY PHILOSOPHY ── */}
+                <div className="mt-4 p-3.5 rounded-xl bg-cyan-950/30 border border-cyan-500/30 text-left">
+                  <div className="flex items-center gap-2 text-cyan-300 font-mono text-[11px] font-bold uppercase tracking-wider mb-1">
+                    <ShieldCheck size={14} className="text-cyan-400" />
+                    <span>Phone-Verified Ecosystem</span>
+                  </div>
+                  <p className="text-[11px] text-zinc-300 leading-relaxed">
+                    We use mobile phone verification instead of disposable email addresses to keep the platform spam-free, maintain high-trust ratings, and ensure immutable builder security.
+                  </p>
+                </div>
               </div>
 
               <form onSubmit={handleSendOtp} className="space-y-4">

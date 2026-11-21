@@ -6,8 +6,9 @@ import { useRouter } from 'next/navigation';
 import {
   Phone, ArrowRight, Shield, ChevronLeft, Sparkles, Loader2,
   CheckCircle2, User, AtSign, Smartphone, MessageSquare, ExternalLink,
-  Copy, Check
+  Copy, Check, Lock, ShieldCheck
 } from 'lucide-react';
+import { setStoredUser } from '@/lib/api-client';
 
 type Step = 'phone' | 'otp' | 'profile';
 
@@ -99,7 +100,7 @@ export default function SignUpPage() {
     setLoading(true);
 
     const userObj = {
-      id: `usr_${Date.now()}`,
+      id: `usr_${phone.replace(/\D/g, '') || Date.now()}`,
       phone: fullPhone,
       displayName: displayName.trim(),
       username: username.trim(),
@@ -108,8 +109,7 @@ export default function SignUpPage() {
       createdAt: new Date().toISOString(),
     };
 
-    localStorage.setItem('rabinja_auth_user', JSON.stringify(userObj));
-    window.dispatchEvent(new Event('rabinja-auth-change'));
+    setStoredUser(userObj);
     setLoading(false);
     router.push('/profile');
   }
@@ -230,6 +230,17 @@ export default function SignUpPage() {
                 <p className="text-zinc-400 text-xs mt-1.5 leading-relaxed">
                   We generate an instant secure verification link and 6-digit OTP to authenticate your squad node.
                 </p>
+
+                {/* ── SECURITY PHILOSOPHY: PHONE-FIRST IDENTITY ── */}
+                <div className="mt-4 p-3.5 rounded-xl bg-cyan-950/30 border border-cyan-500/30 text-left">
+                  <div className="flex items-center gap-2 text-cyan-300 font-mono text-[11px] font-bold uppercase tracking-wider mb-1">
+                    <ShieldCheck size={14} className="text-cyan-400" />
+                    <span>Why Phone Registration?</span>
+                  </div>
+                  <p className="text-[11px] text-zinc-300 leading-relaxed">
+                    We believe email addresses are disposable and can be created infinitely, allowing spam and fake credentials. A phone number provides authentic proof-of-humanity, securing your proprietary innovations, credentials, and voting integrity.
+                  </p>
+                </div>
               </div>
 
               <form onSubmit={handleSendOtp} className="space-y-4">

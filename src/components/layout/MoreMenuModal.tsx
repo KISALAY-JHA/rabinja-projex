@@ -1,10 +1,10 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import {
   X, User, Send, HeartPulse, Settings, LogOut,
-  HelpCircle, ShieldCheck, ExternalLink, ChevronRight
+  HelpCircle, ShieldCheck, ExternalLink, ChevronRight, Film
 } from 'lucide-react';
 
 interface MoreMenuModalProps {
@@ -15,6 +15,34 @@ interface MoreMenuModalProps {
 }
 
 export function MoreMenuModal({ isOpen, onClose, authUser, onLogout }: MoreMenuModalProps) {
+  const [introDisabled, setIntroDisabled] = useState(false);
+
+  useEffect(() => {
+    const check = () => {
+      try {
+        setIntroDisabled(localStorage.getItem('rabinja_disable_intro') === 'true');
+      } catch {
+        setIntroDisabled(false);
+      }
+    };
+    check();
+    window.addEventListener('rabinja-settings-change', check);
+    return () => window.removeEventListener('rabinja-settings-change', check);
+  }, []);
+
+  const toggleIntro = () => {
+    const next = !introDisabled;
+    setIntroDisabled(next);
+    try {
+      if (next) {
+        localStorage.setItem('rabinja_disable_intro', 'true');
+      } else {
+        localStorage.removeItem('rabinja_disable_intro');
+      }
+      window.dispatchEvent(new Event('rabinja-settings-change'));
+    } catch {}
+  };
+
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
@@ -129,6 +157,30 @@ export function MoreMenuModal({ isOpen, onClose, authUser, onLogout }: MoreMenuM
             </div>
             <ChevronRight size={16} className="text-zinc-600" />
           </Link>
+
+          {/* Quick Toggle for Startup Intro Video */}
+          <div className="flex items-center justify-between p-3.5 rounded-xl bg-zinc-950/80 border border-zinc-800/80 text-zinc-200">
+            <div className="flex items-center gap-3">
+              <Film size={18} className="text-cyan-400" />
+              <div>
+                <div className="text-sm font-medium text-white">Startup Intro Video</div>
+                <div className="text-[11px] text-zinc-500">
+                  {introDisabled ? 'Disabled (direct load)' : 'Enabled (plays on launch)'}
+                </div>
+              </div>
+            </div>
+            <button
+              onClick={toggleIntro}
+              type="button"
+              className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-all ${
+                introDisabled
+                  ? 'bg-zinc-800 text-zinc-400 hover:text-white'
+                  : 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 shadow-[0_0_10px_rgba(0,212,255,0.2)]'
+              }`}
+            >
+              {introDisabled ? 'Turn ON' : 'Turn OFF'}
+            </button>
+          </div>
 
           <Link
             href="/profile?tab=settings"

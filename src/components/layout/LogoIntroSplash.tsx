@@ -38,6 +38,7 @@ export function LogoIntroSplash({
     e.stopPropagation();
     try {
       localStorage.setItem('rabinja_disable_intro', 'true');
+      window.dispatchEvent(new Event('rabinja-settings-change'));
     } catch {
       // ignore
     }

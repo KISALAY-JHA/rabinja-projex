@@ -4,6 +4,7 @@ import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { ShieldCheck, CheckCircle2, ArrowRight, Loader2, Smartphone, Sparkles } from 'lucide-react';
+import { setStoredUser, apiFetchProfileByPhone } from '@/lib/api-client';
 
 function VerifyContent() {
   const searchParams = useSearchParams();
@@ -20,19 +21,24 @@ function VerifyContent() {
     }
 
     // Simulate cyber handshake verification
-    const timer = setTimeout(() => {
-      // Save authenticated session in localStorage
+    const timer = setTimeout(async () => {
+      const cleanNum = phone.replace(/\D/g, '');
+      let existingProfile = null;
+      try {
+        existingProfile = await apiFetchProfileByPhone(phone);
+      } catch {}
+
       const userSession = {
+        id: existingProfile?.id || `usr_${cleanNum}`,
         phone,
-        verified: true,
+        isVerified: true,
+        role: existingProfile?.role || 'innovator',
+        displayName: existingProfile?.displayName || 'Squad Innovator',
+        username: existingProfile?.username || `user_${cleanNum.slice(-4) || 'node'}`,
+        teamName: existingProfile?.teamName || null,
         verifiedAt: new Date().toISOString(),
-        role: 'innovator',
-        displayName: 'Squad Innovator',
-        username: `user_${phone.replace(/\D/g, '').slice(-4)}`
       };
-      localStorage.setItem('rabinja_auth_user', JSON.stringify(userSession));
-      // Notify header and components
-      window.dispatchEvent(new Event('rabinja-auth-change'));
+      setStoredUser(userSession);
       setStatus('success');
     }, 1200);
 

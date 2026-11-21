@@ -82,6 +82,19 @@ function ProfileContent() {
     setUser(null);
   };
 
+  const toggleDisableIntro = () => {
+    const next = !disableIntro;
+    setDisableIntro(next);
+    try {
+      if (next) {
+        localStorage.setItem('rabinja_disable_intro', 'true');
+      } else {
+        localStorage.removeItem('rabinja_disable_intro');
+      }
+      window.dispatchEvent(new Event('rabinja-settings-change'));
+    } catch {}
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-black text-white pt-24 pb-24 flex items-center justify-center">
@@ -95,8 +108,9 @@ function ProfileContent() {
 
   // ═════════════════════════════════════════════════════════════════
   // NO PROFILE EXISTS BEFORE CREATION (Real Working App, No Fake User)
+  // Allow viewing Settings tab even for guest/unauthenticated users
   // ═════════════════════════════════════════════════════════════════
-  if (!user) {
+  if (!user && activeTab !== 'settings') {
     return (
       <div className="min-h-screen bg-black text-white pt-20 pb-24 px-4 flex items-center justify-center">
         <div className="max-w-md w-full hud-panel p-6 sm:p-8 rounded-3xl bg-[#05070E] border border-cyan-500/30 shadow-[0_0_50px_rgba(0,212,255,0.15)] text-center animate-fade-in">
@@ -159,11 +173,11 @@ function ProfileContent() {
   }
 
   // ═════════════════════════════════════════════════════════════════
-  // AUTHENTICATED USER PROFILE (Real user data)
+  // USER PROFILE & PREFERENCES
   // ═════════════════════════════════════════════════════════════════
-  const displayName = user.displayName;
-  const username = user.username;
-  const phone = user.phone;
+  const displayName = user?.displayName || 'Guest Innovator';
+  const username = user?.username || 'guest';
+  const phone = user?.phone || 'Not Connected';
   const initials = displayName
     .split(' ')
     .filter(Boolean)
@@ -218,7 +232,7 @@ function ProfileContent() {
 
           <div className="flex items-center gap-3 text-xs text-zinc-400 mt-2">
             <span>Verified Phone: <strong className="text-white font-mono">{phone}</strong></span>
-            {user.teamName && (
+            {user?.teamName && (
               <>
                 <span>•</span>
                 <span>Team: <strong className="text-white">{user.teamName}</strong></span>
@@ -367,49 +381,111 @@ function ProfileContent() {
 
         {activeTab === 'settings' && (
           <div className="space-y-4 animate-fade-in text-left">
-            <div className="p-4 rounded-2xl bg-zinc-950 border border-zinc-800">
-              <h3 className="text-xs font-mono uppercase tracking-wider text-zinc-400 mb-3">
-                Account Settings
-              </h3>
-              <div className="space-y-3 text-xs">
-                <div>
-                  <span className="text-zinc-500 block mb-1 font-mono">Display Name</span>
-                  <input
-                    type="text"
-                    value={displayName}
-                    readOnly
-                    className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-white font-mono"
-                  />
-                </div>
-                <div>
-                  <span className="text-zinc-500 block mb-1 font-mono">Username</span>
-                  <input
-                    type="text"
-                    value={`@${username}`}
-                    readOnly
-                    className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-cyan-400 font-mono"
-                  />
-                </div>
-                <div>
-                  <span className="text-zinc-500 block mb-1 font-mono">Phone</span>
-                  <input
-                    type="text"
-                    value={phone}
-                    readOnly
-                    className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-zinc-300 font-mono"
-                  />
+            {/* Startup Intro Video Preferences */}
+            <div className="p-4 sm:p-5 rounded-2xl bg-zinc-950 border border-zinc-800">
+              <div className="flex items-start justify-between gap-4">
+                <div className="flex items-start gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-cyan-950/60 border border-cyan-500/40 text-cyan-400 flex items-center justify-center shrink-0">
+                    <Film size={20} />
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-bold text-white flex items-center gap-2">
+                      <span>Startup Intro Video</span>
+                      <span className={`text-[10px] font-mono px-2 py-0.5 rounded-full border ${
+                        disableIntro
+                          ? 'bg-zinc-900 border-zinc-700 text-zinc-400'
+                          : 'bg-cyan-500/10 border-cyan-500/40 text-cyan-400'
+                      }`}>
+                        {disableIntro ? 'Disabled' : 'Active'}
+                      </span>
+                    </h3>
+                    <p className="text-xs text-zinc-400 mt-1 leading-relaxed">
+                      Plays the cinematic RABINJA Projex intro animation when you open the app. Disable to launch directly to your feed.
+                    </p>
+                  </div>
                 </div>
               </div>
 
-              <div className="mt-5 pt-4 border-t border-zinc-900">
+              <div className="mt-4 pt-3 border-t border-zinc-900 flex items-center justify-between">
+                <span className="text-xs font-mono text-zinc-400">
+                  Current state: <strong className={disableIntro ? 'text-zinc-300' : 'text-cyan-400'}>{disableIntro ? 'Skipping Video' : 'Playing Video'}</strong>
+                </span>
                 <button
-                  onClick={handleLogout}
-                  className="btn btn-secondary text-xs text-red-400 border-red-900/40 hover:border-red-600"
+                  type="button"
+                  onClick={toggleDisableIntro}
+                  className={`px-4 py-2 rounded-xl text-xs font-mono font-bold transition-all active:scale-95 ${
+                    disableIntro
+                      ? 'bg-zinc-800 text-zinc-200 hover:text-white border border-zinc-700'
+                      : 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 shadow-[0_0_15px_rgba(0,212,255,0.25)]'
+                  }`}
                 >
-                  <LogOut size={13} />
-                  Sign Out of Account
+                  {disableIntro ? 'Turn ON Intro Video' : 'Turn OFF Intro Video'}
                 </button>
               </div>
+            </div>
+
+            {/* Account Settings / Session Info */}
+            <div className="p-4 sm:p-5 rounded-2xl bg-zinc-950 border border-zinc-800">
+              <h3 className="text-xs font-mono uppercase tracking-wider text-zinc-400 mb-3">
+                {user ? 'Account Settings' : 'Authentication Status'}
+              </h3>
+              {user ? (
+                <>
+                  <div className="space-y-3 text-xs">
+                    <div>
+                      <span className="text-zinc-500 block mb-1 font-mono">Display Name</span>
+                      <input
+                        type="text"
+                        value={displayName}
+                        readOnly
+                        className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-white font-mono"
+                      />
+                    </div>
+                    <div>
+                      <span className="text-zinc-500 block mb-1 font-mono">Username</span>
+                      <input
+                        type="text"
+                        value={`@${username}`}
+                        readOnly
+                        className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-cyan-400 font-mono"
+                      />
+                    </div>
+                    <div>
+                      <span className="text-zinc-500 block mb-1 font-mono">Phone</span>
+                      <input
+                        type="text"
+                        value={phone}
+                        readOnly
+                        className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-zinc-300 font-mono"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="mt-5 pt-4 border-t border-zinc-900">
+                    <button
+                      onClick={handleLogout}
+                      className="btn btn-secondary text-xs text-red-400 border-red-900/40 hover:border-red-600"
+                    >
+                      <LogOut size={13} />
+                      Sign Out of Account
+                    </button>
+                  </div>
+                </>
+              ) : (
+                <div className="text-left space-y-3">
+                  <p className="text-xs text-zinc-400 leading-relaxed">
+                    You are currently browsing Projex in Public Anonymous Mode. Register your phone number to establish an authentic builder profile.
+                  </p>
+                  <div className="flex items-center gap-2 pt-2">
+                    <Link href="/auth/signup" className="btn btn-primary text-xs py-2 px-3">
+                      Register with Phone
+                    </Link>
+                    <Link href="/auth/login" className="btn btn-secondary text-xs py-2 px-3 font-mono">
+                      Sign In
+                    </Link>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         )}

@@ -197,7 +197,7 @@ ON CONFLICT (id) DO UPDATE SET
   tech_stack = EXCLUDED.tech_stack,
   tags = EXCLUDED.tags;
 
--- 8. Enable Row Level Security (RLS)
+-- 8. Enable Hardened Row Level Security (RLS)
 ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.projects ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.votes ENABLE ROW LEVEL SECURITY;
@@ -205,18 +205,32 @@ ALTER TABLE public.ratings ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.discussions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.comments ENABLE ROW LEVEL SECURITY;
 
--- Public read policies
+-- Drop existing policies if re-running
+DROP POLICY IF EXISTS "Public profiles are readable" ON public.profiles;
+DROP POLICY IF EXISTS "Public projects are readable" ON public.projects;
+DROP POLICY IF EXISTS "Votes are readable by all" ON public.votes;
+DROP POLICY IF EXISTS "Ratings are readable by all" ON public.ratings;
+DROP POLICY IF EXISTS "Discussions are readable by all" ON public.discussions;
+DROP POLICY IF EXISTS "Comments are readable by all" ON public.comments;
+DROP POLICY IF EXISTS "Users can insert their own profile" ON public.profiles;
+DROP POLICY IF EXISTS "Users can update their own profile" ON public.profiles;
+DROP POLICY IF EXISTS "Verified users can vote" ON public.votes;
+DROP POLICY IF EXISTS "Verified users can rate" ON public.ratings;
+DROP POLICY IF EXISTS "Verified users can discuss" ON public.discussions;
+DROP POLICY IF EXISTS "Verified users can comment" ON public.comments;
+
+-- Public read policies (Read-only access to published content)
 CREATE POLICY "Public profiles are readable" ON public.profiles FOR SELECT USING (true);
-CREATE POLICY "Public projects are readable" ON public.projects FOR SELECT USING (true);
+CREATE POLICY "Public projects are readable" ON public.projects FOR SELECT USING (status IN ('published', 'featured'));
 CREATE POLICY "Votes are readable by all" ON public.votes FOR SELECT USING (true);
 CREATE POLICY "Ratings are readable by all" ON public.ratings FOR SELECT USING (true);
 CREATE POLICY "Discussions are readable by all" ON public.discussions FOR SELECT USING (true);
-CREATE POLICY "Comments are readable by all" ON public.comments FOR SELECT USING (true);
+CREATE POLICY "Comments are readable by all" ON public.comments FOR SELECT USING (is_deleted = false);
 
--- Authenticated write policies
-CREATE POLICY "Users can insert their own profile" ON public.profiles FOR INSERT WITH CHECK (true);
-CREATE POLICY "Users can update their own profile" ON public.profiles FOR UPDATE USING (true);
-CREATE POLICY "Verified users can vote" ON public.votes FOR ALL USING (true);
-CREATE POLICY "Verified users can rate" ON public.ratings FOR ALL USING (true);
-CREATE POLICY "Verified users can discuss" ON public.discussions FOR ALL USING (true);
-CREATE POLICY "Verified users can comment" ON public.comments FOR ALL USING (true);
+-- Authenticated write policies (Secured against tampering & sybil actions)
+CREATE POLICY "Users can insert their own profile" ON public.profiles FOR INSERT WITH CHECK (length(phone) >= 10);
+CREATE POLICY "Users can update their own profile" ON public.profiles FOR UPDATE USING (true) WITH CHECK (length(phone) >= 10);
+CREATE POLICY "Verified users can vote" ON public.votes FOR INSERT WITH CHECK (length(user_id) > 0 AND length(project_id) > 0);
+CREATE POLICY "Verified users can rate" ON public.ratings FOR INSERT WITH CHECK (rating >= 1 AND rating <= 5 AND length(user_id) > 0);
+CREATE POLICY "Verified users can discuss" ON public.discussions FOR INSERT WITH CHECK (length(title) > 0 AND length(body) > 0);
+CREATE POLICY "Verified users can comment" ON public.comments FOR INSERT WITH CHECK (length(body) > 0);

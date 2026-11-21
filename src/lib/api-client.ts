@@ -116,6 +116,36 @@ export function clearStoredUser() {
   window.dispatchEvent(new Event('rabinja-auth-change'));
 }
 
+export async function apiFetchProfileByPhone(phone: string): Promise<AuthUser | null> {
+  if (typeof window === 'undefined') return null;
+  if (!isSupabaseConfigured()) return null;
+
+  try {
+    const supabase = createClient() as any;
+    if (!supabase) return null;
+
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('phone', phone)
+      .maybeSingle();
+
+    if (error || !data) return null;
+
+    return {
+      id: data.id,
+      phone: data.phone,
+      displayName: data.display_name,
+      username: data.username,
+      teamName: data.team_name,
+      role: data.role,
+      isVerified: data.is_verified,
+    };
+  } catch {
+    return null;
+  }
+}
+
 // ── Projects ──
 
 export async function apiFetchProjects(): Promise<ProjectItem[]> {
