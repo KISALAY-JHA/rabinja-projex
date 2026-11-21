@@ -80,15 +80,18 @@ export function Header() {
   return (
     <>
       <header
-        className={`fixed top-0 left-0 right-0 w-full max-w-full z-40 transition-all duration-200 overflow-x-hidden ${
-          scrolled ? 'bg-black/95 border-b border-zinc-800/80 backdrop-blur-xl' : 'bg-black/75 backdrop-blur-md'
+        className={`fixed top-0 left-0 right-0 w-full max-w-full z-40 transition-all duration-200 overflow-x-hidden relative ${
+          scrolled ? 'bg-black/95 border-b border-cyan-500/30 backdrop-blur-xl shadow-[0_4px_20px_rgba(0,0,0,0.8)]' : 'bg-black/85 border-b border-zinc-800/60 backdrop-blur-md'
         }`}
       >
+        {/* Anime neon HUD edge line */}
+        <div className="absolute bottom-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-cyan-400/50 to-transparent pointer-events-none" />
+
         <div className="w-full max-w-7xl mx-auto px-3 sm:px-6">
           <div className="flex items-center justify-between h-14 sm:h-16 w-full">
             {/* ── Brand Logo (Left) ── */}
             <Link href="/" className="flex items-center gap-2 group shrink-0" id="header-logo">
-              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl overflow-hidden border border-cyan-400/50 shadow-[0_0_12px_rgba(0,212,255,0.3)] group-hover:scale-105 transition-transform bg-black flex items-center justify-center shrink-0">
+              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl overflow-hidden border border-cyan-400/60 shadow-[0_0_12px_rgba(0,212,255,0.4)] group-hover:scale-105 transition-transform bg-black flex items-center justify-center shrink-0">
                 <img src="/logo.png" alt="RABINJA Projex" className="w-full h-full object-cover" />
               </div>
               <div className="flex items-baseline">
@@ -99,6 +102,10 @@ export function Header() {
                   PROJEX
                 </span>
               </div>
+              <span className="hidden sm:inline-flex items-center gap-1 ml-2 px-1.5 py-0.5 rounded bg-cyan-950/50 border border-cyan-500/30 text-[9px] font-mono text-cyan-300 font-bold uppercase tracking-widest">
+                <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
+                <span>ONLINE</span>
+              </span>
             </Link>
 
             {/* ── Desktop Navigation Links (Center) ── */}

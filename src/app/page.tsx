@@ -66,31 +66,37 @@ export default function HomePage() {
               </div>
             )}
 
+            {/* Sub-header tactical eyebrow */}
+            <div className="mb-2">
+              <span className="text-[10px] font-mono tracking-[0.25em] text-cyan-400 font-bold uppercase block mb-1">
+                // 新世代 • NEXT-GEN INNOVATION ARENA
+              </span>
+            </div>
+
             {/* Headline with responsive mobile text scaling */}
-            <h1 id="hero-heading" className="font-display text-3xl sm:text-5xl md:text-7xl font-extrabold mb-4 sm:mb-6 leading-[1.12] tracking-tight text-white">
+            <h1 id="hero-heading" className="font-display text-3xl sm:text-5xl md:text-7xl font-extrabold mb-3 sm:mb-6 leading-[1.12] tracking-tight text-white">
               Where Innovation
               <br />
               <span className="gradient-brand">Gets Recognized</span>
             </h1>
 
-            <p className="text-sm sm:text-base md:text-lg text-zinc-300 mb-8 sm:mb-10 max-w-2xl mx-auto leading-relaxed px-2">
+            <p className="text-xs sm:text-base md:text-lg text-zinc-300 mb-6 sm:mb-10 max-w-2xl mx-auto leading-relaxed px-2">
               Discover and showcase engineering projects. Authenticate with your phone, vote for your favourites, and get unbiased architectural stress-testing from{' '}
               <span className="gradient-nex font-bold">NEX AI</span> — the first autonomous judge built for innovation competitions.
             </p>
 
-            {/* CTAs */}
-            <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 px-2">
-              <Link href="/explore" id="hero-explore-btn" className="btn btn-primary text-xs sm:text-sm py-2.5 sm:py-3 px-5 sm:px-6 shadow-[0_0_20px_rgba(0,212,255,0.4)]">
-                <Compass size={16} />
-                Explore Projects
-                <ArrowRight size={15} />
+            {/* CTAs - Mobile-first ergonomic touch grid */}
+            <div className="grid grid-cols-2 sm:flex sm:flex-wrap items-center justify-center gap-2.5 sm:gap-4 px-2 max-w-md sm:max-w-none mx-auto">
+              <Link href="/explore" id="hero-explore-btn" className="btn btn-primary text-xs sm:text-sm py-2.5 sm:py-3 px-3 sm:px-6 justify-center shadow-[0_0_20px_rgba(0,212,255,0.4)]">
+                <Compass size={15} />
+                <span>Explore Arena</span>
               </Link>
-              <Link href="/nex" id="hero-nex-btn" className="btn btn-secondary text-xs sm:text-sm py-2.5 sm:py-3 px-5 sm:px-6 group">
-                <Sparkles size={16} className="text-cyan-400" />
-                Launch NEX AI
+              <Link href="/nex" id="hero-nex-btn" className="btn btn-secondary text-xs sm:text-sm py-2.5 sm:py-3 px-3 sm:px-6 justify-center group">
+                <Sparkles size={15} className="text-cyan-400" />
+                <span>Launch NEX AI</span>
               </Link>
-              <Link href="/auth/signup" id="hero-signup-btn" className="btn btn-ghost text-xs sm:text-sm py-2.5 sm:py-3 px-4 font-mono text-cyan-300">
-                Verify Phone & Submit →
+              <Link href="/auth/signup" id="hero-signup-btn" className="col-span-2 sm:col-auto btn btn-ghost text-xs sm:text-sm py-2 sm:py-3 px-3 font-mono text-cyan-300 justify-center border border-cyan-500/30 hover:border-cyan-400">
+                <span>Verify Phone & Submit →</span>
               </Link>
             </div>
 
@@ -174,22 +180,22 @@ export default function HomePage() {
 
           {featuredProject && (
             <Link href={`/explore/${featuredProject.slug}`}>
-              <div className="hud-panel p-6 sm:p-8 rounded-3xl bg-[#05070E] border-2 border-cyan-500/40 hover:border-cyan-400 transition-all shadow-[0_0_40px_rgba(0,212,255,0.15)] group relative overflow-hidden">
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+              <div className="hud-panel anime-hud-frame p-5 sm:p-8 rounded-3xl bg-[#05070E] border-2 border-cyan-500/40 hover:border-cyan-400 transition-all shadow-[0_0_40px_rgba(0,212,255,0.15)] group relative overflow-hidden">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-5 sm:gap-6">
                   <div className="max-w-2xl text-left">
                     <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-400/40 text-[10px] font-mono text-cyan-300 font-bold uppercase tracking-widest mb-3">
                       <Sparkles size={11} className="text-cyan-400" />
                       FLAGSHIP // {featuredProject.category}
                     </div>
-                    <h3 className="font-display text-2xl sm:text-4xl font-extrabold text-white group-hover:text-cyan-300 transition-colors mb-2">
+                    <h3 className="font-display text-xl sm:text-4xl font-extrabold text-white group-hover:text-cyan-300 transition-colors mb-2">
                       {featuredProject.title}
                     </h3>
                     <p className="text-zinc-300 text-xs sm:text-sm leading-relaxed mb-4">
                       {featuredProject.subtitle}
                     </p>
-                    <div className="flex flex-wrap gap-2">
+                    <div className="flex flex-wrap gap-1.5 sm:gap-2">
                       {featuredProject.tech_stack.map((t) => (
-                        <span key={t} className="px-2.5 py-0.5 rounded-lg bg-zinc-900 border border-zinc-800 text-[11px] font-mono text-cyan-400">
+                        <span key={t} className="px-2.5 py-0.5 rounded-lg bg-zinc-900 border border-zinc-800 text-[10px] sm:text-[11px] font-mono text-cyan-400">
                           {t}
                         </span>
                       ))}
@@ -197,11 +203,11 @@ export default function HomePage() {
                   </div>
 
                   <div className="flex flex-col sm:flex-row md:flex-col gap-2 shrink-0">
-                    <span className="btn btn-primary text-xs py-2.5 px-4 font-bold shadow-[0_0_15px_rgba(0,212,255,0.3)]">
+                    <span className="btn btn-primary text-xs py-2.5 px-4 font-bold shadow-[0_0_15px_rgba(0,212,255,0.3)] justify-center">
                       Inspect Architecture →
                     </span>
-                    <span className="text-[11px] font-mono text-zinc-500 text-center">
-                      Verified RABINJA Part
+                    <span className="text-[10px] sm:text-[11px] font-mono text-zinc-500 text-center">
+                      // VERIFIED OFFICIAL BLUEPRINT
                     </span>
                   </div>
                 </div>
@@ -210,24 +216,27 @@ export default function HomePage() {
           )}
 
           {/* Quick Grid of other RABINJA Projects */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mt-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-4 mt-5 sm:mt-6">
             {SAMPLE_PROJECTS.slice(1, 5).map((p) => (
-              <Link key={p.id} href={`/explore/${p.slug}`} className="group block">
-                <div className="p-4 rounded-2xl bg-[#05070E] border border-cyan-500/20 hover:border-cyan-400 hover:shadow-[0_0_20px_rgba(0,212,255,0.2)] transition-all h-full flex flex-col justify-between text-left">
+              <Link key={p.id} href={`/explore/${p.slug}`} className="group block h-full">
+                <div className="p-3.5 sm:p-4 rounded-2xl bg-[#05070E] border border-cyan-500/20 hover:border-cyan-400 hover:shadow-[0_0_20px_rgba(0,212,255,0.2)] transition-all h-full flex flex-col justify-between text-left relative overflow-hidden">
+                  <div className="absolute top-1 right-2 font-mono text-[8px] text-cyan-400/40 select-none">
+                    ◤◢
+                  </div>
                   <div>
                     <span className="text-[9px] font-mono text-cyan-400 uppercase font-bold tracking-wider block mb-1">
                       {p.category}
                     </span>
-                    <h4 className="font-display text-sm font-bold text-white group-hover:text-cyan-300 transition-colors">
+                    <h4 className="font-display text-xs sm:text-sm font-bold text-white group-hover:text-cyan-300 transition-colors line-clamp-1">
                       {p.title}
                     </h4>
-                    <p className="text-[11px] text-zinc-400 line-clamp-2 mt-1">
+                    <p className="text-[10px] sm:text-[11px] text-zinc-400 line-clamp-2 mt-1 leading-snug">
                       {p.subtitle}
                     </p>
                   </div>
                   <div className="mt-3 pt-2 border-t border-zinc-900 flex items-center justify-between text-[10px] font-mono text-zinc-500">
-                    <span>{p.team_name}</span>
-                    <span className="text-cyan-400 group-hover:translate-x-0.5 transition-transform">→</span>
+                    <span className="truncate max-w-[80%]">{p.team_name}</span>
+                    <span className="text-cyan-400 group-hover:translate-x-0.5 transition-transform shrink-0">→</span>
                   </div>
                 </div>
               </Link>

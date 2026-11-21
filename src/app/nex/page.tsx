@@ -284,13 +284,16 @@ NEX is not a conversational chatbot; it is an analytical judging engine designed
           )}
 
           {/* Judge Persona Selection */}
-          <div className="card p-5">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-[var(--text-muted)] mb-3 flex items-center gap-2">
-              <Terminal size={14} className="text-[var(--cyan)]" />
-              Evaluation Persona
+          <div className="card p-3 sm:p-5">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-[var(--text-muted)] mb-2.5 flex items-center justify-between">
+              <span className="flex items-center gap-2">
+                <Terminal size={14} className="text-[var(--cyan)]" />
+                Evaluation Persona
+              </span>
+              <span className="text-[10px] font-mono text-cyan-400 lg:hidden">// SWIPE PERSONAS</span>
             </h3>
 
-            <div className="space-y-2.5">
+            <div className="flex lg:flex-col gap-2 overflow-x-auto no-scrollbar pb-1 lg:pb-0">
               {MODES.map((mode) => {
                 const Icon = mode.icon;
                 const isActive = selectedMode === mode.id;
@@ -298,19 +301,19 @@ NEX is not a conversational chatbot; it is an analytical judging engine designed
                   <button
                     key={mode.id}
                     onClick={() => setSelectedMode(mode.id)}
-                    className={`w-full text-left p-3.5 rounded-xl border transition-all flex items-start gap-3.5 ${
+                    className={`min-w-[210px] lg:min-w-0 flex-1 text-left p-3 rounded-xl border transition-all flex items-start gap-2.5 sm:gap-3.5 shrink-0 ${
                       isActive ? mode.activeBg : `bg-[var(--bg-surface-2)] ${mode.borderColor}`
                     }`}
                   >
-                    <div className={`p-2 rounded-lg bg-[var(--bg-surface)] ${mode.color} shrink-0`}>
-                      <Icon size={18} />
+                    <div className={`p-1.5 sm:p-2 rounded-lg bg-[var(--bg-surface)] ${mode.color} shrink-0`}>
+                      <Icon size={16} />
                     </div>
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center justify-between">
-                        <span className="font-semibold text-sm text-white">{mode.name}</span>
-                        <span className="text-[9px] font-mono tracking-wider opacity-70">{mode.badge}</span>
+                        <span className="font-semibold text-xs sm:text-sm text-white truncate">{mode.name}</span>
+                        <span className="text-[8px] sm:text-[9px] font-mono tracking-wider opacity-70 ml-1 shrink-0">{mode.badge}</span>
                       </div>
-                      <p className="text-xs text-[var(--text-muted)] mt-1 leading-snug">{mode.desc}</p>
+                      <p className="text-[10px] sm:text-xs text-[var(--text-muted)] mt-0.5 leading-snug line-clamp-2 lg:line-clamp-none">{mode.desc}</p>
                     </div>
                   </button>
                 );
@@ -319,26 +322,26 @@ NEX is not a conversational chatbot; it is an analytical judging engine designed
           </div>
 
           {/* Quick Prompts */}
-          <div className="card p-5">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-[var(--text-muted)] mb-3">
+          <div className="card p-3 sm:p-5">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-[var(--text-muted)] mb-2.5">
               Trigger Specialized Inquiries
             </h3>
-            <div className="space-y-2">
+            <div className="flex lg:flex-col gap-2 overflow-x-auto no-scrollbar pb-1 lg:pb-0">
               <button
                 onClick={() => handleSend('Simulate an aggressive technical judge cross-examination session.')}
-                className="btn btn-secondary text-xs w-full justify-start py-2 font-mono text-left truncate"
+                className="btn btn-secondary text-xs min-w-[220px] lg:min-w-0 w-full justify-start py-2 font-mono text-left truncate shrink-0"
               >
                 &gt; Cross-examine architecture & latency
               </button>
               <button
                 onClick={() => handleSend('Detect hype, unbacked statements, and marketing exaggerations.')}
-                className="btn btn-secondary text-xs w-full justify-start py-2 font-mono text-left truncate"
+                className="btn btn-secondary text-xs min-w-[220px] lg:min-w-0 w-full justify-start py-2 font-mono text-left truncate shrink-0"
               >
                 &gt; Red-team vulnerability & claim audit
               </button>
               <button
                 onClick={() => handleSend('Evaluate practical product defensibility against Big Tech replication.')}
-                className="btn btn-secondary text-xs w-full justify-start py-2 font-mono text-left truncate"
+                className="btn btn-secondary text-xs min-w-[220px] lg:min-w-0 w-full justify-start py-2 font-mono text-left truncate shrink-0"
               >
                 &gt; Moat & competitive defense assessment
               </button>
@@ -347,7 +350,7 @@ NEX is not a conversational chatbot; it is an analytical judging engine designed
         </div>
 
         {/* ── RIGHT COLUMN: Interactive Terminal & Report Stream ── */}
-        <div className="lg:col-span-8 flex flex-col h-[750px] card overflow-hidden border-[var(--border)]">
+        <div className="lg:col-span-8 flex flex-col h-[520px] sm:h-[650px] lg:h-[750px] card anime-hud-frame overflow-hidden border-[var(--border)]">
           {/* Header of Stream */}
           <div className="p-4 border-b border-[var(--border)] bg-[var(--bg-surface-2)] flex items-center justify-between">
             <div className="flex items-center gap-2 font-mono text-xs text-[var(--text-secondary)]">

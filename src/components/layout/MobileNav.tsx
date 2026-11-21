@@ -17,10 +17,13 @@ export function MobileNav() {
 
   return (
     <nav
-      className="fixed bottom-0 left-0 right-0 md:hidden z-40 bg-black/95 border-t border-zinc-800/80 pb-[env(safe-area-inset-bottom,0px)] shadow-[0_-8px_25px_rgba(0,0,0,0.85)] backdrop-blur-xl w-full max-w-full overflow-hidden"
+      className="fixed bottom-0 left-0 right-0 md:hidden z-40 bg-black/95 border-t border-cyan-500/20 pb-[max(env(safe-area-inset-bottom),6px)] shadow-[0_-10px_35px_rgba(0,0,0,0.95)] backdrop-blur-2xl w-full max-w-full overflow-hidden"
       aria-label="Mobile navigation"
     >
-      <div className="flex items-center justify-around h-16 px-1 w-full max-w-full">
+      {/* Anime top edge glow filament */}
+      <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-cyan-400/60 to-transparent" />
+
+      <div className="flex items-center justify-around h-16 px-1 w-full max-w-full relative">
         {NAV_ITEMS.map((item) => {
           const isActive = pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href));
 
@@ -30,13 +33,17 @@ export function MobileNav() {
                 key={item.href}
                 href={item.href}
                 id="mobile-nav-nex"
-                className="relative -top-3 flex flex-col items-center group active:scale-95 transition-transform"
+                className="relative -top-3.5 flex flex-col items-center group active:scale-90 transition-transform"
                 title="Launch NEX AI"
               >
-                <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center shadow-[0_0_20px_rgba(0,212,255,0.5)] border-2 border-black group-hover:shadow-[0_0_25px_rgba(0,212,255,0.8)] transition-all">
-                  <Sparkles size={20} className="text-black fill-black/20 animate-pulse" />
+                {/* Mecha Core Ring */}
+                <div className="relative">
+                  <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-cyan-500 to-blue-600 opacity-70 blur-sm group-hover:opacity-100 transition-opacity animate-pulse" />
+                  <div className="relative w-12 h-12 rounded-2xl bg-gradient-to-tr from-cyan-400 via-cyan-500 to-blue-600 flex items-center justify-center shadow-[0_0_20px_rgba(0,212,255,0.6)] border-2 border-black">
+                    <Sparkles size={20} className="text-black fill-black/20" />
+                  </div>
                 </div>
-                <span className="text-[10px] font-mono font-bold text-cyan-400 mt-1 tracking-wider">
+                <span className="text-[10px] font-mono font-extrabold text-cyan-300 mt-1 tracking-wider uppercase drop-shadow-[0_0_8px_rgba(0,212,255,0.8)]">
                   NEX AI
                 </span>
               </Link>
@@ -55,14 +62,18 @@ export function MobileNav() {
               <div className="relative">
                 <item.icon
                   size={20}
-                  strokeWidth={isActive ? 2.3 : 1.7}
-                  className={`transition-colors ${isActive ? 'text-cyan-400' : 'text-current'}`}
+                  strokeWidth={isActive ? 2.4 : 1.7}
+                  className={`transition-colors ${isActive ? 'text-cyan-400 drop-shadow-[0_0_8px_rgba(0,212,255,0.8)]' : 'text-current'}`}
                 />
                 {isActive && (
-                  <span className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-cyan-400 shadow-[0_0_8px_#00D4FF]" />
+                  <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-cyan-400 shadow-[0_0_8px_#00D4FF]" />
                 )}
               </div>
-              <span className="mt-1.5 font-mono text-[9px] tracking-wide">{item.label}</span>
+              <span className={`mt-1 font-mono text-[9px] tracking-wider uppercase transition-colors ${
+                isActive ? 'text-cyan-300 font-bold' : 'text-zinc-400'
+              }`}>
+                {item.label}
+              </span>
             </Link>
           );
         })}

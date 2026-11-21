@@ -85,11 +85,19 @@ export function MobileProjectCard({ project, rank, featured }: MobileProjectCard
       href={`/explore/${project.slug}`}
       className="group block h-full select-none"
     >
-      <div className={`flex flex-col h-full rounded-2xl bg-[#05070E] border transition-all duration-200 overflow-hidden shadow-lg ${
+      <div className={`flex flex-col h-full rounded-2xl bg-[#05070E] border transition-all duration-200 overflow-hidden shadow-lg active:scale-[0.98] relative ${
         isRabinjaBrand
           ? 'border-cyan-500/40 hover:border-cyan-400 hover:shadow-[0_0_20px_rgba(0,212,255,0.25)]'
-          : 'border-zinc-800 hover:border-zinc-700'
+          : 'border-zinc-800/80 hover:border-zinc-700'
       }`}>
+        {/* Subtle Anime Corner Accents */}
+        <div className="absolute top-1 left-1.5 z-20 pointer-events-none text-[8px] font-mono text-cyan-400/40 select-none">
+          ◤
+        </div>
+        <div className="absolute top-1 right-1.5 z-20 pointer-events-none text-[8px] font-mono text-cyan-400/40 select-none">
+          ◥
+        </div>
+
         {/* Poster / Cover Image */}
         <div className="relative aspect-[3/4] w-full overflow-hidden bg-zinc-950">
           <img
@@ -100,42 +108,42 @@ export function MobileProjectCard({ project, rank, featured }: MobileProjectCard
           />
 
           {/* Dark gradient overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/25 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent" />
 
-          {/* Top Left Badge: Special RABINJA Original or Rank */}
-          <div className="absolute top-2 left-2 flex items-center gap-1">
+          {/* Top Left Badge */}
+          <div className="absolute top-2 left-2 flex items-center gap-1 z-10">
             {isRabinjaBrand ? (
               <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg bg-black/90 backdrop-blur-md border border-cyan-400/60 text-[9px] font-mono font-bold text-cyan-300 shadow-[0_0_10px_rgba(0,212,255,0.4)]">
                 <Sparkles size={9} className="text-cyan-400" />
-                <span>RABINJA ORIGINAL</span>
+                <span>ORIGINAL</span>
               </span>
             ) : rank !== undefined ? (
               <span className="w-6 h-6 rounded-lg bg-black/80 backdrop-blur-md border border-white/20 text-white font-mono font-bold text-xs flex items-center justify-center">
-                {rank}
+                #{rank}
               </span>
             ) : (
-              <span className="px-2 py-0.5 rounded-lg bg-black/80 backdrop-blur-md border border-zinc-700 text-[10px] font-mono text-zinc-300">
+              <span className="px-2 py-0.5 rounded-lg bg-black/80 backdrop-blur-md border border-zinc-700 text-[9px] font-mono font-semibold text-zinc-300">
                 {project.category}
               </span>
             )}
           </div>
 
-          {/* Top Right Save Button */}
+          {/* Top Right Save Button (Larger 36px touch target for mobile thumb) */}
           <button
             onClick={toggleSave}
-            className={`absolute top-2 right-2 w-7 h-7 rounded-full backdrop-blur-md flex items-center justify-center transition-all ${
+            className={`absolute top-2 right-2 w-8 h-8 rounded-full backdrop-blur-md flex items-center justify-center transition-all z-10 active:scale-90 ${
               isSaved
-                ? 'bg-cyan-500 text-black shadow-[0_0_10px_rgba(0,212,255,0.6)]'
-                : 'bg-black/60 text-zinc-300 hover:text-white border border-white/10'
+                ? 'bg-cyan-400 text-black shadow-[0_0_12px_rgba(0,212,255,0.7)]'
+                : 'bg-black/70 text-zinc-300 hover:text-white border border-white/20'
             }`}
             aria-label="Save project"
           >
-            <Bookmark size={13} fill={isSaved ? 'currentColor' : 'none'} />
+            <Bookmark size={14} fill={isSaved ? 'currentColor' : 'none'} />
           </button>
 
-          {/* Bottom Overlaid Metadata in Image */}
-          <div className="absolute bottom-2 left-2 right-2">
-            <span className="inline-block text-[9px] font-mono uppercase tracking-wider text-cyan-300 font-bold px-1.5 py-0.5 rounded bg-black/80 backdrop-blur-sm border border-cyan-500/30 mb-0.5">
+          {/* Bottom Overlaid Team Name */}
+          <div className="absolute bottom-2 left-2 right-2 z-10">
+            <span className="inline-block text-[9px] font-mono uppercase tracking-wider text-cyan-300 font-bold px-1.5 py-0.5 rounded bg-black/85 backdrop-blur-sm border border-cyan-500/30 truncate max-w-full">
               {project.team_name}
             </span>
           </div>
@@ -157,18 +165,18 @@ export function MobileProjectCard({ project, rank, featured }: MobileProjectCard
             <button
               onClick={handleVote}
               disabled={loadingVote}
-              className={`flex items-center gap-1 font-mono font-bold transition-all px-1.5 py-0.5 rounded-md ${
+              className={`flex items-center gap-1.5 font-mono font-bold transition-all px-2 py-1 rounded-lg active:scale-90 ${
                 hasVoted
-                  ? 'text-cyan-300 bg-cyan-500/10 border border-cyan-500/30'
-                  : 'text-zinc-400 hover:text-zinc-200'
+                  ? 'text-cyan-300 bg-cyan-500/15 border border-cyan-400/50 shadow-[0_0_10px_rgba(0,212,255,0.3)]'
+                  : 'text-zinc-400 hover:text-zinc-200 bg-zinc-900/60 border border-zinc-800'
               }`}
               title="Cast verified vote"
             >
-              <Flame size={12} className={hasVoted ? 'text-cyan-400 fill-cyan-400' : 'text-amber-500'} />
+              <Flame size={13} className={hasVoted ? 'text-cyan-400 fill-cyan-400' : 'text-amber-500'} />
               <span>{voteCount}</span>
             </button>
 
-            <span className="text-[10px] font-mono text-cyan-400/80 flex items-center gap-0.5 group-hover:text-cyan-300 transition-colors">
+            <span className="text-[10px] font-mono text-cyan-400/90 flex items-center gap-0.5 group-hover:text-cyan-300 transition-colors">
               <span>Inspect</span>
               <ArrowUpRight size={11} className="text-cyan-400" />
             </span>

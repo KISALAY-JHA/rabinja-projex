@@ -110,14 +110,14 @@ export default function ExplorePage() {
       {/* ── Search Bar Input ── */}
       <div className="px-3 sm:px-4 pt-2 pb-2 max-w-4xl mx-auto">
         <div className="relative flex items-center">
-          <Search size={16} className="absolute left-3.5 text-zinc-400 pointer-events-none" />
+          <Search size={16} className="absolute left-3.5 text-cyan-400 pointer-events-none" />
           <input
             id="explore-search-input"
             type="search"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search RABINJA projects: Projex, Therapist, Smart Desk, Pet Shield, Investra..."
-            className="w-full bg-zinc-950 border border-zinc-800 rounded-2xl pl-10 pr-4 py-2.5 text-xs sm:text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-cyan-500/60 focus:ring-1 focus:ring-cyan-500/40 transition-all font-mono"
+            placeholder="Search projects: Projex, Therapist, Smart Desk, Pet Shield..."
+            className="w-full bg-[#05070E] border border-cyan-500/30 rounded-2xl pl-10 pr-4 py-2.5 text-xs sm:text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-cyan-400 focus:shadow-[0_0_15px_rgba(0,212,255,0.25)] transition-all font-mono"
           />
         </div>
       </div>
@@ -134,11 +134,11 @@ export default function ExplorePage() {
                 onClick={() => setActiveTab(tab.key)}
                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-mono font-bold whitespace-nowrap transition-all active:scale-95 ${
                   isActive
-                    ? 'bg-cyan-400 text-black shadow-[0_0_15px_rgba(0,212,255,0.4)]'
-                    : 'text-zinc-400 hover:text-white bg-zinc-900/60 hover:bg-zinc-900 border border-zinc-800/60'
+                    ? 'bg-cyan-400 text-black shadow-[0_0_15px_rgba(0,212,255,0.5)]'
+                    : 'text-zinc-400 hover:text-white bg-zinc-900/80 hover:bg-zinc-800 border border-zinc-800/80'
                 }`}
               >
-                <Icon size={13} className={isActive ? 'text-black' : 'text-zinc-400'} />
+                <Icon size={13} className={isActive ? 'text-black' : 'text-cyan-400'} />
                 <span>{tab.label}</span>
               </button>
             );

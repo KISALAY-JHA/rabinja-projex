@@ -531,6 +531,60 @@ a {
   );
 }
 
+/* Tactical HUD corner bracket borders (No clip-path clipping of content) */
+.anime-hud-frame {
+  position: relative;
+}
+
+.anime-hud-frame::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 10px;
+  height: 10px;
+  border-top: 2px solid #00D4FF;
+  border-left: 2px solid #00D4FF;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.anime-hud-frame::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 10px;
+  height: 10px;
+  border-bottom: 2px solid #00D4FF;
+  border-right: 2px solid #00D4FF;
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* Subtle anime neon glow border */
+.anime-border-glow {
+  border: 1px solid rgba(0, 212, 255, 0.4);
+  box-shadow: 0 0 15px rgba(0, 212, 255, 0.15), inset 0 0 15px rgba(0, 212, 255, 0.05);
+}
+
+/* Anime micro-badge */
+.anime-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.2rem 0.55rem;
+  border-radius: 6px;
+  background: rgba(0, 212, 255, 0.1);
+  border: 1px solid rgba(0, 212, 255, 0.35);
+  color: #00D4FF;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
 /* Anime character showcase bay */
 .anime-character-bay {
   position: relative;

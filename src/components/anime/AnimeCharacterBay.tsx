@@ -68,13 +68,13 @@ export function AnimeCharacterBay({
       <div className="absolute inset-x-0 top-1/2 h-px bg-gradient-to-r from-transparent via-cyan-400/40 to-transparent pointer-events-none animate-pulse" />
 
       {/* Character Image Stage */}
-      <div className="relative w-48 h-48 sm:w-64 sm:h-64 mx-auto my-3 flex items-center justify-center">
+      <div className="relative w-36 h-36 sm:w-56 sm:h-56 mx-auto my-2 sm:my-3 flex items-center justify-center">
         {/* Glowing cyber energy ring behind character */}
-        <div className="absolute inset-0 rounded-full border border-cyan-400/30 animate-[spin_12s_linear_infinite] shadow-[0_0_30px_rgba(0,212,255,0.3)]" />
+        <div className="absolute inset-0 rounded-full border border-cyan-400/30 animate-[spin_12s_linear_infinite] shadow-[0_0_25px_rgba(0,212,255,0.3)]" />
         <div className="absolute inset-2 rounded-full border border-dashed border-blue-500/40 animate-[spin_18s_linear_infinite_reverse]" />
 
         {/* Character Illustration */}
-        <div className="relative w-40 h-40 sm:w-56 sm:h-56 rounded-2xl overflow-hidden animate-anime-float z-10 flex items-center justify-center">
+        <div className="relative w-28 h-28 sm:w-48 sm:h-48 rounded-2xl overflow-hidden animate-anime-float z-10 flex items-center justify-center">
           <img
             src={imgError ? '/logo.png' : imageSrc}
             alt="RABINJA Character Operator"
@@ -85,12 +85,12 @@ export function AnimeCharacterBay({
       </div>
 
       {/* Tactical Status Readout */}
-      <div className="mt-2 text-center z-10 relative">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-950/40 border border-cyan-500/40 text-[11px] font-mono font-bold text-cyan-300">
-          <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping" />
-          <span>{callsign}</span>
-          <span className="text-zinc-500">|</span>
-          <span className="text-emerald-400">{status}</span>
+      <div className="mt-1 sm:mt-2 text-center z-10 relative">
+        <div className="inline-flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1 rounded-full bg-cyan-950/60 border border-cyan-500/40 text-[10px] sm:text-[11px] font-mono font-bold text-cyan-300 max-w-full truncate">
+          <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping shrink-0" />
+          <span className="truncate">{callsign}</span>
+          <span className="text-zinc-600 shrink-0">|</span>
+          <span className="text-emerald-400 shrink-0">{status}</span>
         </div>
       </div>
     </div>
