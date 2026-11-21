@@ -6,7 +6,6 @@ import { MobileNav } from '@/components/layout/MobileNav';
 import { LogoIntroSplash } from '@/components/layout/LogoIntroSplash';
 import { InstallPwaPrompt } from '@/components/layout/InstallPwaPrompt';
 import { AnimeFloatingCompanion } from '@/components/anime/AnimeFloatingCompanion';
-import { AnimeKatanaSlashFX } from '@/components/anime/AnimeKatanaSlashFX';
 
 export const viewport: Viewport = {
   themeColor: '#000000',
@@ -87,7 +86,6 @@ export default function RootLayout({
         <main className="flex-1 flex flex-col w-full max-w-full overflow-x-hidden">{children}</main>
         <Footer />
         <AnimeFloatingCompanion />
-        <AnimeKatanaSlashFX />
         <MobileNav />
       </body>
     </html>
