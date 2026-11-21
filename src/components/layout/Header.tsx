@@ -80,8 +80,10 @@ export function Header() {
   return (
     <>
       <header
-        className={`fixed top-0 left-0 right-0 w-full max-w-full z-40 transition-all duration-200 overflow-x-hidden relative ${
-          scrolled ? 'bg-black/95 border-b border-cyan-500/30 backdrop-blur-xl shadow-[0_4px_20px_rgba(0,0,0,0.8)]' : 'bg-black/85 border-b border-zinc-800/60 backdrop-blur-md'
+        className={`sticky top-0 left-0 right-0 w-full max-w-full z-40 transition-all duration-200 overflow-x-hidden ${
+          scrolled
+            ? 'bg-black/95 border-b border-cyan-500/40 backdrop-blur-xl shadow-[0_4px_25px_rgba(0,212,255,0.15)]'
+            : 'bg-black/90 border-b border-cyan-500/20 backdrop-blur-md'
         }`}
       >
         {/* Anime neon HUD edge line */}
