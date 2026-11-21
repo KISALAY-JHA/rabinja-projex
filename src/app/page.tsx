@@ -43,7 +43,7 @@ export default function HomePage() {
             <div className="flex flex-wrap items-center justify-center gap-2 mb-3.5">
               <div className="inline-flex items-center gap-1.5 sm:gap-2 px-3 py-1 rounded-full bg-cyan-950/60 border border-cyan-400/40 text-[10px] sm:text-xs font-mono font-bold text-cyan-300 shadow-[0_0_15px_rgba(0,212,255,0.3)]">
                 <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-cyan-400 animate-ping" />
-                <span>新世代 // NEX AI 2.4</span>
+                <span>NEX AI 2.4</span>
                 <span className="text-zinc-600">|</span>
                 <span className="text-emerald-400">PHONE VERIFIED</span>
               </div>
@@ -90,12 +90,11 @@ export default function HomePage() {
               </Link>
             </div>
 
-            {/* Anime Character Showcase Bay (Ready for custom character artworks) */}
+            {/* Anime Character Showcase Bay with Figures & Dynamic Anime Lighting */}
             <div className="mt-8 sm:mt-12 px-2">
               <AnimeCharacterBay
-                imageSrc="/logo.png"
-                callsign="UNIT: CYBER RABBIT // SQUAD COMMANDER"
-                status="ONLINE // READY FOR DECORATION"
+                callsign="UNIT: CYBER SHINOBI // SQUAD COMMANDER"
+                status="SYSTEM SYNC 100%"
               />
             </div>
 

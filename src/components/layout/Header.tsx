@@ -104,17 +104,7 @@ export function Header() {
                   PROJEX
                 </span>
               </div>
-              <span className="hidden sm:inline-flex items-center gap-1 ml-2 px-1.5 py-0.5 rounded bg-cyan-950/50 border border-cyan-500/30 text-[9px] font-mono text-cyan-300 font-bold uppercase tracking-widest">
-                <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
-                <span>ONLINE</span>
-              </span>
             </Link>
-
-            {/* ── Mobile Center Status Pill (Fills empty center space on phones) ── */}
-            <div className="flex md:hidden items-center gap-1.5 px-2 py-0.5 rounded-full bg-cyan-950/60 border border-cyan-500/40 text-[9px] font-mono font-bold text-cyan-300 shadow-[0_0_10px_rgba(0,212,255,0.2)]">
-              <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping" />
-              <span>NEX AI // ONLINE</span>
-            </div>
 
             {/* ── Desktop Navigation Links (Center) ── */}
             <nav className="hidden md:flex items-center gap-1.5" role="navigation" aria-label="Main navigation">

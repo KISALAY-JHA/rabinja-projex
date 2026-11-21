@@ -60,13 +60,16 @@ export function MobileNav() {
               }`}
             >
               <div className="relative">
+                {isActive && (
+                  <div className="absolute -inset-1.5 rounded-full bg-cyan-400/25 blur-sm animate-pulse pointer-events-none" />
+                )}
                 <item.icon
                   size={20}
                   strokeWidth={isActive ? 2.4 : 1.7}
-                  className={`transition-colors ${isActive ? 'text-cyan-400 drop-shadow-[0_0_8px_rgba(0,212,255,0.8)]' : 'text-current'}`}
+                  className={`transition-colors relative z-10 ${isActive ? 'text-cyan-400 drop-shadow-[0_0_10px_rgba(0,212,255,1)]' : 'text-current'}`}
                 />
                 {isActive && (
-                  <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-cyan-400 shadow-[0_0_8px_#00D4FF]" />
+                  <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-0.5 rounded-full bg-cyan-400 shadow-[0_0_8px_#00D4FF]" />
                 )}
               </div>
               <span className={`mt-1 font-mono text-[9px] tracking-wider uppercase transition-colors ${
