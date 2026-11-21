@@ -1,303 +1,386 @@
 import Link from 'next/link';
 import {
-  Sparkles, TrendingUp, Compass, Star, ArrowRight,
-  ChevronRight, Heart, Shield, Cpu, Leaf, GraduationCap, Coins,
-  Code2, CheckCircle2, Smartphone
+  Sparkles,
+  Compass,
+  Trophy,
+  Users,
+  ArrowRight,
+  CheckCircle2,
+  Calendar,
+  MapPin,
+  ExternalLink,
 } from 'lucide-react';
-import { SAMPLE_PROJECTS, SAMPLE_EVENTS } from '@/lib/sample-data';
-import { AnimeCharacterBay } from '@/components/anime/AnimeCharacterBay';
+import { SAMPLE_PROJECTS } from '@/lib/sample-data';
 
-const CATEGORY_MAP: Record<string, { icon: typeof Code2; color: string; cardClass: string }> = {
-  HealthTech:    { icon: Heart,         color: 'var(--red)',    cardClass: 'card-red' },
-  CleanTech:     { icon: Leaf,          color: 'var(--green)',  cardClass: 'card-green' },
-  Cybersecurity: { icon: Shield,        color: 'var(--purple)', cardClass: 'card-purple' },
-  DeepTech:      { icon: Cpu,           color: 'var(--cyan)',   cardClass: 'card-cyan' },
-  EdTech:        { icon: GraduationCap, color: 'var(--amber)',  cardClass: 'card-amber' },
-  FinTech:       { icon: Coins,         color: 'var(--green)',  cardClass: 'card-green' },
-};
+// ─── Platform Pillars ────────────────────────────────────────────────────────
 
-function getCategoryConfig(cat: string) {
-  return CATEGORY_MAP[cat] ?? { icon: Code2, color: 'var(--blue)', cardClass: 'card-blue' };
-}
+const PILLARS = [
+  {
+    icon: Compass,
+    title: 'Discover Projects',
+    desc: 'Browse real innovation across hardware, software, health, fintech and more.',
+  },
+  {
+    icon: Trophy,
+    title: 'Live Hackathons',
+    desc: 'Find active buildathons, ideathons, and register directly on their platforms.',
+  },
+  {
+    icon: Sparkles,
+    title: 'NEX AI Evaluation',
+    desc: 'Get your project stress-tested by autonomous AI. No bias, real feedback.',
+  },
+  {
+    icon: Users,
+    title: 'Authentic Community',
+    desc: 'No algorithm noise. Phone-verified people. Genuine votes and discussions.',
+  },
+];
+
+// ─── Rabinjathon Round dates ──────────────────────────────────────────────────
+
+const ROUNDS = [
+  { label: 'Round 1', date: '1 Jan 2027' },
+  { label: 'Round 2', date: '15 Jan 2027' },
+  { label: 'Grand Finale', date: '31 Jan 2027' },
+];
+
+// ─── Homepage ────────────────────────────────────────────────────────────────
 
 export default function HomePage() {
-  const featuredProject = SAMPLE_PROJECTS.find((p) => p.status === 'featured') || SAMPLE_PROJECTS[0] || null;
-  const trendingProjects = featuredProject
-    ? SAMPLE_PROJECTS.filter((p) => p.id !== featuredProject.id).slice(0, 4)
-    : [];
-  const activeEvent = SAMPLE_EVENTS.find((e) => e.status === 'active');
+  const displayProjects = SAMPLE_PROJECTS.slice(0, 6);
 
   return (
-    <div className="bg-black bg-grid w-full overflow-x-hidden">
-      {/* ════════════════════════════════════════════════════════
-          HERO SECTION (Serious Cyber Anime HUD)
-          ════════════════════════════════════════════════════════ */}
-      <section className="relative overflow-hidden w-full" aria-labelledby="hero-heading">
-        {/* Ambient glow orbs contained inside section */}
-        <div className="glow-orb w-72 sm:w-96 h-72 sm:h-96 bg-[var(--cyan)] -top-20 -right-20 pointer-events-none" />
-        <div className="glow-orb w-60 sm:w-80 h-60 sm:h-80 bg-[var(--cobalt)] bottom-10 left-10 pointer-events-none" />
+    <div className="bg-black w-full overflow-x-hidden pb-20 md:pb-0">
 
-        <div className="container-page relative z-10 pt-3 sm:pt-6 pb-12 sm:pb-20">
-          <div className="max-w-4xl mx-auto text-center px-1">
-            {/* High-Impact Tactical Anime Command Strip (Eliminates empty space & duplicate logos) */}
-            <div className="flex flex-wrap items-center justify-center gap-2 mb-3.5">
-              <div className="inline-flex items-center gap-1.5 sm:gap-2 px-3 py-1 rounded-full bg-cyan-950/60 border border-cyan-400/40 text-[10px] sm:text-xs font-mono font-bold text-cyan-300 shadow-[0_0_15px_rgba(0,212,255,0.3)]">
-                <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-cyan-400 animate-ping" />
-                <span>NEX AI 2.4</span>
-                <span className="text-zinc-600">|</span>
-                <span className="text-emerald-400">PHONE VERIFIED</span>
-              </div>
+      {/* ══════════════════════════════════════════════════════════
+          1. HERO SECTION
+          ══════════════════════════════════════════════════════════ */}
+      <section
+        className="relative overflow-hidden w-full"
+        aria-label="Hero — Where Innovation Gets Recognized"
+      >
+        {/* Ambient glow */}
+        <div className="pointer-events-none absolute -top-24 -right-24 w-72 h-72 md:w-[480px] md:h-[480px] rounded-full bg-cyan-500/10 blur-3xl" />
+        <div className="pointer-events-none absolute bottom-0 -left-16 w-56 h-56 md:w-96 md:h-96 rounded-full bg-blue-700/10 blur-3xl" />
 
-              {activeEvent && (
-                <Link
-                  href={`/events/${activeEvent.slug}`}
-                  className="inline-flex items-center gap-1.5 sm:gap-2 px-3 py-1 rounded-full border border-rose-500/40 bg-rose-950/30 text-[10px] sm:text-xs text-zinc-200 hover:border-rose-400 hover:text-white transition-all group max-w-full truncate shadow-[0_0_15px_rgba(255,45,85,0.2)]"
-                  id="hero-event-badge"
-                >
-                  <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse shrink-0" />
-                  <span className="font-mono font-bold text-rose-400 uppercase tracking-wider text-[9px] sm:text-[10px]">LIVE:</span>
-                  <span className="truncate max-w-[130px] sm:max-w-none">{activeEvent.name}</span>
-                  <span className="text-amber-400 font-mono font-bold text-[10px] sm:text-xs">₹25L</span>
-                  <ChevronRight size={12} className="group-hover:translate-x-0.5 transition-transform shrink-0 text-rose-400" />
-                </Link>
-              )}
-            </div>
+        <div className="container-page relative z-10 pt-10 pb-16 md:pt-20 md:pb-24">
+          <div className="max-w-3xl mx-auto text-center px-4">
 
-            {/* Headline with responsive mobile text scaling */}
-            <h1 id="hero-heading" className="font-display text-3xl sm:text-5xl md:text-7xl font-extrabold mb-3 sm:mb-6 leading-[1.12] tracking-tight text-white">
-              Where Innovation
-              <br />
-              <span className="gradient-brand">Gets Recognized</span>
+            {/* Top pill badge */}
+            <Link
+              href="/events"
+              className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-rose-950/60 border border-rose-500/40 text-[11px] md:text-xs font-mono font-semibold text-rose-300 hover:border-rose-400 transition-colors mb-6 md:mb-8"
+            >
+              <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse shrink-0" />
+              ● RABINJATHON: PRIME 1 // REGISTRATION OPEN
+            </Link>
+
+            {/* Headline */}
+            <h1 className="font-display text-[2.2rem] leading-[1.1] sm:text-5xl md:text-7xl font-extrabold tracking-tight text-white mb-4 md:mb-6">
+              Where Innovation{' '}
+              <span className="block gradient-brand">Gets Recognized</span>
             </h1>
 
-            <p className="text-xs sm:text-base md:text-lg text-zinc-300 mb-6 sm:mb-10 max-w-2xl mx-auto leading-relaxed px-2">
-              Discover and showcase engineering projects. Authenticate with your phone, vote for your favourites, and get unbiased architectural stress-testing from{' '}
-              <span className="gradient-nex font-bold">NEX AI</span> — the first autonomous judge built for innovation competitions.
+            {/* Sub-description */}
+            <p className="text-sm md:text-lg text-zinc-300 leading-relaxed max-w-2xl mx-auto mb-8 md:mb-10 px-2">
+              The first project-centric platform for builders, hackathons, and innovators in
+              India. Discover real projects, join buildathons, support ideas, and get authentic
+              feedback — not algorithm noise.
             </p>
 
-            {/* CTAs - Mobile-first ergonomic touch grid */}
-            <div className="grid grid-cols-2 sm:flex sm:flex-wrap items-center justify-center gap-2.5 sm:gap-4 px-2 max-w-md sm:max-w-none mx-auto">
-              <Link href="/explore" id="hero-explore-btn" className="btn btn-primary text-xs sm:text-sm py-2.5 sm:py-3 px-3 sm:px-6 justify-center shadow-[0_0_20px_rgba(0,212,255,0.4)]">
+            {/* CTA buttons */}
+            <div className="flex items-center justify-center gap-3 mb-8 md:mb-10 px-4">
+              <Link
+                href="/explore"
+                className="btn btn-primary text-xs md:text-sm py-2.5 md:py-3 px-5 md:px-7 shadow-[0_0_20px_rgba(0,212,255,0.35)]"
+              >
                 <Compass size={15} />
-                <span>Explore Arena</span>
+                Explore Projects
               </Link>
-              <Link href="/nex" id="hero-nex-btn" className="btn btn-secondary text-xs sm:text-sm py-2.5 sm:py-3 px-3 sm:px-6 justify-center group">
-                <Sparkles size={15} className="text-cyan-400" />
-                <span>Launch NEX AI</span>
-              </Link>
-              <Link href="/auth/signup" id="hero-signup-btn" className="col-span-2 sm:col-auto btn btn-ghost text-xs sm:text-sm py-2 sm:py-3 px-3 font-mono text-cyan-300 justify-center border border-cyan-500/30 hover:border-cyan-400">
-                <span>Verify Phone & Submit →</span>
+              <Link
+                href="/events"
+                className="btn btn-secondary text-xs md:text-sm py-2.5 md:py-3 px-5 md:px-7"
+              >
+                View Events
               </Link>
             </div>
 
-            {/* Anime Character Showcase Bay with Figures & Dynamic Anime Lighting */}
-            <div className="mt-8 sm:mt-12 px-2">
-              <AnimeCharacterBay
-                callsign="UNIT: CYBER SHINOBI // SQUAD COMMANDER"
-                status="SYSTEM SYNC 100%"
-              />
-            </div>
-
-            {/* Realtime Operational Telemetry HUD (No fake sample counters) */}
-            <div className="mt-10 sm:mt-16 grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-4 max-w-2xl mx-auto">
+            {/* Platform trust row */}
+            <div className="flex flex-wrap items-center justify-center gap-4 md:gap-6 text-[11px] md:text-sm text-zinc-400">
               {[
-                { label: 'GENESIS TRACK', value: 'PHASE 01', color: 'var(--cyan)' },
-                { label: 'NEX AI ENGINE', value: 'ACTIVE',   color: 'var(--blue)' },
-                { label: 'AUTHENTICATION', value: 'PHONE OTP', color: 'var(--green)' },
-                { label: 'RABINJATHON',   value: '2026 LIVE', color: 'var(--amber)' },
-              ].map((stat) => (
-                <div key={stat.label} className="hud-panel p-3 sm:p-4 text-center rounded-xl bg-[#05070E] border border-cyan-500/20">
-                  <div
-                    className="font-mono text-base sm:text-xl font-extrabold tracking-wider"
-                    style={{ color: stat.color, textShadow: `0 0 15px ${stat.color}80` }}
-                  >
-                    {stat.value}
-                  </div>
-                  <div className="text-[9px] sm:text-[10px] text-zinc-400 mt-1 font-mono uppercase tracking-widest">
-                    // {stat.label}
-                  </div>
-                </div>
+                'No Fake Metrics',
+                'Phone Verified Identity',
+                'Real Project Submissions',
+              ].map((label) => (
+                <span key={label} className="flex items-center gap-1.5">
+                  <CheckCircle2 size={14} className="text-emerald-400 shrink-0" />
+                  {label}
+                </span>
               ))}
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════════════════════
+          2. LIVE EVENT BANNER — Rabinjathon Prime 1
+          ══════════════════════════════════════════════════════════ */}
+      <section
+        className="section-spacing w-full"
+        aria-label="Live Event — Rabinjathon Prime 1"
+      >
+        <div className="container-page px-4">
+          <div className="rounded-2xl border border-rose-500/30 bg-gradient-to-br from-rose-950/30 via-black to-black p-6 md:p-10 shadow-[0_0_40px_rgba(244,63,94,0.12)]">
+            <div className="flex flex-col md:flex-row md:items-start gap-8">
+
+              {/* Left: event info */}
+              <div className="flex-1 min-w-0">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rose-500/10 border border-rose-500/30 text-[10px] md:text-xs font-mono font-bold text-rose-400 uppercase tracking-wider mb-4">
+                  <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse shrink-0" />
+                  Live Event
+                </div>
+
+                <h2 className="font-display text-xl md:text-3xl font-extrabold text-white mb-3 leading-tight">
+                  Rabinjathon: Prime 1 —{' '}
+                  <span className="text-rose-400">Now Open</span>
+                </h2>
+
+                <div className="flex flex-wrap gap-x-5 gap-y-2 text-xs md:text-sm text-zinc-300 mb-5">
+                  <span className="flex items-center gap-1.5">
+                    <Users size={13} className="text-zinc-500 shrink-0" />
+                    Organizer: <span className="text-white font-medium ml-1">RABINJA Squad</span>
+                  </span>
+                  <span className="flex items-center gap-1.5">
+                    <MapPin size={13} className="text-zinc-500 shrink-0" />
+                    Mode: <span className="text-white font-medium ml-1">Online</span>
+                  </span>
+                  <span className="flex items-center gap-1.5">
+                    <Calendar size={13} className="text-zinc-500 shrink-0" />
+                    Registration Deadline: <span className="text-white font-medium ml-1">31 Dec 2026</span>
+                  </span>
+                  <span className="flex items-center gap-1.5">
+                    <Calendar size={13} className="text-zinc-500 shrink-0" />
+                    Round 1 Starts: <span className="text-white font-medium ml-1">1 Jan 2027</span>
+                  </span>
+                  <span className="flex items-center gap-1.5">
+                    <Trophy size={13} className="text-amber-500 shrink-0" />
+                    Prize: <span className="text-amber-400 font-medium ml-1">Participation Certificate</span>
+                  </span>
+                </div>
+
+                <a
+                  href="https://unstop.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn btn-primary text-xs md:text-sm py-2.5 px-5 inline-flex items-center gap-2 shadow-[0_0_16px_rgba(244,63,94,0.3)]"
+                >
+                  Register on Unstop
+                  <ExternalLink size={13} />
+                </a>
+              </div>
+
+              {/* Right: round dates */}
+              <div className="shrink-0 w-full md:w-52 flex flex-row md:flex-col gap-3">
+                {ROUNDS.map((r, i) => (
+                  <div
+                    key={r.label}
+                    className="flex-1 md:flex-none rounded-xl border border-zinc-800 bg-zinc-950/60 p-3 md:p-4"
+                  >
+                    <div className="text-[9px] md:text-[10px] font-mono text-zinc-500 uppercase tracking-widest mb-1">
+                      Round {i + 1}
+                    </div>
+                    <div className="text-xs md:text-sm font-bold text-white leading-tight">{r.label}</div>
+                    <div className="text-[11px] md:text-xs text-cyan-400 font-mono mt-0.5">{r.date}</div>
+                  </div>
+                ))}
+              </div>
+
             </div>
           </div>
         </div>
       </section>
 
-      {/* ════════════════════════════════════════════════════════
-          LIVE MECHA TELEMETRY TICKER
-          ════════════════════════════════════════════════════════ */}
-      <div className="border-y border-cyan-500/20 bg-[#020307] overflow-hidden py-2.5 w-full">
-        <div className="flex gap-8 animate-ticker whitespace-nowrap" aria-hidden="true">
-          {[1, 2, 3, 4].map((i) => (
-            <span key={i} className="inline-flex items-center gap-3 text-xs font-mono text-zinc-400">
-              <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse shadow-[0_0_8px_#00D4FF]" />
-              <span className="font-extrabold text-white tracking-widest">[ RABINJA : PROJEX ]</span>
-              <span>•</span>
-              <span className="text-cyan-400 font-semibold">// NEX AI AUTONOMOUS EVALUATION ENGINE ONLINE</span>
-              <span>•</span>
-              <span className="text-zinc-300 font-medium">// RABINJATHON 2026 GENESIS OPEN</span>
-              <span>•</span>
-              <span className="text-emerald-400 font-bold">// SECURE PHONE OTP VERIFICATION REQUIRED</span>
-              <span>•</span>
-              <span className="text-rose-500 font-bold">// ZERO FAKE METRICS</span>
-            </span>
-          ))}
-        </div>
-      </div>
-
-      {/* ════════════════════════════════════════════════════════
-          FEATURED PROJECT SECTION (RABINJA BRAND ORIGINAL)
-          ════════════════════════════════════════════════════════ */}
-      <section className="section-spacing w-full" aria-labelledby="featured-heading">
-        <div className="container-page">
-          <div className="flex items-center justify-between mb-6">
-            <div>
-              <div className="flex items-center gap-2 mb-1.5">
-                <Star size={15} className="text-cyan-400" />
-                <span className="text-[11px] font-mono font-bold text-cyan-400 uppercase tracking-widest">
-                  // RABINJA BRAND ECOSYSTEM
-                </span>
-              </div>
-              <h2 id="featured-heading" className="font-display text-xl sm:text-2xl md:text-3xl font-bold text-white">
-                Official Brand Projects
-              </h2>
-            </div>
-            <Link href="/explore" className="btn btn-ghost text-xs hidden sm:flex">
-              Explore All 8 Inventions <ArrowRight size={13} />
-            </Link>
+      {/* ══════════════════════════════════════════════════════════
+          3. PLATFORM PILLARS
+          ══════════════════════════════════════════════════════════ */}
+      <section
+        className="section-spacing w-full"
+        aria-label="Platform Pillars"
+      >
+        <div className="container-page px-4">
+          <div className="text-center mb-8 md:mb-12">
+            <h2 className="font-display text-xl md:text-3xl font-bold text-white">
+              Built for Real Builders
+            </h2>
+            <p className="text-sm md:text-base text-zinc-400 mt-2 max-w-xl mx-auto">
+              Every feature is designed around authenticity — no vanity metrics, no clout games.
+            </p>
           </div>
 
-          {featuredProject && (
-            <Link href={`/explore/${featuredProject.slug}`}>
-              <div className="hud-panel anime-hud-frame p-5 sm:p-8 rounded-3xl bg-[#05070E] border-2 border-cyan-500/40 hover:border-cyan-400 transition-all shadow-[0_0_40px_rgba(0,212,255,0.15)] group relative overflow-hidden">
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-5 sm:gap-6">
-                  <div className="max-w-2xl text-left">
-                    <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-400/40 text-[10px] font-mono text-cyan-300 font-bold uppercase tracking-widest mb-3">
-                      <Sparkles size={11} className="text-cyan-400" />
-                      FLAGSHIP // {featuredProject.category}
-                    </div>
-                    <h3 className="font-display text-xl sm:text-4xl font-extrabold text-white group-hover:text-cyan-300 transition-colors mb-2">
-                      {featuredProject.title}
-                    </h3>
-                    <p className="text-zinc-300 text-xs sm:text-sm leading-relaxed mb-4">
-                      {featuredProject.subtitle}
-                    </p>
-                    <div className="flex flex-wrap gap-1.5 sm:gap-2">
-                      {featuredProject.tech_stack.map((t) => (
-                        <span key={t} className="px-2.5 py-0.5 rounded-lg bg-zinc-900 border border-zinc-800 text-[10px] sm:text-[11px] font-mono text-cyan-400">
-                          {t}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="flex flex-col sm:flex-row md:flex-col gap-2 shrink-0">
-                    <span className="btn btn-primary text-xs py-2.5 px-4 font-bold shadow-[0_0_15px_rgba(0,212,255,0.3)] justify-center">
-                      Inspect Architecture →
-                    </span>
-                    <span className="text-[10px] sm:text-[11px] font-mono text-zinc-500 text-center">
-                      // VERIFIED OFFICIAL BLUEPRINT
-                    </span>
-                  </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-5">
+            {PILLARS.map(({ icon: Icon, title, desc }) => (
+              <div
+                key={title}
+                className="card p-4 md:p-6 rounded-2xl bg-zinc-950 border border-zinc-800 hover:border-cyan-500/40 hover:shadow-[0_0_20px_rgba(0,212,255,0.08)] transition-all flex flex-col gap-3"
+              >
+                <div className="w-9 h-9 md:w-11 md:h-11 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center shrink-0">
+                  <Icon size={18} className="text-cyan-400 md:hidden" />
+                  <Icon size={20} className="text-cyan-400 hidden md:block" />
+                </div>
+                <div>
+                  <h3 className="font-display text-sm md:text-base font-bold text-white mb-1 leading-tight">
+                    {title}
+                  </h3>
+                  <p className="text-[11px] md:text-sm text-zinc-400 leading-relaxed">
+                    {desc}
+                  </p>
                 </div>
               </div>
-            </Link>
-          )}
-
-          {/* Quick Grid of other RABINJA Projects */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-4 mt-5 sm:mt-6">
-            {SAMPLE_PROJECTS.slice(1, 5).map((p) => (
-              <Link key={p.id} href={`/explore/${p.slug}`} className="group block h-full">
-                <div className="p-3.5 sm:p-4 rounded-2xl bg-[#05070E] border border-cyan-500/20 hover:border-cyan-400 hover:shadow-[0_0_20px_rgba(0,212,255,0.2)] transition-all h-full flex flex-col justify-between text-left relative overflow-hidden">
-                  <div className="absolute top-1 right-2 font-mono text-[8px] text-cyan-400/40 select-none">
-                    ◤◢
-                  </div>
-                  <div>
-                    <span className="text-[9px] font-mono text-cyan-400 uppercase font-bold tracking-wider block mb-1">
-                      {p.category}
-                    </span>
-                    <h4 className="font-display text-xs sm:text-sm font-bold text-white group-hover:text-cyan-300 transition-colors line-clamp-1">
-                      {p.title}
-                    </h4>
-                    <p className="text-[10px] sm:text-[11px] text-zinc-400 line-clamp-2 mt-1 leading-snug">
-                      {p.subtitle}
-                    </p>
-                  </div>
-                  <div className="mt-3 pt-2 border-t border-zinc-900 flex items-center justify-between text-[10px] font-mono text-zinc-500">
-                    <span className="truncate max-w-[80%]">{p.team_name}</span>
-                    <span className="text-cyan-400 group-hover:translate-x-0.5 transition-transform shrink-0">→</span>
-                  </div>
-                </div>
-              </Link>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ════════════════════════════════════════════════════════
-          TRENDING PROJECTS / LEADERBOARD SECTION
-          ════════════════════════════════════════════════════════ */}
-      <section className="section-spacing pt-0 w-full" aria-labelledby="trending-heading">
-        <div className="container-page">
-          <div className="flex items-center justify-between mb-6">
+      {/* ══════════════════════════════════════════════════════════
+          4. OFFICIAL RABINJA BRAND PROJECTS
+          ══════════════════════════════════════════════════════════ */}
+      <section
+        className="section-spacing w-full"
+        aria-label="Official RABINJA Brand Projects"
+      >
+        <div className="container-page px-4">
+          <div className="flex items-end justify-between mb-6 md:mb-10">
             <div>
-              <div className="flex items-center gap-2 mb-1.5">
-                <TrendingUp size={15} className="text-cyan-400" />
-                <span className="text-[11px] font-mono font-bold text-cyan-400 uppercase tracking-widest">
-                  // LEADERBOARD
-                </span>
-              </div>
-              <h2 id="trending-heading" className="font-display text-xl sm:text-2xl font-bold text-white">
-                Live Submissions
+              <span className="text-[10px] md:text-xs font-mono font-bold text-cyan-400 uppercase tracking-widest">
+                // RABINJA Brand Ecosystem
+              </span>
+              <h2 className="font-display text-xl md:text-3xl font-bold text-white mt-1">
+                Official Brand Projects
               </h2>
             </div>
+            <Link href="/explore" className="btn btn-ghost text-xs hidden sm:inline-flex items-center gap-1.5">
+              Explore All <ArrowRight size={13} />
+            </Link>
           </div>
 
-          <div className="card p-6 sm:p-8 text-center border-dashed border-zinc-800 max-w-xl mx-auto bg-[#03050A]">
-            <TrendingUp size={28} className="mx-auto mb-2 text-cyan-400 opacity-60" />
-            <h3 className="font-display text-base font-bold text-white mb-1">
-              Genesis Leaderboard Open
-            </h3>
-            <p className="text-xs text-zinc-400 max-w-sm mx-auto mb-4 leading-relaxed">
-              Real community votes and verified scores will rank projects here as teams complete their Rabinjathon builds.
-            </p>
-            <Link href="/auth/signup" className="btn btn-secondary text-xs py-2 px-3.5 font-mono">
-              Register Node & Submit
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-5">
+            {displayProjects.map((p) => {
+              const visibleTech = p.tech_stack.slice(0, 3);
+              const extraTech = p.tech_stack.length - 3;
+              return (
+                <div
+                  key={p.id}
+                  className="card rounded-2xl bg-zinc-950 border border-zinc-800 hover:border-cyan-500/30 hover:shadow-[0_0_20px_rgba(0,212,255,0.1)] transition-all flex flex-col p-5 md:p-6"
+                >
+                  {/* Category badge */}
+                  <span className="inline-block self-start px-2.5 py-0.5 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-[10px] md:text-[11px] font-mono text-cyan-400 font-bold uppercase tracking-wide mb-3">
+                    {p.category}
+                  </span>
+
+                  {/* Title */}
+                  <Link href={`/explore/${p.slug}`}>
+                    <h3 className="font-display text-base md:text-lg font-bold text-white hover:text-cyan-300 transition-colors line-clamp-1 mb-1.5">
+                      {p.title}
+                    </h3>
+                  </Link>
+
+                  {/* Subtitle */}
+                  <p className="text-xs md:text-sm text-zinc-400 leading-relaxed line-clamp-2 mb-4 flex-1">
+                    {p.subtitle}
+                  </p>
+
+                  {/* Tech stack */}
+                  <div className="flex flex-wrap gap-1.5 mb-4">
+                    {visibleTech.map((t) => (
+                      <span
+                        key={t}
+                        className="px-2 py-0.5 rounded-md bg-zinc-900 border border-zinc-800 text-[10px] font-mono text-zinc-300"
+                      >
+                        {t}
+                      </span>
+                    ))}
+                    {extraTech > 0 && (
+                      <span className="px-2 py-0.5 rounded-md bg-zinc-900 border border-zinc-800 text-[10px] font-mono text-zinc-500">
+                        +{extraTech}
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Footer */}
+                  <div className="border-t border-zinc-900 pt-3 flex items-center justify-between">
+                    <span className="text-[11px] md:text-xs text-zinc-500 font-mono truncate max-w-[55%]">
+                      {p.team_name}
+                    </span>
+                    <Link
+                      href={`/explore/${p.slug}`}
+                      className="inline-flex items-center gap-1 text-[11px] md:text-xs text-cyan-400 hover:text-cyan-300 font-mono font-semibold transition-colors shrink-0"
+                    >
+                      View Project <ArrowRight size={12} />
+                    </Link>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Mobile "Explore All" link */}
+          <div className="mt-6 text-center sm:hidden">
+            <Link href="/explore" className="btn btn-ghost text-xs inline-flex items-center gap-1.5">
+              Explore All Projects <ArrowRight size={13} />
             </Link>
           </div>
         </div>
       </section>
 
-      {/* ════════════════════════════════════════════════════════
-          NEX AI TEASER BANNER (Serious Anime Mecha Vibe)
-          ════════════════════════════════════════════════════════ */}
-      <section className="section-spacing pt-0 w-full" aria-labelledby="nex-teaser-heading">
-        <div className="container-page">
-          <div className="hud-panel p-6 sm:p-12 relative overflow-hidden rounded-2xl border border-cyan-500/30 bg-gradient-to-r from-[#05070E] via-[#090E1C] to-black shadow-[0_0_50px_rgba(0,212,255,0.15)]">
+      {/* ══════════════════════════════════════════════════════════
+          5. NEX AI TEASER BANNER
+          ══════════════════════════════════════════════════════════ */}
+      <section
+        className="section-spacing w-full"
+        aria-label="NEX AI Evaluation"
+      >
+        <div className="container-page px-4">
+          <div className="relative overflow-hidden rounded-2xl border border-cyan-500/25 bg-gradient-to-br from-[#05070E] via-[#070c1b] to-black p-7 md:p-14 shadow-[0_0_60px_rgba(0,212,255,0.12)]">
+            {/* Background glow */}
+            <div className="pointer-events-none absolute top-0 right-0 w-64 h-64 md:w-96 md:h-96 rounded-full bg-cyan-500/5 blur-3xl" />
+
             <div className="relative z-10 max-w-2xl">
-              <div className="inline-flex items-center gap-2 mb-3 px-2.5 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-[10px] sm:text-xs font-mono font-bold text-cyan-400">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/25 text-[10px] md:text-xs font-mono font-bold text-cyan-400 mb-4">
                 <Sparkles size={12} />
-                NEX-9 // AUTONOMOUS JUDGING NODE
+                NEX AI ENGINE
               </div>
-              <h2 id="nex-teaser-heading" className="font-display text-2xl sm:text-4xl font-extrabold mb-3 text-white">
-                Tired of Subjective Hackathon Judging?
+
+              <h2 className="font-display text-2xl md:text-4xl font-extrabold text-white mb-3 leading-tight">
+                AI-Powered Project Evaluation
               </h2>
-              <p className="text-zinc-300 text-xs sm:text-sm mb-6 leading-relaxed">
-                NEX AI evaluates projects strictly on engineering merit: architecture depth, originality, stress testing, and real-world usefulness. No bias, instant feedback.
+
+              <p className="text-sm md:text-base text-zinc-300 leading-relaxed mb-7 max-w-xl">
+                NEX AI evaluates projects on architecture depth, originality, and real-world impact.
+                No bias, instant feedback.
               </p>
-              <div className="flex flex-wrap items-center gap-3">
-                <Link href="/nex" className="btn btn-primary text-xs sm:text-sm py-2.5 px-4 font-bold">
+
+              <div className="flex flex-wrap gap-3">
+                <Link
+                  href="/nex"
+                  className="btn btn-primary text-xs md:text-sm py-2.5 md:py-3 px-5 md:px-7 inline-flex items-center gap-2 shadow-[0_0_20px_rgba(0,212,255,0.3)]"
+                >
                   <Sparkles size={15} />
-                  Evaluate a Project with NEX AI
+                  Evaluate with NEX AI →
                 </Link>
-                <Link href="/events" className="btn btn-secondary text-xs sm:text-sm py-2.5 px-4">
-                  Explore Rabinjathon 2026
+                <Link
+                  href="/explore"
+                  className="btn btn-secondary text-xs md:text-sm py-2.5 md:py-3 px-5 md:px-7"
+                >
+                  Explore Projects
                 </Link>
               </div>
             </div>
           </div>
         </div>
       </section>
+
     </div>
   );
 }
