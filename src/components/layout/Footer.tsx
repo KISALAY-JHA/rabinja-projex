@@ -1,32 +1,30 @@
 import Link from 'next/link';
-import { Zap, Globe, Code2, Mail, ExternalLink, Share2 } from 'lucide-react';
+import { Zap, Globe, Mail, ExternalLink, Share2 } from 'lucide-react';
 
 const FOOTER_LINKS = {
   Platform: [
     { label: 'Explore Projects', href: '/explore' },
-    { label: 'Events', href: '/events' },
-    { label: 'NEX AI', href: '/nex' },
-    { label: 'Leaderboard', href: '/events?tab=leaderboard' },
+    { label: 'Events & Hackathons', href: '/events' },
+    { label: 'NEX AI Engine', href: '/nex' },
+    { label: 'Collections', href: '/collections' },
   ],
   Community: [
     { label: 'Discussions', href: '/explore?tab=discussions' },
-    { label: 'Join a Team', href: '/teams' },
-    { label: 'Become a Judge', href: '/judges/apply' },
-    { label: 'Blog', href: '/blog' },
+    { label: 'Startup Teams', href: '/profile?tab=startup_team' },
+    { label: 'Official WhatsApp', href: 'https://chat.whatsapp.com/GFL3izBqAbJEov4AgpCKOI' },
+    { label: 'Official Hub', href: 'https://linktr.ee/RABINJATHON' },
   ],
   Company: [
-    { label: 'About RABINJA SQUAD', href: 'https://rabinjasquad.in' },
-    { label: 'Careers', href: '/careers' },
+    { label: 'About RABINJA SQUAD', href: 'https://linktr.ee/RABINJATHON' },
+    { label: 'Rabinjathon: Prime 1', href: '/events' },
     { label: 'Privacy Policy', href: '/privacy' },
     { label: 'Terms of Service', href: '/terms' },
   ],
 };
 
 const SOCIAL_LINKS = [
-  { icon: Globe,    href: 'https://twitter.com/rabinja_labs', label: 'Twitter / X' },
-  { icon: Code2,    href: 'https://github.com/rabinja-labs',  label: 'GitHub' },
-  { icon: Share2,   href: 'https://linkedin.com/company/rabinja', label: 'LinkedIn' },
-  { icon: Mail,     href: 'mailto:hello@rabinja.com',          label: 'Email' },
+  { icon: Globe,    href: 'https://linktr.ee/RABINJATHON', label: 'Linktree Hub' },
+  { icon: Mail,     href: 'mailto:rabinjathon@gmail.com',   label: 'Email Support' },
 ];
 
 export function Footer() {

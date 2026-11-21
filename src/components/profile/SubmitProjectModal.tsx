@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { X, Send, Sparkles, Code2, Globe, Users } from 'lucide-react';
+import { X, Send, Sparkles, Film, Globe, Users, ShieldCheck } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 
 interface SubmitProjectModalProps {
@@ -190,23 +190,28 @@ export function SubmitProjectModal({ isOpen, onClose, onSubmitted }: SubmitProje
             />
           </div>
 
+          <div className="p-3 rounded-xl bg-cyan-950/30 border border-cyan-500/20 text-[11px] font-mono text-cyan-300 flex items-center gap-2">
+            <ShieldCheck size={16} className="text-cyan-400 shrink-0" />
+            <span>IP Shield: Zero raw code disclosure required. Keep your repository and secret sauce confidential.</span>
+          </div>
+
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="block text-[11px] font-mono text-zinc-400 mb-1">
-                GITHUB REPO URL
+                DEMO / SHOWCASE VIDEO URL
               </label>
               <input
                 type="url"
                 value={repoUrl}
                 onChange={(e) => setRepoUrl(e.target.value)}
-                placeholder="https://github.com/..."
+                placeholder="https://youtube.com/... or video link"
                 className="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 rounded-xl text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-cyan-500"
               />
             </div>
 
             <div>
               <label className="block text-[11px] font-mono text-zinc-400 mb-1">
-                LIVE DEMO URL
+                LIVE DEMO URL (OPTIONAL)
               </label>
               <input
                 type="url"

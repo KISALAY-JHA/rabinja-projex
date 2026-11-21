@@ -4,7 +4,7 @@ import React, { useEffect } from 'react';
 import Link from 'next/link';
 import {
   X, Activity, Crown, Trophy, Heart, Leaf, Shield,
-  Cpu, GraduationCap, Coins, Code2, Zap, Award, Sparkles, ChevronRight
+  Cpu, GraduationCap, Coins, Layers, Zap, Award, Sparkles, ChevronRight
 } from 'lucide-react';
 
 interface BrowseModalProps {
@@ -22,7 +22,7 @@ const TRACKS = [
 ];
 
 const SPECIAL_COLLECTIONS = [
-  { name: 'Open Source', icon: Code2, color: 'text-cyan-400', href: '/explore?tag=opensource' },
+  { name: 'Community Builds', icon: Layers, color: 'text-cyan-400', href: '/explore?tag=community' },
   { name: 'Hardware & IoT', icon: Zap, color: 'text-amber-400', href: '/explore?tag=hardware' },
   { name: 'Award Winners', icon: Award, color: 'text-yellow-400', href: '/explore?filter=winners' },
   { name: 'NEX Picks', icon: Sparkles, color: 'text-cyan-300', href: '/explore?filter=nex-picks' },

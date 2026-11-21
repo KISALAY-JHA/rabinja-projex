@@ -5,7 +5,7 @@ import Link from 'next/link';
 import {
   Search, SlidersHorizontal, Flame, Sparkles, Trophy,
   Compass, HeartPulse, Leaf, Shield, Cpu, GraduationCap, Coins,
-  Code2, Filter, Star
+  Layers, Filter, Star
 } from 'lucide-react';
 import { RABINJA_PROJECTS, type ProjectItem } from '@/lib/sample-data';
 import { MobileProjectCard } from '@/components/project/MobileProjectCard';

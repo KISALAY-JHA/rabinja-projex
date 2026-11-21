@@ -6,10 +6,11 @@ import { useState, useEffect } from 'react';
 import {
   Search, Bell, LayoutGrid, MoreVertical,
   Sparkles, Trophy, Compass, BookOpen, Smartphone,
-  CheckCircle2, LogOut
+  CheckCircle2, LogOut, Share2
 } from 'lucide-react';
 import { BrowseModal } from './BrowseModal';
 import { MoreMenuModal } from './MoreMenuModal';
+import { ShareProjexModal } from '@/components/share/ShareProjexModal';
 
 const NAV_LINKS = [
   {
@@ -40,6 +41,7 @@ export function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [browseOpen, setBrowseOpen] = useState(false);
   const [moreMenuOpen, setMoreMenuOpen] = useState(false);
+  const [shareOpen, setShareOpen] = useState(false);
   const [authUser, setAuthUser] = useState<{ phone: string; displayName?: string } | null>(null);
 
   useEffect(() => {
@@ -150,6 +152,17 @@ export function Header() {
                 <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-cyan-400 ring-2 ring-black" />
               </Link>
 
+              {/* Share Projex Card */}
+              <button
+                onClick={() => setShareOpen(true)}
+                className="w-9 h-9 rounded-full flex items-center justify-center text-zinc-400 hover:text-cyan-400 hover:bg-zinc-900 transition-colors active:scale-95"
+                title="Share Projex Card"
+                aria-label="Share Projex Card"
+                id="header-share-btn"
+              >
+                <Share2 size={17} />
+              </button>
+
               {/* 3x3 Grid Icon: Browse By Categories Drawer */}
               <button
                 onClick={() => setBrowseOpen(true)}
@@ -215,6 +228,8 @@ export function Header() {
         authUser={authUser}
         onLogout={handleLogout}
       />
+      {/* ── Share Projex Card Modal ── */}
+      <ShareProjexModal isOpen={shareOpen} onClose={() => setShareOpen(false)} />
     </>
   );
 }

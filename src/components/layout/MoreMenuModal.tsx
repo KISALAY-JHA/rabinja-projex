@@ -223,7 +223,7 @@ export function MoreMenuModal({ isOpen, onClose, authUser, onLogout }: MoreMenuM
             <Link href="/events" onClick={onClose} className="p-2 rounded-lg hover:bg-zinc-900 transition-colors">
               Hackathon Guidelines
             </Link>
-            <a href="mailto:support@rabinja.com" className="p-2 rounded-lg hover:bg-zinc-900 transition-colors flex items-center gap-1">
+            <a href="mailto:rabinjathon@gmail.com" className="p-2 rounded-lg hover:bg-zinc-900 transition-colors flex items-center gap-1">
               Contact Support <ExternalLink size={10} />
             </a>
             <Link href="/privacy" onClick={onClose} className="p-2 rounded-lg hover:bg-zinc-900 transition-colors">

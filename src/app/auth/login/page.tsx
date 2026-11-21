@@ -224,13 +224,13 @@ export default function LoginPage() {
                     Phone Number
                   </label>
                   <div className="relative">
-                    <Phone size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-cyan-400" />
+                    <Phone size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-cyan-400 pointer-events-none z-10" />
                     <input
                       type="tel"
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
-                      placeholder="98765 43210"
-                      className="input pl-9 text-sm font-mono tracking-wider bg-zinc-900 border-zinc-800 text-white focus:border-cyan-400"
+                      placeholder="XXXXX XXXXX"
+                      className="input pl-12 text-sm font-mono tracking-wider bg-zinc-900 border-zinc-800 text-white focus:border-cyan-400"
                       required
                       autoFocus
                     />

@@ -6,7 +6,6 @@ import {
   GitBranch,
   Terminal,
   ExternalLink,
-  Code2,
   Settings,
 } from 'lucide-react';
 import type { Project } from '@/lib/types';

@@ -5,7 +5,7 @@ import Link from 'next/link';
 import {
   TrendingUp, MessageSquare, ExternalLink,
   Play, ChevronLeft, Share2, Bookmark, Flag, Sparkles,
-  Trophy, Users, Code2, ArrowRight, ThumbsUp,
+  Trophy, Users, Layers, ArrowRight, ThumbsUp,
   CheckCircle2, User, Star, Send, ShieldAlert, LogIn, UserPlus
 } from 'lucide-react';
 import { RABINJA_PROJECTS, type ProjectItem } from '@/lib/sample-data';
@@ -22,12 +22,14 @@ import {
   type AuthUser
 } from '@/lib/api-client';
 import { AdSlot } from '@/components/ads/AdSlot';
+import { ShareProjexModal } from '@/components/share/ShareProjexModal';
 
 type Tab = 'overview' | 'rate' | 'discussions' | 'comments';
 
 export function ProjectDetailClient({ slug }: { slug: string }) {
   const [tab, setTab] = useState<Tab>('overview');
   const [user, setUser] = useState<AuthUser | null>(null);
+  const [shareModalOpen, setShareModalOpen] = useState(false);
 
   // Live real data states
   const [voteCount, setVoteCount] = useState(0);
@@ -319,7 +321,7 @@ export function ProjectDetailClient({ slug }: { slug: string }) {
               </button>
 
               <div className="grid grid-cols-2 gap-2">
-                {project.demo_url && (
+                {project.demo_url ? (
                   <a
                     href={project.demo_url}
                     target="_blank"
@@ -328,17 +330,17 @@ export function ProjectDetailClient({ slug }: { slug: string }) {
                   >
                     <Play size={13} /> Demo URL
                   </a>
+                ) : (
+                  <div className="btn btn-ghost text-xs justify-center opacity-40 cursor-default">
+                    <Play size={13} /> Demo Ready
+                  </div>
                 )}
-                {project.repo_url && (
-                  <a
-                    href={project.repo_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="btn btn-secondary text-xs justify-center"
-                  >
-                    <Code2 size={13} /> Repository
-                  </a>
-                )}
+                <button
+                  onClick={() => setShareModalOpen(true)}
+                  className="btn btn-secondary text-xs justify-center text-cyan-300 border-cyan-500/30 hover:border-cyan-400"
+                >
+                  <Share2 size={13} /> Share Card
+                </button>
               </div>
 
               {/* NEX AI Stress Testing */}
@@ -400,7 +402,7 @@ export function ProjectDetailClient({ slug }: { slug: string }) {
 
               <div>
                 <h3 className="font-display text-base font-bold text-white mb-3 flex items-center gap-2">
-                  <Code2 size={16} className="text-cyan-400" />
+                  <Layers size={16} className="text-cyan-400" />
                   Engineering Stack
                 </h3>
                 <div className="flex flex-wrap gap-2">
@@ -828,6 +830,13 @@ export function ProjectDetailClient({ slug }: { slug: string }) {
           </div>
         </div>
       )}
+      {/* ── Share Projex Card Modal ── */}
+      <ShareProjexModal
+        isOpen={shareModalOpen}
+        onClose={() => setShareModalOpen(false)}
+        title={project.title}
+        description={project.subtitle || project.description}
+      />
     </div>
   );
 }

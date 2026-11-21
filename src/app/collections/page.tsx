@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Bookmark, FolderPlus, ArrowRight, Eye, TrendingUp, Sparkles, Code2, Compass } from 'lucide-react';
+import { Bookmark, FolderPlus, ArrowRight, Eye, TrendingUp, Sparkles, Layers, Compass } from 'lucide-react';
 import { RABINJA_PROJECTS, type ProjectItem } from '@/lib/sample-data';
 import { getStoredUser } from '@/lib/api-client';
 
