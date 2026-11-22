@@ -7,7 +7,7 @@ import {
   User, CheckCircle2, Bookmark, HeartPulse, Send, Settings,
   LogOut, Shield, ChevronRight, Smartphone, ArrowRight, Flame,
   Trophy, ExternalLink, Edit3, Film, UserPlus, LogIn, Sparkles,
-  Users, UserCheck, X, Plus, PlusCircle, Check, Landmark
+  Users, UserCheck, X, Plus, PlusCircle, Check, Landmark, CreditCard
 } from 'lucide-react';
 import { ProfileHealthTab } from '@/components/profile/ProfileHealthTab';
 import { SubmissionsTab } from '@/components/profile/SubmissionsTab';
@@ -75,6 +75,12 @@ function ProfileContent() {
   const [networkList, setNetworkList] = useState<FriendItem[]>(DEFAULT_FRIENDS);
   const [addFriendInput, setAddFriendInput] = useState('');
   const [friendSuccessMsg, setFriendSuccessMsg] = useState('');
+
+  // ── Financial Payout Settings ──
+  const [razorpayId, setRazorpayId] = useState('');
+  const [paypalId, setPaypalId] = useState('');
+  const [upiVpa, setUpiVpa] = useState('');
+  const [payoutSaved, setPayoutSaved] = useState(false);
 
   useEffect(() => {
     const tabParam = searchParams.get('tab');
@@ -914,46 +920,79 @@ function ProfileContent() {
         {/* ── TAB 6: SETTINGS ── */}
         {activeTab === 'settings' && (
           <div className="space-y-4 animate-fade-in text-left">
-            {/* Startup Intro Video Preferences */}
-            <div className="p-4 sm:p-5 rounded-2xl bg-zinc-950 border border-zinc-800">
-              <div className="flex items-start justify-between gap-4">
-                <div className="flex items-start gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-cyan-950/60 border border-cyan-500/40 text-cyan-400 flex items-center justify-center shrink-0">
-                    <Film size={20} />
-                  </div>
-                  <div>
-                    <h3 className="text-sm font-bold text-white flex items-center gap-2">
-                      <span>Startup Intro Video</span>
-                      <span className={`text-[10px] font-mono px-2 py-0.5 rounded-full border ${
-                        disableIntro
-                          ? 'bg-zinc-900 border-zinc-700 text-zinc-400'
-                          : 'bg-cyan-500/10 border-cyan-500/40 text-cyan-400'
-                      }`}>
-                        {disableIntro ? 'Disabled' : 'Active'}
-                      </span>
-                    </h3>
-                    <p className="text-xs text-zinc-400 mt-1 leading-relaxed">
-                      Plays the cinematic RABINJA Projex intro animation when you open the app. Disable to launch directly to your feed.
-                    </p>
-                  </div>
+            {/* Creator Financial Backing & Payout Gateway Setup */}
+            <div className="p-4 sm:p-5 rounded-2xl bg-zinc-950 border border-zinc-800 space-y-4">
+              <div className="flex items-start gap-3">
+                <div className="w-10 h-10 rounded-xl bg-rose-950/60 border border-rose-500/40 text-rose-400 flex items-center justify-center shrink-0">
+                  <CreditCard size={20} />
+                </div>
+                <div>
+                  <h3 className="text-sm font-bold text-white flex items-center gap-2">
+                    <span>Direct Financial Backing & Payout Setup</span>
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-950 border border-emerald-500/40 text-emerald-300">
+                      0% Platform Cut
+                    </span>
+                  </h3>
+                  <p className="text-xs text-zinc-400 mt-1 leading-relaxed">
+                    Set up your payout gateway so supporters, angels, and testers can directly fund your startup team. 100% of received money goes directly to you (less standard card/UPI processor fees and statutory taxes).
+                  </p>
                 </div>
               </div>
 
-              <div className="mt-4 pt-3 border-t border-zinc-900 flex items-center justify-between">
-                <span className="text-xs font-mono text-zinc-400">
-                  Current state: <strong className={disableIntro ? 'text-zinc-300' : 'text-cyan-400'}>{disableIntro ? 'Skipping Video' : 'Playing Video'}</strong>
-                </span>
-                <button
-                  type="button"
-                  onClick={toggleDisableIntro}
-                  className={`px-4 py-2 rounded-xl text-xs font-mono font-bold transition-all active:scale-95 ${
-                    disableIntro
-                      ? 'bg-zinc-800 text-zinc-200 hover:text-white border border-zinc-700'
-                      : 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 shadow-[0_0_15px_rgba(0,212,255,0.25)]'
-                  }`}
-                >
-                  {disableIntro ? 'Turn ON Intro Video' : 'Turn OFF Intro Video'}
-                </button>
+              <div className="space-y-3 pt-2 text-xs font-mono">
+                <div>
+                  <label className="block text-zinc-400 mb-1">RAZORPAY PAYMENT LINK / ACCOUNT KEY (UPI, CARDS)</label>
+                  <input
+                    type="text"
+                    value={razorpayId}
+                    onChange={(e) => setRazorpayId(e.target.value)}
+                    placeholder="https://pages.razorpay.com/pl_... or Razorpay Key"
+                    className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-white placeholder-zinc-500 focus:outline-none focus:border-rose-400"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-zinc-400 mb-1">PAYPAL.ME LINK / USERNAME (GLOBAL USD/EUR)</label>
+                  <input
+                    type="text"
+                    value={paypalId}
+                    onChange={(e) => setPaypalId(e.target.value)}
+                    placeholder="https://paypal.me/yourusername or PayPal Email"
+                    className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-white placeholder-zinc-500 focus:outline-none focus:border-rose-400"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-zinc-400 mb-1">DIRECT UPI VPA (INDIA INSTANT SETTLEMENT)</label>
+                  <input
+                    type="text"
+                    value={upiVpa}
+                    onChange={(e) => setUpiVpa(e.target.value)}
+                    placeholder="yourstartup@okhdfcbank or @paytm"
+                    className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-cyan-400 placeholder-zinc-500 focus:outline-none focus:border-cyan-400"
+                  />
+                </div>
+
+                <div className="flex items-center justify-between pt-2">
+                  {payoutSaved && (
+                    <span className="text-xs text-emerald-400 flex items-center gap-1">
+                      <CheckCircle2 size={13} /> Payout preferences saved!
+                    </span>
+                  )}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      try {
+                        localStorage.setItem('rabinja_payout_settings', JSON.stringify({ razorpayId, paypalId, upiVpa }));
+                        setPayoutSaved(true);
+                        setTimeout(() => setPayoutSaved(false), 2500);
+                      } catch {}
+                    }}
+                    className="btn btn-primary text-xs py-2 px-4 font-bold ml-auto"
+                  >
+                    Save Payout Setup
+                  </button>
+                </div>
               </div>
             </div>
 

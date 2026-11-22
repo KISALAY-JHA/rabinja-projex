@@ -6,7 +6,7 @@ import {
   TrendingUp, MessageSquare, ExternalLink,
   Play, ChevronLeft, Share2, Bookmark, Flag, Sparkles,
   Trophy, Users, Layers, ArrowRight, ThumbsUp,
-  CheckCircle2, User, Star, Send, ShieldAlert, LogIn, UserPlus, Landmark
+  CheckCircle2, User, Star, Send, ShieldAlert, LogIn, UserPlus, Landmark, Heart
 } from 'lucide-react';
 import { RABINJA_PROJECTS, type ProjectItem } from '@/lib/sample-data';
 import {
@@ -24,6 +24,7 @@ import {
 import { AdSlot } from '@/components/ads/AdSlot';
 import { ShareProjexModal } from '@/components/share/ShareProjexModal';
 import { GovtShowcaseModal } from '@/components/verification/GovtShowcaseModal';
+import { SupportProjectModal } from '@/components/support/SupportProjectModal';
 
 type Tab = 'overview' | 'rate' | 'discussions' | 'comments';
 
@@ -32,6 +33,7 @@ export function ProjectDetailClient({ slug }: { slug: string }) {
   const [user, setUser] = useState<AuthUser | null>(null);
   const [shareModalOpen, setShareModalOpen] = useState(false);
   const [govtModalOpen, setGovtModalOpen] = useState(false);
+  const [supportModalOpen, setSupportModalOpen] = useState(false);
 
   // Live real data states
   const [voteCount, setVoteCount] = useState(0);
@@ -344,6 +346,15 @@ export function ProjectDetailClient({ slug }: { slug: string }) {
                   <Share2 size={13} /> Share Card
                 </button>
               </div>
+
+              {/* Direct Supporter Funding Button */}
+              <button
+                onClick={() => setSupportModalOpen(true)}
+                className="w-full py-2.5 px-3 rounded-xl bg-gradient-to-r from-rose-500/20 via-pink-500/15 to-rose-500/20 border border-rose-500/40 hover:border-rose-400 text-rose-300 hover:text-white font-mono text-xs font-bold flex items-center justify-center gap-2 transition-all shadow-[0_0_15px_rgba(244,63,94,0.15)] hover:shadow-[0_0_20px_rgba(244,63,94,0.3)] active:scale-95"
+              >
+                <Heart size={14} className="text-rose-400 fill-rose-500/30 shrink-0" />
+                <span>Support Financially (Razorpay / PayPal)</span>
+              </button>
 
               {/* NEX AI Stress Testing */}
               <Link
@@ -880,6 +891,14 @@ export function ProjectDetailClient({ slug }: { slug: string }) {
         projectTitle={project.title}
         projectSlug={project.slug}
         voteCount={voteCount}
+      />
+
+      {/* ── Direct Financial Support Modal ── */}
+      <SupportProjectModal
+        isOpen={supportModalOpen}
+        onClose={() => setSupportModalOpen(false)}
+        projectTitle={project.title}
+        teamName={project.team_name}
       />
     </div>
   );

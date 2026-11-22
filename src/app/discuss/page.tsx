@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, Suspense } from 'react';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import {
   Coffee,
   Search,
@@ -21,7 +22,9 @@ import {
   ShieldCheck,
   ChevronRight,
   Flame,
-  ThumbsUp
+  ThumbsUp,
+  Copy,
+  ExternalLink
 } from 'lucide-react';
 import { getStoredUser, type AuthUser } from '@/lib/api-client';
 
@@ -118,12 +121,12 @@ const INITIAL_ROOMS: DiscussionRoom[] = [
     title: 'Private Syndicate: Hardware Bill-of-Materials & PCB Assembly Vendors in India',
     initiator: 'Embedded Founders Circle',
     category: 'Hardware & IoT',
-    description: 'Invite-only mastermind sharing verified PCBA fabricators, component lead times, and customs clearance benchmarks.',
+    description: 'Invite-only mastermind sharing verified PCBA fabricators, component lead times, and customs clearance benchmarks. Passkey required.',
     isPrivate: true,
     participantCount: 8,
     createdAt: '1 day ago',
     messages: [
-      { id: 'm1', sender: 'HardwareLead', text: 'Welcome to the private room. Enter the room passkey to access vendor comparison matrices.', time: '1d ago', isInitiator: true }
+      { id: 'm1', sender: 'HardwareLead', text: 'Welcome to the private mastermind room. Only friends with the verified passkey have access to these vendor matrices.', time: '1d ago', isInitiator: true }
     ]
   }
 ];
@@ -137,21 +140,31 @@ const CATEGORIES = [
   'FinTech & Wealth'
 ];
 
-export default function OpenDiscussionPage() {
+function DiscussionContent() {
+  const searchParams = useSearchParams();
   const [rooms, setRooms] = useState<DiscussionRoom[]>(INITIAL_ROOMS);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('ALL');
   const [user, setUser] = useState<AuthUser | null>(null);
 
-  // Modals
+  // Modals & Active Room
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [activeRoom, setActiveRoom] = useState<DiscussionRoom | null>(null);
   const [privateCodeInput, setPrivateCodeInput] = useState('');
   const [codeError, setCodeError] = useState('');
 
+  // Private Room Lock State
+  const [unlockedCodes, setUnlockedCodes] = useState<string[]>([]);
+  const [privateUnlockRoom, setPrivateUnlockRoom] = useState<DiscussionRoom | null>(null);
+  const [unlockPasskeyInput, setUnlockPasskeyInput] = useState('');
+  const [unlockError, setUnlockError] = useState('');
+
+  // Share Modal State
+  const [shareRoomModal, setShareRoomModal] = useState<DiscussionRoom | null>(null);
+  const [shareCopied, setShareCopied] = useState(false);
+
   // Active Room Messaging State
   const [newMsgText, setNewMsgText] = useState('');
-  const [roomCopied, setRoomCopied] = useState(false);
 
   // New Room Form State
   const [formTitle, setFormTitle] = useState('');
@@ -171,7 +184,28 @@ export default function OpenDiscussionPage() {
         }
       } catch {}
     }
+
+    try {
+      const unlocked = JSON.parse(localStorage.getItem('rabinja_unlocked_private_rooms') || '[]');
+      setUnlockedCodes(unlocked);
+    } catch {}
   }, []);
+
+  // Handle URL param ?code=... to automatically open room
+  useEffect(() => {
+    const codeParam = searchParams?.get('code');
+    if (codeParam) {
+      const found = rooms.find((r) => r.code.toUpperCase() === codeParam.toUpperCase());
+      if (found) {
+        if (!found.isPrivate || unlockedCodes.includes(found.code)) {
+          setActiveRoom(found);
+        } else {
+          setPrivateUnlockRoom(found);
+          setUnlockPasskeyInput(codeParam);
+        }
+      }
+    }
+  }, [searchParams, rooms, unlockedCodes]);
 
   const filteredRooms = useMemo(() => {
     return rooms.filter((r) => {
@@ -182,11 +216,45 @@ export default function OpenDiscussionPage() {
         r.title.toLowerCase().includes(q) ||
         r.initiator.toLowerCase().includes(q) ||
         r.description.toLowerCase().includes(q) ||
-        r.code.toLowerCase().includes(q) ||
+        (!r.isPrivate && r.code.toLowerCase().includes(q)) ||
         (r.linkedProject && r.linkedProject.toLowerCase().includes(q));
       return matchCat && matchQuery;
     });
   }, [rooms, selectedCategory, searchQuery]);
+
+  const handleRoomCardClick = (room: DiscussionRoom) => {
+    if (!room.isPrivate) {
+      setActiveRoom(room);
+    } else {
+      // Check if unlocked already
+      if (unlockedCodes.includes(room.code)) {
+        setActiveRoom(room);
+      } else {
+        setPrivateUnlockRoom(room);
+        setUnlockPasskeyInput('');
+        setUnlockError('');
+      }
+    }
+  };
+
+  const handleUnlockPrivateRoom = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!privateUnlockRoom) return;
+    setUnlockError('');
+
+    if (unlockPasskeyInput.trim().toUpperCase() === privateUnlockRoom.code.toUpperCase()) {
+      const updated = [...unlockedCodes, privateUnlockRoom.code];
+      setUnlockedCodes(updated);
+      try {
+        localStorage.setItem('rabinja_unlocked_private_rooms', JSON.stringify(updated));
+      } catch {}
+      setActiveRoom(privateUnlockRoom);
+      setPrivateUnlockRoom(null);
+      setUnlockPasskeyInput('');
+    } else {
+      setUnlockError('Invalid passkey. Private rooms can only be accessed with the code shared by your friend.');
+    }
+  };
 
   const handleJoinByCode = (e: React.FormEvent) => {
     e.preventDefault();
@@ -194,10 +262,15 @@ export default function OpenDiscussionPage() {
     const targetCode = privateCodeInput.trim().toUpperCase();
     const found = rooms.find((r) => r.code.toUpperCase() === targetCode);
     if (found) {
-      setActiveRoom(found);
+      if (!found.isPrivate || unlockedCodes.includes(found.code)) {
+        setActiveRoom(found);
+      } else {
+        setPrivateUnlockRoom(found);
+        setUnlockPasskeyInput(targetCode);
+      }
       setPrivateCodeInput('');
     } else {
-      setCodeError(`No room found with code "${targetCode}". Please verify code.`);
+      setCodeError(`No room found with code "${targetCode}". Please verify the code with your friend.`);
     }
   };
 
@@ -231,6 +304,14 @@ export default function OpenDiscussionPage() {
 
     const updated = [newRoom, ...rooms];
     setRooms(updated);
+    if (formIsPrivate) {
+      const updatedUnlocked = [...unlockedCodes, generatedCode];
+      setUnlockedCodes(updatedUnlocked);
+      try {
+        localStorage.setItem('rabinja_unlocked_private_rooms', JSON.stringify(updatedUnlocked));
+      } catch {}
+    }
+
     try {
       localStorage.setItem('rabinja_open_discussions', JSON.stringify(updated.filter(r => !INITIAL_ROOMS.some(i => i.id === r.id))));
     } catch {}
@@ -275,15 +356,15 @@ export default function OpenDiscussionPage() {
         <div className="pointer-events-none absolute bottom-5 right-1/4 w-80 h-80 rounded-full bg-amber-500/10 blur-3xl" />
 
         <div className="max-w-6xl mx-auto relative z-10 text-center sm:text-left">
-          <div className="flex flex-col lg:flex-row items-center justify-between gap-8">
-            <div className="max-w-2xl space-y-4">
+          <div className="flex flex-col lg:flex-row items-center justify-between gap-6 sm:gap-8">
+            <div className="max-w-2xl space-y-3 sm:space-y-4">
               <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-cyan-950/60 border border-cyan-400/40 text-cyan-300 text-xs font-mono font-bold tracking-wider">
                 <Coffee size={14} className="text-amber-400 animate-pulse" />
                 <span>THE OPEN INNOVATION CAFÉ</span>
                 <span className="w-1.5 h-1.5 rounded-full bg-cyan-400" />
               </div>
 
-              <h1 className="font-display text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white leading-tight">
+              <h1 className="font-display text-2xl sm:text-4xl lg:text-5xl font-extrabold text-white leading-tight">
                 Where Builders Debate, <br className="hidden sm:inline" />
                 <span className="bg-gradient-to-r from-amber-400 via-orange-300 to-cyan-400 bg-clip-text text-transparent">
                   Shape Ideas & Transmit Feedback
@@ -291,7 +372,7 @@ export default function OpenDiscussionPage() {
               </h1>
 
               <p className="text-zinc-300 text-xs sm:text-sm leading-relaxed max-w-xl">
-                Start an open think tank or join private rooms with a code. When any topic reaches <span className="text-amber-400 font-bold">15+ participants</span>, our system compiles community consensus insights and delivers them directly to the project team.
+                Start an open think tank or join private rooms with a code shared by friends. When any topic reaches <span className="text-amber-400 font-bold">15+ participants</span>, community consensus insights are delivered directly to the project team.
               </p>
 
               {/* 15-Member Rule High-Trust Alert */}
@@ -324,7 +405,7 @@ export default function OpenDiscussionPage() {
               <form onSubmit={handleJoinByCode} className="p-4 rounded-2xl bg-zinc-950/80 border border-zinc-800 space-y-2 text-left">
                 <div className="flex items-center gap-1.5 text-xs font-mono text-zinc-400">
                   <Key size={13} className="text-cyan-400" />
-                  <span>HAVE A ROOM PASSKEY?</span>
+                  <span>HAVE A PASSKEY FROM A FRIEND?</span>
                 </div>
                 <div className="flex gap-2">
                   <input
@@ -353,8 +434,8 @@ export default function OpenDiscussionPage() {
       </section>
 
       {/* ── SEARCH & FILTER CONTROLS ── */}
-      <section className="max-w-6xl mx-auto px-4 sm:px-6 pt-6">
-        <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 pb-6 border-b border-zinc-800">
+      <section className="max-w-6xl mx-auto px-4 sm:px-6 pt-5">
+        <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 pb-5 border-b border-zinc-800">
           {/* Search Input */}
           <div className="relative flex-1 max-w-md">
             <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-400 pointer-events-none" />
@@ -362,7 +443,7 @@ export default function OpenDiscussionPage() {
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search topics, projects, or room codes..."
+              placeholder="Search topics, projects, or public codes..."
               className="w-full pl-10 pr-4 py-2 bg-zinc-900/90 border border-zinc-800 rounded-xl text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-cyan-400 font-mono"
             />
           </div>
@@ -392,7 +473,7 @@ export default function OpenDiscussionPage() {
             return (
               <div
                 key={room.id}
-                onClick={() => setActiveRoom(room)}
+                onClick={() => handleRoomCardClick(room)}
                 className="group p-5 rounded-2xl bg-zinc-950/70 border border-zinc-800/80 hover:border-cyan-400/50 hover:bg-[#070D1B] transition-all cursor-pointer relative overflow-hidden flex flex-col justify-between space-y-4"
               >
                 {/* Top badges */}
@@ -417,7 +498,13 @@ export default function OpenDiscussionPage() {
                     )}
                   </div>
                   <span className="text-[10px] font-mono text-zinc-500">
-                    CODE: <strong className="text-white">{room.code}</strong>
+                    {room.isPrivate ? (
+                      <span className="text-zinc-500 flex items-center gap-1">
+                        <Lock size={10} /> Passkey Required
+                      </span>
+                    ) : (
+                      <>CODE: <strong className="text-white">{room.code}</strong></>
+                    )}
                   </span>
                 </div>
 
@@ -466,7 +553,11 @@ export default function OpenDiscussionPage() {
                 <div className="flex items-center justify-between pt-2 border-t border-zinc-900 text-[10px] font-mono text-zinc-500">
                   <span>Initiated by: <strong className="text-zinc-300">{room.initiator}</strong></span>
                   <span className="text-cyan-400 group-hover:translate-x-1 transition-transform flex items-center gap-1">
-                    Enter Café <ChevronRight size={12} />
+                    {room.isPrivate ? (
+                      <>Enter with Passkey <Lock size={11} /></>
+                    ) : (
+                      <>Enter Café <ChevronRight size={12} /></>
+                    )}
                   </span>
                 </div>
               </div>
@@ -474,6 +565,151 @@ export default function OpenDiscussionPage() {
           })}
         </div>
       </section>
+
+      {/* ════════════════════════════════════════════════════════════════════════
+          PRIVATE ROOM PASSKEY UNLOCK MODAL
+          ════════════════════════════════════════════════════════════════════════ */}
+      {privateUnlockRoom && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-md animate-fade-in text-left">
+          <div className="relative w-full max-w-md bg-[#05070E] border-2 border-rose-500/50 rounded-3xl p-5 sm:p-6 shadow-[0_0_60px_rgba(244,63,94,0.3)] space-y-4">
+            <div className="flex items-start justify-between pb-3 border-b border-zinc-800">
+              <div className="flex items-center gap-2.5">
+                <div className="w-9 h-9 rounded-xl bg-rose-500/20 text-rose-400 border border-rose-400 flex items-center justify-center">
+                  <Lock size={18} />
+                </div>
+                <div>
+                  <h3 className="font-display text-base font-bold text-white">Private Mastermind Circle</h3>
+                  <p className="text-[10px] font-mono text-zinc-400">Passkey required to enter</p>
+                </div>
+              </div>
+              <button
+                onClick={() => setPrivateUnlockRoom(null)}
+                className="w-8 h-8 rounded-full bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white flex items-center justify-center"
+              >
+                <X size={16} />
+              </button>
+            </div>
+
+            <div className="p-3.5 rounded-2xl bg-zinc-950 border border-zinc-800 space-y-1.5 text-xs">
+              <div className="text-zinc-400 font-mono text-[10px] uppercase">Room Topic:</div>
+              <p className="text-white font-bold font-sans text-xs">{privateUnlockRoom.title}</p>
+              <p className="text-[11px] text-zinc-400 leading-relaxed pt-1">
+                This discussion is private and invite-only. Private room passkeys are shared exclusively by friends and room initiators.
+              </p>
+            </div>
+
+            <form onSubmit={handleUnlockPrivateRoom} className="space-y-3 text-xs font-mono">
+              <div>
+                <label className="block text-zinc-400 mb-1">ENTER PASSKEY CODE</label>
+                <input
+                  type="text"
+                  required
+                  autoFocus
+                  value={unlockPasskeyInput}
+                  onChange={(e) => setUnlockPasskeyInput(e.target.value)}
+                  placeholder="e.g. PRIV-77"
+                  className="w-full px-3.5 py-2.5 bg-zinc-900 border border-zinc-800 rounded-xl text-white placeholder-zinc-500 uppercase tracking-widest focus:outline-none focus:border-rose-400"
+                />
+              </div>
+
+              {unlockError && (
+                <p className="text-[11px] text-rose-400 font-mono flex items-center gap-1.5">
+                  <AlertCircle size={13} /> {unlockError}
+                </p>
+              )}
+
+              <div className="pt-2">
+                <button
+                  type="submit"
+                  className="w-full py-3 rounded-xl bg-gradient-to-r from-rose-500 to-pink-600 text-white font-bold uppercase tracking-wider text-xs shadow-[0_0_20px_rgba(244,63,94,0.35)] flex items-center justify-center gap-2"
+                >
+                  <Key size={14} />
+                  <span>Unlock & Enter Room</span>
+                </button>
+                <p className="text-[10px] text-zinc-500 text-center mt-2 font-mono">
+                  Don&apos;t have the code? Ask your friend who initiated the room to share their invite link.
+                </p>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* ════════════════════════════════════════════════════════════════════════
+          SHARE TOPIC MODAL (DIRECT OPENABLE LINK)
+          ════════════════════════════════════════════════════════════════════════ */}
+      {shareRoomModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-md animate-fade-in text-left">
+          <div className="relative w-full max-w-md bg-[#05070E] border-2 border-cyan-500/50 rounded-3xl p-5 sm:p-6 shadow-[0_0_50px_rgba(0,212,255,0.3)] space-y-4">
+            <div className="flex items-start justify-between pb-3 border-b border-zinc-800">
+              <div className="flex items-center gap-2.5">
+                <div className="w-9 h-9 rounded-xl bg-cyan-500/20 text-cyan-400 border border-cyan-400 flex items-center justify-center">
+                  <Share2 size={18} />
+                </div>
+                <div>
+                  <h3 className="font-display text-base font-bold text-white">Share Discussion Room</h3>
+                  <p className="text-[10px] font-mono text-zinc-400">Invite friends directly with openable link</p>
+                </div>
+              </div>
+              <button
+                onClick={() => setShareRoomModal(null)}
+                className="w-8 h-8 rounded-full bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white flex items-center justify-center"
+              >
+                <X size={16} />
+              </button>
+            </div>
+
+            <div className="p-3 bg-zinc-950 rounded-xl border border-zinc-800 text-xs space-y-1">
+              <span className="text-[10px] font-mono text-zinc-500 block uppercase">Topic:</span>
+              <p className="text-white font-bold font-sans text-xs">{shareRoomModal.title}</p>
+              <div className="text-[10px] font-mono text-cyan-400 pt-1">
+                Passkey Code: <strong className="text-white">{shareRoomModal.code}</strong> {shareRoomModal.isPrivate ? '(Private)' : '(Public)'}
+              </div>
+            </div>
+
+            {/* Direct Link Box */}
+            <div className="space-y-2">
+              <label className="block text-[11px] font-mono text-zinc-400 uppercase">
+                Direct Openable Link:
+              </label>
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  readOnly
+                  value={`https://rabinjasquad.in/discuss?code=${shareRoomModal.code}`}
+                  className="flex-1 px-3 py-2 bg-zinc-900 border border-zinc-800 rounded-xl text-xs font-mono text-cyan-300 focus:outline-none"
+                />
+                <button
+                  onClick={() => {
+                    navigator.clipboard.writeText(`https://rabinjasquad.in/discuss?code=${shareRoomModal.code}`);
+                    setShareCopied(true);
+                    setTimeout(() => setShareCopied(false), 2000);
+                  }}
+                  className="px-3.5 py-2 rounded-xl bg-cyan-500 text-black font-bold font-mono text-xs flex items-center gap-1 shrink-0"
+                >
+                  <Copy size={13} />
+                  <span>{shareCopied ? 'Copied!' : 'Copy'}</span>
+                </button>
+              </div>
+            </div>
+
+            {/* WhatsApp Share Button */}
+            <div className="pt-2">
+              <a
+                href={`https://api.whatsapp.com/send?text=${encodeURIComponent(
+                  `Hey! Join our discussion on "${shareRoomModal.title}" at RABINJA Projex Open Café.\n\nPasskey Code: ${shareRoomModal.code}\nOpen discussion directly here: https://rabinjasquad.in/discuss?code=${shareRoomModal.code}`
+                )}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full py-2.5 rounded-xl bg-[#25D366]/20 border border-[#25D366]/40 hover:bg-[#25D366]/30 text-[#25D366] font-mono text-xs font-bold flex items-center justify-center gap-2 transition-colors"
+              >
+                <span>Share with Friends on WhatsApp</span>
+                <ExternalLink size={13} />
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* ════════════════════════════════════════════════════════════════════════
           ACTIVE DISCUSSION ROOM MODAL / LIVE FORUM
@@ -491,6 +727,11 @@ export default function OpenDiscussionPage() {
                   <span className="text-[10px] font-mono text-cyan-400 bg-cyan-950/60 px-2 py-0.5 rounded border border-cyan-500/40 font-bold">
                     CODE: {activeRoom.code}
                   </span>
+                  {activeRoom.isPrivate && (
+                    <span className="text-[10px] font-mono text-rose-400 bg-rose-950/60 px-2 py-0.5 rounded border border-rose-500/40 flex items-center gap-1">
+                      <Lock size={10} /> Friends Only
+                    </span>
+                  )}
                   {activeRoom.linkedProject && (
                     <span className="text-[10px] font-mono text-amber-300 bg-amber-950/60 px-2 py-0.5 rounded border border-amber-500/40">
                       ✦ {activeRoom.linkedProject}
@@ -504,15 +745,11 @@ export default function OpenDiscussionPage() {
 
               <div className="flex items-center gap-2 shrink-0">
                 <button
-                  onClick={() => {
-                    navigator.clipboard.writeText(`https://rabinjasquad.in/discuss?code=${activeRoom.code}`);
-                    setRoomCopied(true);
-                    setTimeout(() => setRoomCopied(false), 2000);
-                  }}
+                  onClick={() => setShareRoomModal(activeRoom)}
                   className="px-2.5 py-1.5 rounded-xl bg-zinc-900 border border-zinc-800 text-xs font-mono text-zinc-300 hover:text-white flex items-center gap-1.5"
                 >
                   <Share2 size={13} />
-                  <span>{roomCopied ? 'Copied!' : 'Share'}</span>
+                  <span>Share Link</span>
                 </button>
                 <button
                   onClick={() => setActiveRoom(null)}
@@ -700,7 +937,7 @@ export default function OpenDiscussionPage() {
                       onChange={() => setFormIsPrivate(true)}
                       className="text-cyan-400"
                     />
-                    <span>Private (Join with passkey code)</span>
+                    <span>Private (Passkey shared by friends only)</span>
                   </label>
                 </div>
               </div>
@@ -716,5 +953,13 @@ export default function OpenDiscussionPage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function OpenDiscussionPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-black pt-20 text-center font-mono text-xs text-zinc-500">Loading Discussion Café...</div>}>
+      <DiscussionContent />
+    </Suspense>
   );
 }
