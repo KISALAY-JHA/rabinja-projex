@@ -128,7 +128,20 @@ export function Header() {
                       : 'text-zinc-400 hover:text-white hover:bg-zinc-900/50'
                   }`}
                 >
-                  <item.icon size={14} className={item.highlight ? 'text-cyan-400' : ''} />
+                  {item.highlight ? (
+                    <div className="w-4 h-4 rounded-full overflow-hidden border border-cyan-400 shrink-0 bg-black">
+                      <video
+                        src="/nex-ai.mp4"
+                        autoPlay
+                        loop
+                        muted
+                        playsInline
+                        className="w-full h-full object-cover rounded-full"
+                      />
+                    </div>
+                  ) : (
+                    <item.icon size={14} className={item.highlight ? 'text-cyan-400' : ''} />
+                  )}
                   {item.label}
                 </Link>
               ))}

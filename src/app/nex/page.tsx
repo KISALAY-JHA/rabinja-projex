@@ -485,8 +485,15 @@ function NexWorkspaceContent() {
       <div className="border-b border-[var(--border)] bg-[var(--bg-surface)] py-3 px-4 sm:px-6 sticky top-14 sm:top-16 z-20">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-3">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-brand flex items-center justify-center shadow-[0_0_15px_rgba(168,85,247,0.4)] shrink-0">
-              <Sparkles size={22} className="text-white" />
+            <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-cyan-400 shadow-[0_0_18px_rgba(0,212,255,0.7)] bg-black shrink-0 flex items-center justify-center">
+              <video
+                src="/nex-ai.mp4"
+                autoPlay
+                loop
+                muted
+                playsInline
+                className="w-full h-full object-cover rounded-full"
+              />
             </div>
             <div>
               <div className="flex items-center gap-2">

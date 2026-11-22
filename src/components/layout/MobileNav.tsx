@@ -38,9 +38,17 @@ export function MobileNav() {
               >
                 {/* Mecha Core Ring */}
                 <div className="relative">
-                  <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-cyan-500 to-blue-600 opacity-70 blur-sm group-hover:opacity-100 transition-opacity animate-pulse" />
-                  <div className="relative w-12 h-12 rounded-2xl bg-gradient-to-tr from-cyan-400 via-cyan-500 to-blue-600 flex items-center justify-center shadow-[0_0_20px_rgba(0,212,255,0.6)] border-2 border-black">
-                    <Sparkles size={20} className="text-black fill-black/20" />
+                  <div className="absolute -inset-1 rounded-full bg-gradient-to-r from-cyan-400 via-sky-500 to-blue-600 opacity-80 blur-sm group-hover:opacity-100 transition-opacity animate-pulse" />
+                  <div className="relative w-[52px] h-[52px] rounded-full overflow-hidden border-2 border-cyan-400 shadow-[0_0_24px_rgba(0,212,255,0.85)] bg-black flex items-center justify-center">
+                    <video
+                      src="/nex-ai.mp4"
+                      autoPlay
+                      loop
+                      muted
+                      playsInline
+                      preload="auto"
+                      className="w-full h-full object-cover rounded-full scale-105 pointer-events-none"
+                    />
                   </div>
                 </div>
                 <span className="text-[10px] font-mono font-extrabold text-cyan-300 mt-1 tracking-wider uppercase drop-shadow-[0_0_8px_rgba(0,212,255,0.8)]">
