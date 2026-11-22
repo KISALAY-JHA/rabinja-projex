@@ -224,7 +224,7 @@ export const SAMPLE_EVENTS = [
     registration_opens: '2026-10-18T00:00:00+05:30',
     banner_url: '/images/events/poster-rabinjathon.png',
     status: 'active' as const,
-    prize_info: 'Participation Certificate',
+    prize_info: 'Rupees 10,000 + Participation Certificate',
     organizer: 'RABINJA Squad',
     team_size: '1–4 Members (inter-college & global allowed)',
     whatsapp: 'https://chat.whatsapp.com/GFL3izBqAbJEov4AgpCKOI',

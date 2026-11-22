@@ -80,9 +80,9 @@ export default function EventsPage() {
   const filteredEvents = useMemo(() => {
     let list = [...GLOBAL_EVENTS_LIST];
 
-    // Filter by country
+    // Filter by country (Official Rabinjathon is global and always pinned)
     if (selectedCountry !== 'ALL') {
-      list = list.filter((e) => e.countryCode === selectedCountry);
+      list = list.filter((e) => e.countryCode === selectedCountry || e.isRabinjaOfficial);
     }
 
     // Filter by mode
@@ -179,12 +179,20 @@ export default function EventsPage() {
                 <div className="flex-1 min-w-0">
                   {/* Badges */}
                   <div className="mb-3 sm:mb-4 flex flex-wrap items-center gap-2">
-                    <span className="badge badge-green flex items-center gap-1.5 text-xs px-3 py-1">
+                    <span className="badge badge-green flex items-center gap-1.5 text-xs px-3 py-1 font-mono font-bold shadow-[0_0_12px_rgba(34,197,94,0.3)]">
                       <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[var(--green)]" />
                       Registration Open
                     </span>
+                    <span className="inline-flex items-center gap-1.5 rounded-full border border-amber-500/50 bg-amber-950/60 px-3 py-1 text-xs text-amber-300 font-mono font-bold shadow-[0_0_15px_rgba(245,158,11,0.3)]">
+                      <Trophy size={13} className="text-amber-400" />
+                      <span>Rupees 10,000 Prize Pool</span>
+                    </span>
                     <span className="inline-flex items-center gap-1.5 rounded-full border border-cyan-500/40 bg-cyan-950/40 px-3 py-1 text-xs text-cyan-300 font-mono font-bold">
                       <Globe size={12} /> Global Event (Open Worldwide)
+                    </span>
+                    <span className="inline-flex items-center gap-1.5 rounded-full border border-zinc-700 bg-zinc-900/60 px-3 py-1 text-xs text-zinc-300 font-mono">
+                      <Clock size={12} className="text-cyan-400" />
+                      <span>Opens: 18 Oct 2026 • Closes: 31 Dec 2026</span>
                     </span>
                     <span className="inline-flex items-center gap-1.5 rounded-full border border-amber-500/40 bg-amber-950/40 px-3 py-1 text-xs text-amber-300 font-mono font-bold">
                       🗣️ English & Hindi
@@ -197,11 +205,22 @@ export default function EventsPage() {
                     </span>
                   </div>
 
-                  {/* Title */}
-                  <h1 className="font-display mb-3 max-w-4xl text-3xl font-extrabold leading-tight text-white md:text-5xl">
-                    {primaryEvent.name}
-                  </h1>
-                  <p className="mb-2 text-sm font-medium text-[var(--cyan)]">by {primaryEvent.organizer}</p>
+                  {/* Title & Official Rabinjathon Name Logo */}
+                  <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-3">
+                    <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl overflow-hidden border-2 border-cyan-400 shadow-[0_0_20px_rgba(0,212,255,0.4)] bg-black shrink-0">
+                      <img
+                        src="/images/events/rabinjathon-name-logo.jpeg"
+                        alt="Rabinjathon Official Logo"
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <div>
+                      <h1 className="font-display max-w-4xl text-3xl font-extrabold leading-tight text-white md:text-5xl">
+                        {primaryEvent.name}
+                      </h1>
+                      <p className="text-sm font-medium text-[var(--cyan)]">by {primaryEvent.organizer}</p>
+                    </div>
+                  </div>
                   <p className="mb-6 max-w-3xl text-sm leading-relaxed text-[var(--text-secondary)] md:text-base">
                     {primaryEvent.description}
                   </p>
@@ -339,18 +358,40 @@ export default function EventsPage() {
                     <MessageSquare size={14} /> Join Official WhatsApp
                   </a>
 
-                  <div className="pt-4 border-t border-zinc-800 space-y-2 text-xs font-mono">
+                  <div className="pt-4 border-t border-zinc-800 space-y-2.5 text-xs font-mono">
+                    <div className="flex justify-between items-center text-zinc-400">
+                      <span>Prize / Grant:</span>
+                      <strong className="text-amber-400 font-bold text-sm">Rupees 10,000</strong>
+                    </div>
+                    <div className="flex justify-between items-center text-zinc-400">
+                      <span>Current Status:</span>
+                      <span className="px-2 py-0.5 rounded bg-emerald-950/60 border border-emerald-500/40 text-emerald-300 font-bold text-[11px]">
+                        Registration Open
+                      </span>
+                    </div>
+                    <div className="flex justify-between text-zinc-400">
+                      <span>Registration Opens:</span>
+                      <strong className="text-white">18 Oct 2026</strong>
+                    </div>
                     <div className="flex justify-between text-zinc-400">
                       <span>Registration Closes:</span>
-                      <strong className="text-white">31 Dec 2026</strong>
+                      <strong className="text-white">31 Dec 2026, 11:59 PM IST</strong>
                     </div>
                     <div className="flex justify-between text-zinc-400">
-                      <span>Mode:</span>
-                      <strong className="text-cyan-300">Online-First</strong>
+                      <span>Upcoming Round 1:</span>
+                      <strong className="text-cyan-300">01 Jan 2027 (Product Video)</strong>
                     </div>
                     <div className="flex justify-between text-zinc-400">
-                      <span>Prizes:</span>
-                      <strong className="text-amber-400">Participation Certificate</strong>
+                      <span>Upcoming Round 2:</span>
+                      <strong className="text-cyan-300">15 Jan 2027 (Working Demo)</strong>
+                    </div>
+                    <div className="flex justify-between text-zinc-400">
+                      <span>Grand Finale:</span>
+                      <strong className="text-cyan-300">29 Jan – 05 Feb 2027</strong>
+                    </div>
+                    <div className="flex justify-between text-zinc-400">
+                      <span>Format:</span>
+                      <strong className="text-zinc-200">Global Online-First</strong>
                     </div>
                   </div>
                 </div>

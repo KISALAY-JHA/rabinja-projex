@@ -17,13 +17,13 @@ export function MobileNav() {
 
   return (
     <nav
-      className="fixed bottom-0 left-0 right-0 md:hidden z-40 bg-black/95 border-t border-cyan-500/20 pb-[max(env(safe-area-inset-bottom),6px)] shadow-[0_-10px_35px_rgba(0,0,0,0.95)] backdrop-blur-2xl w-full max-w-full overflow-hidden"
+      className="fixed bottom-0 left-0 right-0 md:hidden z-40 bg-black/95 border-t border-cyan-500/20 pb-[max(env(safe-area-inset-bottom),6px)] shadow-[0_-10px_35px_rgba(0,0,0,0.95)] backdrop-blur-2xl w-full max-w-full overflow-visible"
       aria-label="Mobile navigation"
     >
       {/* Anime top edge glow filament */}
-      <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-cyan-400/60 to-transparent" />
+      <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-cyan-400/60 to-transparent pointer-events-none" />
 
-      <div className="flex items-center justify-around h-16 px-1 w-full max-w-full relative">
+      <div className="flex items-center justify-around h-16 px-1 w-full max-w-full relative overflow-visible">
         {NAV_ITEMS.map((item) => {
           const isActive = pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href));
 
@@ -33,13 +33,13 @@ export function MobileNav() {
                 key={item.href}
                 href={item.href}
                 id="mobile-nav-nex"
-                className="relative -top-3.5 flex flex-col items-center group active:scale-90 transition-transform"
+                className="relative -top-4 z-50 flex flex-col items-center group active:scale-95 transition-transform"
                 title="Launch NEX AI"
               >
                 {/* Mecha Core Ring */}
                 <div className="relative">
-                  <div className="absolute -inset-1 rounded-full bg-gradient-to-r from-cyan-400 via-sky-500 to-blue-600 opacity-80 blur-sm group-hover:opacity-100 transition-opacity animate-pulse" />
-                  <div className="relative w-[52px] h-[52px] rounded-full overflow-hidden border-2 border-cyan-400 shadow-[0_0_24px_rgba(0,212,255,0.85)] bg-black flex items-center justify-center">
+                  <div className="absolute -inset-1.5 rounded-full bg-gradient-to-r from-cyan-400 via-sky-500 to-blue-600 opacity-90 blur-md group-hover:opacity-100 transition-opacity animate-pulse pointer-events-none" />
+                  <div className="relative w-14 h-14 rounded-full overflow-hidden border-[2.5px] border-cyan-400 shadow-[0_0_28px_rgba(0,212,255,0.95)] bg-black flex items-center justify-center p-0.5">
                     <video
                       src="/nex-ai.mp4"
                       autoPlay
@@ -47,7 +47,7 @@ export function MobileNav() {
                       muted
                       playsInline
                       preload="auto"
-                      className="w-full h-full object-cover rounded-full scale-105 pointer-events-none"
+                      className="w-full h-full object-cover rounded-full pointer-events-none"
                     />
                   </div>
                 </div>

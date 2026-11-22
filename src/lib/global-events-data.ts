@@ -34,13 +34,13 @@ export interface GlobalEventItem {
 
 export const COUNTRY_BOXES = [
   { code: 'ALL', name: 'All Countries', flag: '🌍', count: 18 },
+  { code: 'GL',  name: 'Global / Online',flag: '🌐', count: 5 },
   { code: 'IN',  name: 'India',          flag: '🇮🇳', count: 6 },
   { code: 'US',  name: 'United States',  flag: '🇺🇸', count: 4 },
   { code: 'GB',  name: 'United Kingdom', flag: '🇬🇧', count: 3 },
   { code: 'SG',  name: 'Singapore',      flag: '🇸🇬', count: 2 },
   { code: 'DE',  name: 'Germany',        flag: '🇩🇪', count: 2 },
   { code: 'JP',  name: 'Japan',          flag: '🇯🇵', count: 2 },
-  { code: 'GL',  name: 'Global / Online',flag: '🌐', count: 4 },
 ];
 
 export const GLOBAL_EVENTS_LIST: GlobalEventItem[] = [
@@ -50,19 +50,19 @@ export const GLOBAL_EVENTS_LIST: GlobalEventItem[] = [
     slug: 'rabinjathon-prime-1',
     name: 'Rabinjathon: Prime 1',
     organizer: 'RABINJA Squad',
-    country: 'India',
-    countryCode: 'IN',
-    flag: '🇮🇳',
-    logo: '/images/events/rabinjathon-logo.png',
+    country: 'Global / Online',
+    countryCode: 'GL',
+    flag: '🌐',
+    logo: '/images/events/rabinjathon-name-logo.jpeg',
     mode: 'Online',
     status: 'Registration Open',
     teamSize: '1–4 Members',
     domain: 'Software, Hardware & Open Innovation',
     registrationDeadline: '31 Dec 2026, 11:59 PM IST',
     dates: '01 Jan 2027 – 05 Feb 2027',
-    prize: 'Participation Certificate',
-    brief: 'Student-led, online-first innovation event by RABINJA SQUAD where original ideas are built into working prototypes and presented before judges.',
-    description: 'RABINJATHON is designed for builders who want to take an idea beyond a presentation — develop a concept, build a working prototype, explain how it works, and present it before an esteemed judging panel with live YouTube broadcast.',
+    prize: 'Rupees 10,000 + Participation Certificates',
+    brief: 'Student-led, global online innovation event by RABINJA SQUAD where original ideas are built into working prototypes and presented before judges.',
+    description: 'RABINJATHON is designed for builders worldwide who want to take an idea beyond a presentation — develop a concept, build a working prototype, explain how it works, and present it before an esteemed judging panel with live YouTube broadcast.',
     externalUrl: 'https://unstop.com',
     isRabinjaOfficial: true,
     rounds: [
