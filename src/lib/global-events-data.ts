@@ -53,7 +53,7 @@ export const GLOBAL_EVENTS_LIST: GlobalEventItem[] = [
     country: 'India',
     countryCode: 'IN',
     flag: '🇮🇳',
-    logo: '/logo.png',
+    logo: '/images/events/rabinjathon-logo.png',
     mode: 'Online',
     status: 'Registration Open',
     teamSize: '1–4 Members',

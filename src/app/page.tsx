@@ -147,27 +147,36 @@ export default function HomePage() {
                   <span className="text-rose-400">Now Open</span>
                 </h2>
 
-                <div className="flex flex-wrap gap-x-5 gap-y-2 text-xs md:text-sm text-zinc-300 mb-5">
-                  <span className="flex items-center gap-1.5">
-                    <Users size={13} className="text-zinc-500 shrink-0" />
-                    Organizer: <span className="text-white font-medium ml-1">RABINJA Squad</span>
-                  </span>
-                  <span className="flex items-center gap-1.5">
-                    <MapPin size={13} className="text-zinc-500 shrink-0" />
-                    Mode: <span className="text-white font-medium ml-1">Online</span>
-                  </span>
-                  <span className="flex items-center gap-1.5">
-                    <Calendar size={13} className="text-zinc-500 shrink-0" />
-                    Registration Deadline: <span className="text-white font-medium ml-1">31 Dec 2026</span>
-                  </span>
-                  <span className="flex items-center gap-1.5">
-                    <Calendar size={13} className="text-zinc-500 shrink-0" />
-                    Round 1 Starts: <span className="text-white font-medium ml-1">1 Jan 2027</span>
-                  </span>
-                  <span className="flex items-center gap-1.5">
-                    <Trophy size={13} className="text-amber-500 shrink-0" />
-                    Prize: <span className="text-amber-400 font-medium ml-1">Participation Certificate</span>
-                  </span>
+                <div className="flex flex-col sm:flex-row gap-4 items-start mb-5">
+                  <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-xl overflow-hidden bg-black border border-rose-500/30 shrink-0 shadow-[0_0_20px_rgba(244,63,94,0.2)]">
+                    <img
+                      src="/images/events/poster-rabinjathon.png"
+                      alt="Rabinjathon Prime 1"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <div className="flex flex-wrap gap-x-5 gap-y-2 text-xs md:text-sm text-zinc-300">
+                    <span className="flex items-center gap-1.5">
+                      <Users size={13} className="text-zinc-500 shrink-0" />
+                      Organizer: <span className="text-white font-medium ml-1">RABINJA Squad</span>
+                    </span>
+                    <span className="flex items-center gap-1.5">
+                      <MapPin size={13} className="text-zinc-500 shrink-0" />
+                      Mode: <span className="text-white font-medium ml-1">Online</span>
+                    </span>
+                    <span className="flex items-center gap-1.5">
+                      <Calendar size={13} className="text-zinc-500 shrink-0" />
+                      Registration Deadline: <span className="text-white font-medium ml-1">31 Dec 2026</span>
+                    </span>
+                    <span className="flex items-center gap-1.5">
+                      <Calendar size={13} className="text-zinc-500 shrink-0" />
+                      Round 1 Starts: <span className="text-white font-medium ml-1">1 Jan 2027</span>
+                    </span>
+                    <span className="flex items-center gap-1.5">
+                      <Trophy size={13} className="text-amber-500 shrink-0" />
+                      Prize: <span className="text-amber-400 font-medium ml-1">Participation Certificate</span>
+                    </span>
+                  </div>
                 </div>
 
                 <a
@@ -274,6 +283,20 @@ export default function HomePage() {
                   key={p.id}
                   className="card rounded-2xl bg-zinc-950 border border-zinc-800 hover:border-cyan-500/30 hover:shadow-[0_0_20px_rgba(0,212,255,0.1)] transition-all flex flex-col p-5 md:p-6"
                 >
+                  {/* Thumbnail Image */}
+                  {p.thumbnail_url && (
+                    <Link
+                      href={`/explore/${p.slug}`}
+                      className="block w-full h-36 rounded-xl overflow-hidden mb-3.5 bg-black border border-zinc-800/80 group-hover:border-cyan-500/40 transition-colors relative"
+                    >
+                      <img
+                        src={p.thumbnail_url}
+                        alt={p.title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
+                    </Link>
+                  )}
+
                   {/* Category badge */}
                   <span className="inline-block self-start px-2.5 py-0.5 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-[10px] md:text-[11px] font-mono text-cyan-400 font-bold uppercase tracking-wide mb-3">
                     {p.category}

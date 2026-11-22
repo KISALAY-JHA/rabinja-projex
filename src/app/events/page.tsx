@@ -185,47 +185,60 @@ export default function EventsPage() {
             <div className="pointer-events-none absolute top-1/2 right-1/4 h-72 w-72 rounded-full bg-[var(--purple)]/8 blur-3xl" />
 
             <div className="container-page relative z-10 py-10 md:py-16">
-              {/* Badges */}
-              <div className="mb-4 flex flex-wrap items-center gap-2">
-                <span className="badge badge-green flex items-center gap-1.5 text-xs px-3 py-1">
-                  <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[var(--green)]" />
-                  Registration Open
-                </span>
-                <span className="badge badge-purple flex items-center gap-1.5 text-xs px-3 py-1">
-                  <MapPin size={12} /> Online
-                </span>
-                <span className="inline-flex items-center gap-1.5 rounded-full border border-[var(--border)] bg-[var(--bg-surface-2)] px-3 py-1 text-xs text-[var(--text-secondary)]">
-                  <Users size={12} /> {primaryEvent.team_size}
-                </span>
-              </div>
+              <div className="flex flex-col lg:flex-row items-start justify-between gap-8">
+                <div className="flex-1 min-w-0">
+                  {/* Badges */}
+                  <div className="mb-4 flex flex-wrap items-center gap-2">
+                    <span className="badge badge-green flex items-center gap-1.5 text-xs px-3 py-1">
+                      <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[var(--green)]" />
+                      Registration Open
+                    </span>
+                    <span className="badge badge-purple flex items-center gap-1.5 text-xs px-3 py-1">
+                      <MapPin size={12} /> Online
+                    </span>
+                    <span className="inline-flex items-center gap-1.5 rounded-full border border-[var(--border)] bg-[var(--bg-surface-2)] px-3 py-1 text-xs text-[var(--text-secondary)]">
+                      <Users size={12} /> {primaryEvent.team_size}
+                    </span>
+                  </div>
 
-              {/* Title */}
-              <h1 className="font-display mb-3 max-w-4xl text-3xl font-extrabold leading-tight text-white md:text-5xl">
-                {primaryEvent.name}
-              </h1>
-              <p className="mb-2 text-sm font-medium text-[var(--cyan)]">by {primaryEvent.organizer}</p>
-              <p className="mb-6 max-w-3xl text-sm leading-relaxed text-[var(--text-secondary)] md:text-base">
-                {primaryEvent.description}
-              </p>
+                  {/* Title */}
+                  <h1 className="font-display mb-3 max-w-4xl text-3xl font-extrabold leading-tight text-white md:text-5xl">
+                    {primaryEvent.name}
+                  </h1>
+                  <p className="mb-2 text-sm font-medium text-[var(--cyan)]">by {primaryEvent.organizer}</p>
+                  <p className="mb-6 max-w-3xl text-sm leading-relaxed text-[var(--text-secondary)] md:text-base">
+                    {primaryEvent.description}
+                  </p>
 
-              {/* Mobile CTA Buttons */}
-              <div className="flex flex-col gap-3 sm:flex-row lg:hidden mb-4">
-                <a
-                  href={primaryEvent.register_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn btn-primary text-xs justify-center shadow-[0_0_20px_rgba(0,212,255,0.4)]"
-                >
-                  Register on Unstop <ExternalLink size={13} />
-                </a>
-                <a
-                  href={primaryEvent.whatsapp}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn btn-secondary text-xs justify-center text-emerald-400 border-emerald-500/40"
-                >
-                  <MessageSquare size={13} /> Join WhatsApp Group
-                </a>
+                  {/* Mobile CTA Buttons */}
+                  <div className="flex flex-col gap-3 sm:flex-row lg:hidden mb-4">
+                    <a
+                      href={primaryEvent.register_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="btn btn-primary text-xs justify-center shadow-[0_0_20px_rgba(0,212,255,0.4)]"
+                    >
+                      Register on Unstop <ExternalLink size={13} />
+                    </a>
+                    <a
+                      href={primaryEvent.whatsapp}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="btn btn-secondary text-xs justify-center text-emerald-400 border-emerald-500/40"
+                    >
+                      <MessageSquare size={13} /> Join WhatsApp Group
+                    </a>
+                  </div>
+                </div>
+
+                {/* Official Event Poster Preview (Desktop) */}
+                <div className="hidden lg:block w-64 xl:w-72 shrink-0 rounded-2xl overflow-hidden border-2 border-cyan-400/40 shadow-[0_0_35px_rgba(0,212,255,0.25)] bg-black">
+                  <img
+                    src="/images/events/poster-rabinjathon.png"
+                    alt="Rabinjathon Prime 1 Official Poster"
+                    className="w-full h-auto object-cover hover:scale-105 transition-transform duration-300"
+                  />
+                </div>
               </div>
             </div>
           </section>
