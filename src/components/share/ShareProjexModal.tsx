@@ -22,7 +22,7 @@ export function ShareProjexModal({
   customUrl,
 }: ShareProjexModalProps) {
   const [copied, setCopied] = useState(false);
-  const [shareUrl, setShareUrl] = useState('https://linktr.ee/RABINJATHON');
+  const [shareUrl, setShareUrl] = useState('https://rabinjasquad.in');
 
   useEffect(() => {
     if (typeof window !== 'undefined') {

@@ -250,23 +250,19 @@ function ProfileContent() {
     setTimeout(() => setFriendSuccessMsg(''), 3000);
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-black text-white pt-24 pb-24 flex items-center justify-center">
-        <div className="flex flex-col items-center gap-3">
-          <div className="w-8 h-8 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin" />
-          <span className="font-mono text-xs text-zinc-400">Verifying session...</span>
-        </div>
-      </div>
-    );
-  }
+  const handleTabSwitch = (newTab: typeof activeTab) => {
+    setActiveTab(newTab);
+    if (typeof window !== 'undefined') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
 
   // ═════════════════════════════════════════════════════════════════
   // NO PROFILE EXISTS BEFORE CREATION (Real Working App, No Fake User)
   // ═════════════════════════════════════════════════════════════════
   if (!user && activeTab !== 'settings') {
     return (
-      <div className="min-h-screen bg-black text-white pt-20 pb-24 px-4 flex items-center justify-center">
+      <div className="min-h-screen bg-black text-white pt-4 sm:pt-8 pb-20 px-4 flex items-center justify-center">
         <div className="max-w-md w-full hud-panel p-6 sm:p-8 rounded-3xl bg-[#05070E] border border-cyan-500/30 shadow-[0_0_50px_rgba(0,212,255,0.15)] text-center animate-fade-in">
           <div className="w-16 h-16 rounded-2xl bg-gradient-brand mx-auto mb-5 flex items-center justify-center shadow-[0_0_25px_rgba(0,212,255,0.4)]">
             <User size={30} className="text-black" />
@@ -335,7 +331,7 @@ function ProfileContent() {
 
           {/* Stats on Right */}
           <div className="flex items-center gap-4 sm:gap-6 text-center">
-            <button onClick={() => setActiveTab('startup_team')} className="group">
+            <button onClick={() => handleTabSwitch('startup_team')} className="group">
               <div className="text-base sm:text-xl font-bold font-mono text-cyan-400 group-hover:scale-110 transition-transform">
                 {startupTeam ? startupTeam.members.length : 0}
               </div>
@@ -343,7 +339,7 @@ function ProfileContent() {
                 Team Size
               </div>
             </button>
-            <button onClick={() => setActiveTab('network')} className="group">
+            <button onClick={() => handleTabSwitch('network')} className="group">
               <div className="text-base sm:text-xl font-bold font-mono text-white group-hover:text-cyan-400 transition-colors">
                 {friendsCount}
               </div>
@@ -351,7 +347,7 @@ function ProfileContent() {
                 Friends
               </div>
             </button>
-            <button onClick={() => setActiveTab('submissions')} className="group">
+            <button onClick={() => handleTabSwitch('submissions')} className="group">
               <div className="text-base sm:text-xl font-bold font-mono text-white group-hover:text-cyan-400 transition-colors">
                 {submissionsCount}
               </div>
@@ -400,7 +396,7 @@ function ProfileContent() {
                 </div>
               </div>
               <button
-                onClick={() => setActiveTab('startup_team')}
+                onClick={() => handleTabSwitch('startup_team')}
                 className="btn btn-ghost text-xs text-cyan-300 hover:text-white font-mono py-1 px-3 border border-cyan-500/30 shrink-0"
               >
                 Team Deck →
@@ -414,7 +410,7 @@ function ProfileContent() {
               </div>
               <button
                 onClick={() => {
-                  setActiveTab('startup_team');
+                  handleTabSwitch('startup_team');
                   setIsEditingTeam(true);
                 }}
                 className="btn btn-primary text-xs py-1.5 px-3 font-mono font-bold shrink-0"
@@ -427,7 +423,7 @@ function ProfileContent() {
           {/* Profile Actions */}
           <div className="mt-4 flex items-center gap-2">
             <button
-              onClick={() => setActiveTab('settings')}
+              onClick={() => handleTabSwitch('settings')}
               className="flex-1 py-2 rounded-xl bg-zinc-900 border border-zinc-700 hover:border-zinc-500 text-zinc-200 font-mono font-medium text-xs text-center active:scale-95 transition-all"
             >
               Edit Profile
@@ -448,7 +444,7 @@ function ProfileContent() {
       <div className="max-w-2xl mx-auto px-4 mt-3">
         <div className="flex items-center gap-1 overflow-x-auto no-scrollbar p-1 rounded-2xl bg-zinc-950 border border-zinc-800">
           <button
-            onClick={() => setActiveTab('overview')}
+            onClick={() => handleTabSwitch('overview')}
             className={`flex-1 min-w-[70px] py-2 rounded-xl text-xs font-mono font-bold flex items-center justify-center gap-1.5 transition-all whitespace-nowrap ${
               activeTab === 'overview'
                 ? 'bg-zinc-800 text-white shadow-sm'
@@ -460,7 +456,7 @@ function ProfileContent() {
           </button>
 
           <button
-            onClick={() => setActiveTab('startup_team')}
+            onClick={() => handleTabSwitch('startup_team')}
             className={`flex-1 min-w-[100px] py-2 rounded-xl text-xs font-mono font-bold flex items-center justify-center gap-1.5 transition-all whitespace-nowrap ${
               activeTab === 'startup_team'
                 ? 'bg-cyan-950 text-cyan-300 border border-cyan-500/40 shadow-sm'
@@ -472,7 +468,7 @@ function ProfileContent() {
           </button>
 
           <button
-            onClick={() => setActiveTab('network')}
+            onClick={() => handleTabSwitch('network')}
             className={`flex-1 min-w-[90px] py-2 rounded-xl text-xs font-mono font-bold flex items-center justify-center gap-1.5 transition-all whitespace-nowrap relative ${
               activeTab === 'network'
                 ? 'bg-zinc-800 text-white shadow-sm'
@@ -487,7 +483,7 @@ function ProfileContent() {
           </button>
 
           <button
-            onClick={() => setActiveTab('submissions')}
+            onClick={() => handleTabSwitch('submissions')}
             className={`flex-1 min-w-[90px] py-2 rounded-xl text-xs font-mono font-bold flex items-center justify-center gap-1.5 transition-all whitespace-nowrap ${
               activeTab === 'submissions'
                 ? 'bg-zinc-800 text-white shadow-sm'
@@ -499,7 +495,7 @@ function ProfileContent() {
           </button>
 
           <button
-            onClick={() => setActiveTab('health')}
+            onClick={() => handleTabSwitch('health')}
             className={`flex-1 min-w-[70px] py-2 rounded-xl text-xs font-mono font-bold flex items-center justify-center gap-1.5 transition-all whitespace-nowrap ${
               activeTab === 'health'
                 ? 'bg-zinc-800 text-emerald-300 shadow-sm'
@@ -511,7 +507,7 @@ function ProfileContent() {
           </button>
 
           <button
-            onClick={() => setActiveTab('settings')}
+            onClick={() => handleTabSwitch('settings')}
             className={`flex-1 min-w-[70px] py-2 rounded-xl text-xs font-mono font-bold flex items-center justify-center gap-1.5 transition-all whitespace-nowrap ${
               activeTab === 'settings'
                 ? 'bg-zinc-800 text-white shadow-sm'

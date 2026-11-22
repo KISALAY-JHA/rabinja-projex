@@ -119,7 +119,10 @@ export default function EventsPage() {
         <div className="container-page flex flex-wrap items-center justify-between gap-2 py-2 px-3 sm:px-6">
           <div className="flex items-center gap-1.5 sm:gap-2">
             <button
-              onClick={() => setActiveView('prime')}
+              onClick={() => {
+                setActiveView('prime');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
               className={`flex items-center gap-1 px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-lg text-[11px] sm:text-xs font-mono font-bold transition-all active:scale-95 ${
                 activeView === 'prime'
                   ? 'bg-cyan-400 text-black shadow-[0_0_12px_rgba(0,212,255,0.4)]'
@@ -131,7 +134,10 @@ export default function EventsPage() {
             </button>
 
             <button
-              onClick={() => setActiveView('explore')}
+              onClick={() => {
+                setActiveView('explore');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
               className={`flex items-center gap-1 px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-lg text-[11px] sm:text-xs font-mono font-bold transition-all active:scale-95 ${
                 activeView === 'explore'
                   ? 'bg-cyan-400 text-black shadow-[0_0_12px_rgba(0,212,255,0.4)]'
@@ -168,14 +174,20 @@ export default function EventsPage() {
             <div className="pointer-events-none absolute top-1/4 left-1/4 h-96 w-96 rounded-full bg-[var(--cyan)]/8 blur-3xl" />
             <div className="pointer-events-none absolute top-1/2 right-1/4 h-72 w-72 rounded-full bg-[var(--purple)]/8 blur-3xl" />
 
-            <div className="container-page relative z-10 py-10 md:py-16">
+            <div className="container-page relative z-10 pt-3 pb-8 sm:pt-6 sm:pb-12 md:py-16">
               <div className="flex flex-col lg:flex-row items-start justify-between gap-8">
                 <div className="flex-1 min-w-0">
                   {/* Badges */}
-                  <div className="mb-4 flex flex-wrap items-center gap-2">
+                  <div className="mb-3 sm:mb-4 flex flex-wrap items-center gap-2">
                     <span className="badge badge-green flex items-center gap-1.5 text-xs px-3 py-1">
                       <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[var(--green)]" />
                       Registration Open
+                    </span>
+                    <span className="inline-flex items-center gap-1.5 rounded-full border border-cyan-500/40 bg-cyan-950/40 px-3 py-1 text-xs text-cyan-300 font-mono font-bold">
+                      <Globe size={12} /> Global Event (Open Worldwide)
+                    </span>
+                    <span className="inline-flex items-center gap-1.5 rounded-full border border-amber-500/40 bg-amber-950/40 px-3 py-1 text-xs text-amber-300 font-mono font-bold">
+                      🗣️ English & Hindi
                     </span>
                     <span className="badge badge-purple flex items-center gap-1.5 text-xs px-3 py-1">
                       <MapPin size={12} /> Online

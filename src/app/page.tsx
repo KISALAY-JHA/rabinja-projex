@@ -64,16 +64,16 @@ export default function HomePage() {
         <div className="pointer-events-none absolute -top-24 -right-24 w-72 h-72 md:w-[480px] md:h-[480px] rounded-full bg-cyan-500/10 blur-3xl" />
         <div className="pointer-events-none absolute bottom-0 -left-16 w-56 h-56 md:w-96 md:h-96 rounded-full bg-blue-700/10 blur-3xl" />
 
-        <div className="container-page relative z-10 pt-10 pb-16 md:pt-20 md:pb-24">
-          <div className="max-w-3xl mx-auto text-center px-4">
+        <div className="container-page relative z-10 pt-3 pb-12 sm:pt-6 sm:pb-16 md:pt-10 md:pb-20">
+          <div className="max-w-3xl mx-auto text-center px-3 sm:px-4">
 
             {/* Top pill badge */}
             <Link
               href="/events"
-              className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-rose-950/60 border border-rose-500/40 text-[11px] md:text-xs font-mono font-semibold text-rose-300 hover:border-rose-400 transition-colors mb-6 md:mb-8"
+              className="inline-flex items-center gap-2 px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-full bg-rose-950/60 border border-rose-500/40 text-[10.5px] sm:text-xs font-mono font-semibold text-rose-300 hover:border-rose-400 transition-colors mb-3 sm:mb-5"
             >
               <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse shrink-0" />
-              ● RABINJATHON: PRIME 1 // REGISTRATION OPEN
+              ● RABINJATHON: PRIME 1 // GLOBAL ARENA (ENGLISH & HINDI)
             </Link>
 
             {/* Headline */}
@@ -83,10 +83,10 @@ export default function HomePage() {
             </h1>
 
             {/* Sub-description */}
-            <p className="text-sm md:text-lg text-zinc-300 leading-relaxed max-w-2xl mx-auto mb-8 md:mb-10 px-2">
-              The first project-centric platform for builders, hackathons, and innovators in
-              India. Discover real projects, join buildathons, support ideas, and get authentic
-              feedback — not algorithm noise.
+            <p className="text-xs sm:text-base md:text-lg text-zinc-300 leading-relaxed max-w-2xl mx-auto mb-6 md:mb-8 px-2">
+              The project-centric ecosystem for builders, hackathons, and global innovators.
+              Discover authentic projects, enter global buildathons in English or Hindi, and get genuine
+              public support and direct government liaison.
             </p>
 
             {/* CTA buttons */}
@@ -162,7 +162,11 @@ export default function HomePage() {
                     </span>
                     <span className="flex items-center gap-1.5">
                       <MapPin size={13} className="text-zinc-500 shrink-0" />
-                      Mode: <span className="text-white font-medium ml-1">Online</span>
+                      Mode: <span className="text-white font-medium ml-1">Online Global</span>
+                    </span>
+                    <span className="flex items-center gap-1.5 text-cyan-300">
+                      <Sparkles size={13} className="text-cyan-400 shrink-0" />
+                      Languages: <span className="text-white font-medium ml-1">English & Hindi</span>
                     </span>
                     <span className="flex items-center gap-1.5">
                       <Calendar size={13} className="text-zinc-500 shrink-0" />

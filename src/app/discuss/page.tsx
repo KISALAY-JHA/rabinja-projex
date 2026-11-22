@@ -270,7 +270,7 @@ export default function OpenDiscussionPage() {
   return (
     <div className="min-h-screen bg-[var(--bg-primary)] pb-24 text-white">
       {/* ── TOP HERO SECTION ── */}
-      <section className="relative overflow-hidden border-b border-cyan-500/20 bg-gradient-to-b from-black via-[#060B18] to-[var(--bg-primary)] pt-12 pb-14 px-4 sm:px-6">
+      <section className="relative overflow-hidden border-b border-cyan-500/20 bg-gradient-to-b from-black via-[#060B18] to-[var(--bg-primary)] pt-3 pb-8 sm:pt-6 sm:pb-12 px-4 sm:px-6">
         <div className="pointer-events-none absolute top-10 left-1/3 w-96 h-96 rounded-full bg-cyan-500/10 blur-3xl" />
         <div className="pointer-events-none absolute bottom-5 right-1/4 w-80 h-80 rounded-full bg-amber-500/10 blur-3xl" />
 
@@ -505,7 +505,7 @@ export default function OpenDiscussionPage() {
               <div className="flex items-center gap-2 shrink-0">
                 <button
                   onClick={() => {
-                    navigator.clipboard.writeText(`https://rabinja.com/discuss?code=${activeRoom.code}`);
+                    navigator.clipboard.writeText(`https://rabinjasquad.in/discuss?code=${activeRoom.code}`);
                     setRoomCopied(true);
                     setTimeout(() => setRoomCopied(false), 2000);
                   }}

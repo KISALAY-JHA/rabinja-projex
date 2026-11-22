@@ -247,8 +247,8 @@ export function ProjectDetailClient({ slug }: { slug: string }) {
 
       {/* ── Project Header ── */}
       <div className="border-b border-zinc-800/80 bg-gradient-to-b from-zinc-950 to-black">
-        <div className="container-page py-8 sm:py-12">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="container-page pt-3 pb-6 sm:py-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
             {/* Left: Title & Meta */}
             <div className="lg:col-span-2">
               {/* Special Category Emblem for RABINJA Brand */}
@@ -354,14 +354,35 @@ export function ProjectDetailClient({ slug }: { slug: string }) {
                 Stress Test with NEX AI
               </Link>
 
-              {/* Request Govt & Policy Showcase Button */}
-              <button
-                onClick={() => setGovtModalOpen(true)}
-                className="w-full py-2.5 px-3 rounded-xl bg-gradient-to-r from-amber-500/20 via-orange-500/15 to-amber-500/20 border border-amber-500/40 hover:border-amber-400 text-amber-300 hover:text-white font-mono text-xs font-bold flex items-center justify-center gap-2 transition-all shadow-[0_0_15px_rgba(245,158,11,0.15)] hover:shadow-[0_0_20px_rgba(245,158,11,0.3)] active:scale-95"
-              >
-                <Landmark size={14} className="text-amber-400 shrink-0" />
-                <span>Request Govt & Policy Showcase</span>
-              </button>
+              {/* Government & Policy Showcase Pathway */}
+              <div className="p-3 rounded-xl bg-gradient-to-r from-amber-950/30 via-black to-zinc-950 border border-amber-500/30 space-y-2 text-left">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-1.5 text-amber-300 font-mono font-bold text-[10.5px]">
+                    <Landmark size={13} className="text-amber-400 shrink-0" />
+                    <span>GOVERNMENT SHOWCASE PATHWAY</span>
+                  </div>
+                </div>
+
+                <p className="text-[10.5px] text-zinc-300 leading-relaxed font-sans">
+                  Public support helps this innovation qualify for official representation before Government Innovation Missions & grants.
+                </p>
+
+                <div className="pt-1 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-1.5 border-t border-zinc-900 text-[10px] font-mono">
+                  <span className="text-zinc-400">Public backing active.</span>
+                  <button
+                    onClick={() => {
+                      if (!user) {
+                        setAuthPromptAction('manage this innovation as owner');
+                      } else {
+                        setGovtModalOpen(true);
+                      }
+                    }}
+                    className="text-amber-400 hover:text-amber-300 underline font-bold"
+                  >
+                    [Project Owner] Issue Request →
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -375,7 +396,10 @@ export function ProjectDetailClient({ slug }: { slug: string }) {
               <button
                 key={t.key}
                 id={`tab-${t.key}`}
-                onClick={() => setTab(t.key)}
+                onClick={() => {
+                  setTab(t.key);
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
                 className={`flex items-center gap-2 px-4 py-3 text-xs sm:text-sm font-mono font-bold border-b-2 transition-all whitespace-nowrap ${
                   tab === t.key
                     ? 'border-cyan-400 text-cyan-300 bg-cyan-500/10'
@@ -470,7 +494,7 @@ export function ProjectDetailClient({ slug }: { slug: string }) {
                 format="sidebar"
                 title="RABINJA Autonomous Systems"
                 description="Engineered for high-throughput, decentralized verification and AI-assisted stress-testing."
-                href="https://rabinja.com"
+                href="https://rabinjasquad.in"
                 sponsorLabel="Brand Partner"
               />
             </div>

@@ -12,10 +12,10 @@ const FOOTER_LINKS = {
     { label: 'Open Innovation Café', href: '/discuss' },
     { label: 'Startup Teams', href: '/profile?tab=startup_team' },
     { label: 'Official WhatsApp', href: 'https://chat.whatsapp.com/GFL3izBqAbJEov4AgpCKOI' },
-    { label: 'Official Hub', href: 'https://linktr.ee/RABINJATHON' },
+    { label: 'Official Website', href: 'https://rabinjasquad.in' },
   ],
   Company: [
-    { label: 'About RABINJA SQUAD', href: 'https://linktr.ee/RABINJATHON' },
+    { label: 'About RABINJA SQUAD', href: 'https://rabinjasquad.in' },
     { label: 'Rabinjathon: Prime 1', href: '/events' },
     { label: 'Privacy Policy', href: '/privacy' },
     { label: 'Terms of Service', href: '/terms' },
@@ -23,7 +23,7 @@ const FOOTER_LINKS = {
 };
 
 const SOCIAL_LINKS = [
-  { icon: Globe,    href: 'https://linktr.ee/RABINJATHON', label: 'Linktree Hub' },
+  { icon: Globe,    href: 'https://rabinjasquad.in', label: 'rabinjasquad.in' },
   { icon: Mail,     href: 'mailto:rabinjathon@gmail.com',   label: 'Email Support' },
 ];
 
@@ -90,11 +90,21 @@ export function Footer() {
       <div className="neon-line" />
 
       {/* Bottom bar */}
-      <div className="container-page py-5">
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[var(--text-muted)]">
-          <span>© 2026 RABINJA SQUAD. All rights reserved.</span>
+      <div className="container-page py-6">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[var(--text-muted)]">
+          <div className="flex items-center gap-2 font-mono">
+            <span>© 2026 RABINJA SQUAD. All rights reserved.</span>
+          </div>
+
+          {/* User Requested Custom Brand Signoff */}
+          <div className="flex items-center gap-2 text-xs font-mono font-bold tracking-wider text-zinc-300 bg-zinc-950/80 px-4 py-1.5 rounded-full border border-zinc-800">
+            <span>RABINJA SQUAD</span>
+            <span className="text-rose-500 animate-pulse text-sm">❤️</span>
+            <span className="bg-gradient-to-r from-cyan-400 via-sky-300 to-white bg-clip-text text-transparent">INNOVATORS</span>
+          </div>
+
           <div className="flex items-center gap-4">
-            <span className="flex items-center gap-1.5">
+            <span className="flex items-center gap-1.5 font-mono text-[11px]">
               <span className="w-2 h-2 rounded-full bg-[var(--green)] animate-pulse" />
               All systems operational
             </span>
@@ -102,7 +112,7 @@ export function Footer() {
               href="https://rabinjasquad.in"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-1 hover:text-white transition-colors text-[var(--purple)] font-medium"
+              className="flex items-center gap-1 hover:text-white transition-colors text-cyan-400 font-mono text-xs font-medium"
             >
               rabinjasquad.in <ExternalLink size={11} />
             </a>
