@@ -9,7 +9,7 @@ const FOOTER_LINKS = {
     { label: 'Collections', href: '/collections' },
   ],
   Community: [
-    { label: 'Discussions', href: '/explore?tab=discussions' },
+    { label: 'Open Innovation Café', href: '/discuss' },
     { label: 'Startup Teams', href: '/profile?tab=startup_team' },
     { label: 'Official WhatsApp', href: 'https://chat.whatsapp.com/GFL3izBqAbJEov4AgpCKOI' },
     { label: 'Official Hub', href: 'https://linktr.ee/RABINJATHON' },

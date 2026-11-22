@@ -263,14 +263,16 @@ export default function SignUpPage() {
                   <label className="text-[11px] font-mono uppercase text-zinc-400 block mb-1.5 tracking-wider">
                     Phone Number
                   </label>
-                  <div className="relative">
-                    <Phone size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-cyan-400 pointer-events-none z-10" />
+                  <div className="flex items-center rounded-xl bg-zinc-900/90 border border-zinc-800 focus-within:border-cyan-400 focus-within:ring-2 focus-within:ring-cyan-500/20 overflow-hidden transition-all">
+                    <div className="px-3.5 py-3 text-cyan-400 bg-zinc-950/80 border-r border-zinc-800 flex items-center justify-center shrink-0">
+                      <Phone size={16} />
+                    </div>
                     <input
                       type="tel"
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
                       placeholder="XXXXX XXXXX"
-                      className="input pl-12 text-sm font-mono tracking-wider bg-zinc-900/80 border-zinc-800 text-white focus:border-cyan-400"
+                      className="w-full bg-transparent px-3.5 py-3 text-sm font-mono tracking-wider text-white placeholder-zinc-500 outline-none border-0 focus:outline-none focus:ring-0"
                       required
                       autoFocus
                     />

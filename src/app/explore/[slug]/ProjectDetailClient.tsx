@@ -6,7 +6,7 @@ import {
   TrendingUp, MessageSquare, ExternalLink,
   Play, ChevronLeft, Share2, Bookmark, Flag, Sparkles,
   Trophy, Users, Layers, ArrowRight, ThumbsUp,
-  CheckCircle2, User, Star, Send, ShieldAlert, LogIn, UserPlus
+  CheckCircle2, User, Star, Send, ShieldAlert, LogIn, UserPlus, Landmark
 } from 'lucide-react';
 import { RABINJA_PROJECTS, type ProjectItem } from '@/lib/sample-data';
 import {
@@ -23,6 +23,7 @@ import {
 } from '@/lib/api-client';
 import { AdSlot } from '@/components/ads/AdSlot';
 import { ShareProjexModal } from '@/components/share/ShareProjexModal';
+import { GovtShowcaseModal } from '@/components/verification/GovtShowcaseModal';
 
 type Tab = 'overview' | 'rate' | 'discussions' | 'comments';
 
@@ -30,6 +31,7 @@ export function ProjectDetailClient({ slug }: { slug: string }) {
   const [tab, setTab] = useState<Tab>('overview');
   const [user, setUser] = useState<AuthUser | null>(null);
   const [shareModalOpen, setShareModalOpen] = useState(false);
+  const [govtModalOpen, setGovtModalOpen] = useState(false);
 
   // Live real data states
   const [voteCount, setVoteCount] = useState(0);
@@ -351,6 +353,15 @@ export function ProjectDetailClient({ slug }: { slug: string }) {
                 <Sparkles size={14} className="text-cyan-400" />
                 Stress Test with NEX AI
               </Link>
+
+              {/* Request Govt & Policy Showcase Button */}
+              <button
+                onClick={() => setGovtModalOpen(true)}
+                className="w-full py-2.5 px-3 rounded-xl bg-gradient-to-r from-amber-500/20 via-orange-500/15 to-amber-500/20 border border-amber-500/40 hover:border-amber-400 text-amber-300 hover:text-white font-mono text-xs font-bold flex items-center justify-center gap-2 transition-all shadow-[0_0_15px_rgba(245,158,11,0.15)] hover:shadow-[0_0_20px_rgba(245,158,11,0.3)] active:scale-95"
+              >
+                <Landmark size={14} className="text-amber-400 shrink-0" />
+                <span>Request Govt & Policy Showcase</span>
+              </button>
             </div>
           </div>
         </div>
@@ -836,6 +847,15 @@ export function ProjectDetailClient({ slug }: { slug: string }) {
         onClose={() => setShareModalOpen(false)}
         title={project.title}
         description={project.subtitle || project.description}
+      />
+
+      {/* ── Govt & Policy Innovation Showcase Modal ── */}
+      <GovtShowcaseModal
+        isOpen={govtModalOpen}
+        onClose={() => setGovtModalOpen(false)}
+        projectTitle={project.title}
+        projectSlug={project.slug}
+        voteCount={voteCount}
       />
     </div>
   );

@@ -23,7 +23,8 @@ import {
   Sparkles,
   X,
   PlusCircle,
-  Share2
+  Share2,
+  Mail
 } from 'lucide-react';
 import { SAMPLE_EVENTS } from '@/lib/sample-data';
 import {
@@ -75,12 +76,6 @@ export default function EventsPage() {
   const [selectedEventModal, setSelectedEventModal] = useState<GlobalEventItem | null>(null);
   const [listModalOpen, setListModalOpen] = useState(false);
 
-  // List Event Form State
-  const [submitEventName, setSubmitEventName] = useState('');
-  const [submitOrg, setSubmitOrg] = useState('');
-  const [submitLink, setSubmitLink] = useState('');
-  const [submitSuccess, setSubmitSuccess] = useState(false);
-
   // Filtered & Sorted events with Rabinjathon ALWAYS pinned on top
   const filteredEvents = useMemo(() => {
     let list = [...GLOBAL_EVENTS_LIST];
@@ -115,48 +110,37 @@ export default function EventsPage() {
     });
   }, [selectedCountry, selectedMode, searchQuery]);
 
-  const handleListSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setSubmitSuccess(true);
-    setTimeout(() => {
-      setSubmitSuccess(false);
-      setListModalOpen(false);
-      setSubmitEventName('');
-      setSubmitOrg('');
-      setSubmitLink('');
-    }, 2500);
-  };
 
   return (
     <div className="min-h-screen bg-[var(--bg-primary)] pb-24 text-white">
 
       {/* ── TOP EVENT NAVIGATION BAR (Switcher between Rabinjathon & Explore More Events) ── */}
-      <div className="border-b border-cyan-500/20 bg-black/90 sticky top-14 z-30 backdrop-blur-xl">
-        <div className="container-page flex items-center justify-between py-2.5 px-3 sm:px-6">
-          <div className="flex items-center gap-2">
+      <div className="border-b border-cyan-500/20 bg-black/95 relative z-20">
+        <div className="container-page flex flex-wrap items-center justify-between gap-2 py-2 px-3 sm:px-6">
+          <div className="flex items-center gap-1.5 sm:gap-2">
             <button
               onClick={() => setActiveView('prime')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-mono font-bold transition-all active:scale-95 ${
+              className={`flex items-center gap-1 px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-lg text-[11px] sm:text-xs font-mono font-bold transition-all active:scale-95 ${
                 activeView === 'prime'
-                  ? 'bg-cyan-400 text-black shadow-[0_0_15px_rgba(0,212,255,0.4)]'
-                  : 'text-zinc-400 hover:text-white bg-zinc-900 border border-zinc-800'
+                  ? 'bg-cyan-400 text-black shadow-[0_0_12px_rgba(0,212,255,0.4)]'
+                  : 'text-zinc-400 hover:text-white bg-zinc-900/90 border border-zinc-800'
               }`}
             >
-              <Trophy size={14} className={activeView === 'prime' ? 'text-black' : 'text-cyan-400'} />
+              <Trophy size={13} className={activeView === 'prime' ? 'text-black' : 'text-cyan-400'} />
               <span>Rabinjathon: Prime 1</span>
             </button>
 
             <button
               onClick={() => setActiveView('explore')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-mono font-bold transition-all active:scale-95 ${
+              className={`flex items-center gap-1 px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-lg text-[11px] sm:text-xs font-mono font-bold transition-all active:scale-95 ${
                 activeView === 'explore'
-                  ? 'bg-cyan-400 text-black shadow-[0_0_15px_rgba(0,212,255,0.4)]'
-                  : 'text-zinc-400 hover:text-white bg-zinc-900 border border-zinc-800'
+                  ? 'bg-cyan-400 text-black shadow-[0_0_12px_rgba(0,212,255,0.4)]'
+                  : 'text-zinc-400 hover:text-white bg-zinc-900/90 border border-zinc-800'
               }`}
             >
-              <Globe size={14} className={activeView === 'explore' ? 'text-black' : 'text-cyan-400'} />
+              <Globe size={13} className={activeView === 'explore' ? 'text-black' : 'text-cyan-400'} />
               <span>Explore More Events</span>
-              <span className="hidden sm:inline-block ml-1 px-1.5 py-0.2 rounded-full bg-cyan-950 text-cyan-300 text-[10px] border border-cyan-500/40">
+              <span className="hidden sm:inline-block ml-1 px-1.5 py-0.2 rounded-full bg-cyan-950 text-cyan-300 text-[9px] border border-cyan-500/40">
                 Directory
               </span>
             </button>
@@ -165,11 +149,11 @@ export default function EventsPage() {
           {/* List Your Event Action (Right) */}
           <button
             onClick={() => setListModalOpen(true)}
-            className="inline-flex items-center gap-1.5 text-[11px] font-mono text-cyan-400 hover:text-cyan-300 border border-cyan-500/30 hover:border-cyan-400 px-2.5 py-1.5 rounded-xl bg-cyan-950/40 transition-all shrink-0"
+            className="inline-flex items-center gap-1.5 text-[10px] sm:text-[11px] font-mono text-cyan-400 hover:text-cyan-300 border border-cyan-500/30 hover:border-cyan-400 px-2 py-1 sm:px-2.5 sm:py-1.5 rounded-lg bg-cyan-950/40 transition-all shrink-0"
           >
-            <PlusCircle size={13} />
+            <Mail size={12} />
             <span className="hidden sm:inline">Organizing an Event?</span>
-            <span>List Event</span>
+            <span>Request to List</span>
           </button>
         </div>
       </div>
@@ -686,63 +670,58 @@ export default function EventsPage() {
               </button>
             </div>
 
-            {submitSuccess ? (
-              <div className="p-6 text-center space-y-2 rounded-2xl bg-emerald-950/40 border border-emerald-500/40">
-                <CheckCircle2 size={32} className="mx-auto text-emerald-400" />
-                <h4 className="font-display font-bold text-white text-sm">Submission Received!</h4>
-                <p className="text-xs text-zinc-300">
-                  Our team will review your event details and list it in the Global Directory.
+            <div className="space-y-4">
+              <div className="p-3.5 rounded-2xl bg-cyan-950/30 border border-cyan-500/30 text-xs space-y-2">
+                <div className="flex items-center gap-2 text-cyan-300 font-bold">
+                  <ShieldCheck size={16} />
+                  <span>Curated & Verified Listing Policy</span>
+                </div>
+                <p className="text-zinc-300 leading-relaxed text-[11px]">
+                  To protect our community against deceptive or unverified contests, external hackathons, ideathons, and buildathons cannot be automatically self-published. Event managers must email their official dossier directly to <span className="text-cyan-400 font-bold">rabinjathon@gmail.com</span>.
+                </p>
+                <p className="text-zinc-400 text-[11px] leading-relaxed">
+                  Our team reviews eligibility, platform terms, and conditions before manually verifying and publishing updates to the Global Directory.
                 </p>
               </div>
-            ) : (
-              <form onSubmit={handleListSubmit} className="space-y-3 text-xs font-mono">
-                <div>
-                  <label className="block text-zinc-400 mb-1">EVENT NAME</label>
-                  <input
-                    type="text"
-                    required
-                    value={submitEventName}
-                    onChange={(e) => setSubmitEventName(e.target.value)}
-                    placeholder="e.g. AI Innovation Summit Hackathon"
-                    className="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:border-cyan-400"
-                  />
-                </div>
-                <div>
-                  <label className="block text-zinc-400 mb-1">ORGANIZING BODY / UNIVERSITY</label>
-                  <input
-                    type="text"
-                    required
-                    value={submitOrg}
-                    onChange={(e) => setSubmitOrg(e.target.value)}
-                    placeholder="e.g. ACM Student Chapter / Tech Club"
-                    className="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:border-cyan-400"
-                  />
-                </div>
-                <div>
-                  <label className="block text-zinc-400 mb-1">DIRECT REGISTRATION URL</label>
-                  <input
-                    type="url"
-                    required
-                    value={submitLink}
-                    onChange={(e) => setSubmitLink(e.target.value)}
-                    placeholder="https://unstop.com/... or your website"
-                    className="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:border-cyan-400"
-                  />
-                </div>
 
-                <div className="pt-2">
-                  <button
-                    type="submit"
-                    className="btn btn-primary w-full justify-center text-xs py-2.5 font-bold"
-                  >
-                    Submit for Directory Listing
-                  </button>
-                  <p className="text-[10px] text-zinc-500 text-center mt-2">
-                    Questions? Email us directly at <span className="text-cyan-400">rabinjathon@gmail.com</span>
-                  </p>
+              <div className="rounded-2xl bg-zinc-900/80 border border-zinc-800 p-3.5 space-y-2 font-mono text-[11px]">
+                <div className="text-zinc-400 font-bold uppercase tracking-wider text-[10px]">
+                  // Required Submission Format
                 </div>
-              </form>
-            )}
+                <div className="text-zinc-300 space-y-1 bg-black/60 p-2.5 rounded-xl border border-zinc-800/80 text-[10.5px]">
+                  <p>• Event Name & Edition</p>
+                  <p>• Host Body / University / Community</p>
+                  <p>• Timeline (Start & End Dates / Rounds)</p>
+                  <p>• Eligibility (UG, PG, Engineering, Open)</p>
+                  <p>• Direct Registration / Spawn URL</p>
+                  <p>• Official Point of Contact & Phone/WhatsApp</p>
+                </div>
+              </div>
+
+              <div className="space-y-2 pt-1">
+                <a
+                  href={`mailto:rabinjathon@gmail.com?subject=${encodeURIComponent('Event Listing Request - Projex Directory')}&body=${encodeURIComponent(
+                    `Hello Rabinja Squad Team,\n\nWe would like to request listing our innovation event on the Projex & Rabinjathon Global Directory.\n\n---\nEvent Name:\nHost Organization:\nDates/Timeline:\nEligibility:\nDirect Link:\nContact Person & Phone:\n---\n\nThank you!`
+                  )}`}
+                  className="btn btn-primary w-full justify-center text-xs py-2.5 font-bold flex items-center gap-2 shadow-[0_0_20px_rgba(0,212,255,0.3)]"
+                >
+                  <Mail size={14} />
+                  <span>Email Official Proposal to rabinjathon@gmail.com</span>
+                </a>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    const text = `Event Name:\nHost Organization:\nDates/Timeline:\nEligibility:\nDirect Link:\nContact Person & Phone:`;
+                    navigator.clipboard.writeText(text);
+                    alert('Submission template copied to clipboard! Please send to rabinjathon@gmail.com');
+                  }}
+                  className="w-full py-2 rounded-xl text-[11px] font-mono text-zinc-400 hover:text-white bg-zinc-900 border border-zinc-800 text-center transition-colors"
+                >
+                  Copy Proposal Template
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       )}

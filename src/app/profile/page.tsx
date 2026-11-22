@@ -7,11 +7,12 @@ import {
   User, CheckCircle2, Bookmark, HeartPulse, Send, Settings,
   LogOut, Shield, ChevronRight, Smartphone, ArrowRight, Flame,
   Trophy, ExternalLink, Edit3, Film, UserPlus, LogIn, Sparkles,
-  Users, UserCheck, X, Plus, PlusCircle, Check
+  Users, UserCheck, X, Plus, PlusCircle, Check, Landmark
 } from 'lucide-react';
 import { ProfileHealthTab } from '@/components/profile/ProfileHealthTab';
 import { SubmissionsTab } from '@/components/profile/SubmissionsTab';
 import { getStoredUser, clearStoredUser } from '@/lib/api-client';
+import { GovtShowcaseModal } from '@/components/verification/GovtShowcaseModal';
 
 interface StartupTeam {
   name: string;
@@ -59,6 +60,7 @@ function ProfileContent() {
   const [submissionsCount, setSubmissionsCount] = useState(0);
   const [disableIntro, setDisableIntro] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [govtModalOpen, setGovtModalOpen] = useState(false);
 
   // ── Startup Team State ──
   const [startupTeam, setStartupTeam] = useState<StartupTeam | null>(null);
@@ -561,6 +563,26 @@ function ProfileContent() {
                 Explore Projects →
               </Link>
             </div>
+
+            {/* Government & Policy Innovation Pipeline */}
+            <div className="p-4 rounded-2xl bg-gradient-to-r from-amber-950/30 via-black to-zinc-950 border border-amber-500/40 space-y-2.5">
+              <div className="flex items-center gap-2">
+                <Landmark size={18} className="text-amber-400" />
+                <h3 className="text-xs font-mono uppercase tracking-wider text-amber-300 font-bold">
+                  Government & Public Support Showcase
+                </h3>
+              </div>
+              <p className="text-[11px] text-zinc-300 leading-relaxed">
+                When your innovation receives public validation and traction, notify Rabinja Labs. Our technical squad conducts a working prototype & Blue-Tick integrity verification before presenting your project directly to Government Innovation Missions, DST, and state startup councils.
+              </p>
+              <button
+                onClick={() => setGovtModalOpen(true)}
+                className="w-full py-2.5 px-3 rounded-xl bg-amber-500 text-black font-mono font-bold text-xs flex items-center justify-center gap-2 shadow-[0_0_15px_rgba(245,158,11,0.35)] hover:bg-amber-400 transition-colors"
+              >
+                <Landmark size={14} />
+                <span>Notify Public Support & Request Govt Showcase</span>
+              </button>
+            </div>
           </div>
         )}
 
@@ -1005,6 +1027,15 @@ function ProfileContent() {
           </div>
         )}
       </div>
+
+      {/* ── Govt & Policy Showcase Modal ── */}
+      <GovtShowcaseModal
+        isOpen={govtModalOpen}
+        onClose={() => setGovtModalOpen(false)}
+        projectTitle={startupTeam ? `${startupTeam.name} Innovation` : 'Flagship Innovation'}
+        projectSlug="profile-showcase"
+        voteCount={submissionsCount}
+      />
     </div>
   );
 }

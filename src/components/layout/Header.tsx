@@ -6,7 +6,7 @@ import { useState, useEffect } from 'react';
 import {
   Search, Bell, LayoutGrid, MoreVertical,
   Sparkles, Trophy, Compass, BookOpen, Smartphone,
-  CheckCircle2, LogOut, Share2
+  CheckCircle2, LogOut, Share2, Coffee
 } from 'lucide-react';
 import { BrowseModal } from './BrowseModal';
 import { MoreMenuModal } from './MoreMenuModal';
@@ -22,6 +22,11 @@ const NAV_LINKS = [
     label: 'Events',
     href: '/events',
     icon: Trophy,
+  },
+  {
+    label: 'Open Café',
+    href: '/discuss',
+    icon: Coffee,
   },
   {
     label: 'NEX AI',

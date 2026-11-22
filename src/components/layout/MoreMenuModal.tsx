@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import {
   X, User, Send, HeartPulse, Settings, LogOut,
-  HelpCircle, ShieldCheck, ExternalLink, ChevronRight, Film
+  HelpCircle, ShieldCheck, ExternalLink, ChevronRight, Film, Coffee
 } from 'lucide-react';
 
 interface MoreMenuModalProps {
@@ -117,6 +117,23 @@ export function MoreMenuModal({ isOpen, onClose, authUser, onLogout }: MoreMenuM
 
         {/* Action List (Moctale Style) */}
         <div className="space-y-2">
+          <Link
+            href="/discuss"
+            onClick={onClose}
+            className="flex items-center justify-between p-3.5 rounded-xl bg-gradient-to-r from-amber-950/30 to-zinc-950/80 border border-amber-500/40 hover:border-amber-400 transition-all text-zinc-200 hover:text-white"
+          >
+            <div className="flex items-center gap-3">
+              <Coffee size={18} className="text-amber-400" />
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-medium">Open Innovation Café</span>
+                <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-amber-950 text-amber-300 border border-amber-500/40">
+                  Discuss
+                </span>
+              </div>
+            </div>
+            <ChevronRight size={16} className="text-zinc-600" />
+          </Link>
+
           <Link
             href="/profile"
             onClick={onClose}
