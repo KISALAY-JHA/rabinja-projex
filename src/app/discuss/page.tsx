@@ -31,6 +31,7 @@ import { getStoredUser, type AuthUser } from '@/lib/api-client';
 interface DiscussionRoom {
   id: string;
   code: string;
+  passkey?: string;
   title: string;
   initiator: string;
   category: string;
@@ -114,20 +115,6 @@ const INITIAL_ROOMS: DiscussionRoom[] = [
       { id: 'm1', sender: 'Organizer Node', text: 'Proprietary IP theft is real. Video walkthroughs + live telemetry verification protect the innovator while proving feasibility.', time: '5h ago', isInitiator: true, likes: 12 },
       { id: 'm2', sender: 'Aditya P.', text: 'Love that participants keep their secret sauce private. This builds trust for genuine builders.', time: '3h ago', likes: 9 }
     ]
-  },
-  {
-    id: 'room-5',
-    code: 'PRIV-77',
-    title: 'Private Syndicate: Hardware Bill-of-Materials & PCB Assembly Vendors in India',
-    initiator: 'Embedded Founders Circle',
-    category: 'Hardware & IoT',
-    description: 'Invite-only mastermind sharing verified PCBA fabricators, component lead times, and customs clearance benchmarks. Passkey required.',
-    isPrivate: true,
-    participantCount: 8,
-    createdAt: '1 day ago',
-    messages: [
-      { id: 'm1', sender: 'HardwareLead', text: 'Welcome to the private mastermind room. Only friends with the verified passkey have access to these vendor matrices.', time: '1d ago', isInitiator: true }
-    ]
   }
 ];
 
@@ -158,10 +145,12 @@ function DiscussionContent() {
   const [privateUnlockRoom, setPrivateUnlockRoom] = useState<DiscussionRoom | null>(null);
   const [unlockPasskeyInput, setUnlockPasskeyInput] = useState('');
   const [unlockError, setUnlockError] = useState('');
+  const [showUnlockPasskey, setShowUnlockPasskey] = useState(false);
 
   // Share Modal State
   const [shareRoomModal, setShareRoomModal] = useState<DiscussionRoom | null>(null);
   const [shareCopied, setShareCopied] = useState(false);
+  const [currentOrigin, setCurrentOrigin] = useState('');
 
   // Active Room Messaging State
   const [newMsgText, setNewMsgText] = useState('');
@@ -171,9 +160,13 @@ function DiscussionContent() {
   const [formCategory, setFormCategory] = useState('AI & Autonomous');
   const [formDesc, setFormDesc] = useState('');
   const [formIsPrivate, setFormIsPrivate] = useState(false);
+  const [formSecretPasskey, setFormSecretPasskey] = useState('');
   const [formLinkedProject, setFormLinkedProject] = useState('');
 
   useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setCurrentOrigin(window.location.origin);
+    }
     setUser(getStoredUser());
     const stored = localStorage.getItem('rabinja_open_discussions');
     if (stored) {
@@ -242,7 +235,10 @@ function DiscussionContent() {
     if (!privateUnlockRoom) return;
     setUnlockError('');
 
-    if (unlockPasskeyInput.trim().toUpperCase() === privateUnlockRoom.code.toUpperCase()) {
+    const entered = unlockPasskeyInput.trim().toUpperCase();
+    const expected = (privateUnlockRoom.passkey || privateUnlockRoom.code).trim().toUpperCase();
+
+    if (entered === expected) {
       const updated = [...unlockedCodes, privateUnlockRoom.code];
       setUnlockedCodes(updated);
       try {
@@ -252,7 +248,7 @@ function DiscussionContent() {
       setPrivateUnlockRoom(null);
       setUnlockPasskeyInput('');
     } else {
-      setUnlockError('Invalid passkey. Private rooms can only be accessed with the code shared by your friend.');
+      setUnlockError('Incorrect passkey. Private rooms can only be accessed with the secret passkey shared by your friend.');
     }
   };
 
@@ -266,7 +262,7 @@ function DiscussionContent() {
         setActiveRoom(found);
       } else {
         setPrivateUnlockRoom(found);
-        setUnlockPasskeyInput(targetCode);
+        setUnlockPasskeyInput('');
       }
       setPrivateCodeInput('');
     } else {
@@ -279,9 +275,14 @@ function DiscussionContent() {
     if (!formTitle.trim()) return;
 
     const generatedCode = 'CAFE-' + Math.floor(100 + Math.random() * 900);
+    const passkeyToUse = formIsPrivate
+      ? (formSecretPasskey.trim().toUpperCase() || generatedCode)
+      : undefined;
+
     const newRoom: DiscussionRoom = {
       id: 'room-' + Date.now(),
       code: generatedCode,
+      passkey: passkeyToUse,
       title: formTitle,
       initiator: user?.displayName || user?.phone || 'Innovator Initiator',
       category: formCategory,
@@ -321,6 +322,7 @@ function DiscussionContent() {
     setFormDesc('');
     setFormLinkedProject('');
     setFormIsPrivate(false);
+    setFormSecretPasskey('');
     setActiveRoom(newRoom);
   };
 
@@ -600,16 +602,25 @@ function DiscussionContent() {
 
             <form onSubmit={handleUnlockPrivateRoom} className="space-y-3 text-xs font-mono">
               <div>
-                <label className="block text-zinc-400 mb-1">ENTER PASSKEY CODE</label>
-                <input
-                  type="text"
-                  required
-                  autoFocus
-                  value={unlockPasskeyInput}
-                  onChange={(e) => setUnlockPasskeyInput(e.target.value)}
-                  placeholder="e.g. PRIV-77"
-                  className="w-full px-3.5 py-2.5 bg-zinc-900 border border-zinc-800 rounded-xl text-white placeholder-zinc-500 uppercase tracking-widest focus:outline-none focus:border-rose-400"
-                />
+                <label className="block text-zinc-400 mb-1">ENTER PASSKEY FROM FRIEND</label>
+                <div className="relative">
+                  <input
+                    type={showUnlockPasskey ? 'text' : 'password'}
+                    required
+                    autoFocus
+                    value={unlockPasskeyInput}
+                    onChange={(e) => setUnlockPasskeyInput(e.target.value)}
+                    placeholder="Enter secret passkey"
+                    className="w-full px-3.5 py-2.5 bg-zinc-900 border border-zinc-800 rounded-xl text-white placeholder-zinc-600 tracking-wider focus:outline-none focus:border-rose-400 font-mono"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowUnlockPasskey(!showUnlockPasskey)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-300 text-[10px]"
+                  >
+                    {showUnlockPasskey ? 'Hide' : 'Show'}
+                  </button>
+                </div>
               </div>
 
               {unlockError && (
@@ -627,7 +638,7 @@ function DiscussionContent() {
                   <span>Unlock & Enter Room</span>
                 </button>
                 <p className="text-[10px] text-zinc-500 text-center mt-2 font-mono">
-                  Don&apos;t have the code? Ask your friend who initiated the room to share their invite link.
+                  This room is strictly invite-only. Private passkeys must be obtained directly from the room initiator.
                 </p>
               </div>
             </form>
@@ -663,7 +674,7 @@ function DiscussionContent() {
               <span className="text-[10px] font-mono text-zinc-500 block uppercase">Topic:</span>
               <p className="text-white font-bold font-sans text-xs">{shareRoomModal.title}</p>
               <div className="text-[10px] font-mono text-cyan-400 pt-1">
-                Passkey Code: <strong className="text-white">{shareRoomModal.code}</strong> {shareRoomModal.isPrivate ? '(Private)' : '(Public)'}
+                Room Code: <strong className="text-white">{shareRoomModal.code}</strong> {shareRoomModal.isPrivate ? '(Private Passkey Required)' : '(Public)'}
               </div>
             </div>
 
@@ -676,16 +687,18 @@ function DiscussionContent() {
                 <input
                   type="text"
                   readOnly
-                  value={`https://rabinjasquad.in/discuss?code=${shareRoomModal.code}`}
-                  className="flex-1 px-3 py-2 bg-zinc-900 border border-zinc-800 rounded-xl text-xs font-mono text-cyan-300 focus:outline-none"
+                  value={`${currentOrigin || 'https://rabinjasquad.in'}/discuss?code=${shareRoomModal.code}`}
+                  className="flex-1 px-3 py-2 bg-zinc-900 border border-zinc-800 rounded-xl text-xs font-mono text-cyan-300 focus:outline-none select-all"
                 />
                 <button
                   onClick={() => {
-                    navigator.clipboard.writeText(`https://rabinjasquad.in/discuss?code=${shareRoomModal.code}`);
+                    const fullUrl = `${currentOrigin || 'https://rabinjasquad.in'}/discuss?code=${shareRoomModal.code}`;
+                    navigator.clipboard.writeText(fullUrl);
                     setShareCopied(true);
                     setTimeout(() => setShareCopied(false), 2000);
                   }}
-                  className="px-3.5 py-2 rounded-xl bg-cyan-500 text-black font-bold font-mono text-xs flex items-center gap-1 shrink-0"
+                  className="px-3.5 py-2 rounded-xl bg-cyan-400 text-black font-extrabold font-mono text-xs flex items-center gap-1 shrink-0 shadow-[0_0_15px_rgba(0,212,255,0.4)]"
+                  style={{ color: '#000000' }}
                 >
                   <Copy size={13} />
                   <span>{shareCopied ? 'Copied!' : 'Copy'}</span>
@@ -693,18 +706,34 @@ function DiscussionContent() {
               </div>
             </div>
 
+            {/* Direct Open Button (Stays inside current app, does not navigate to external site) */}
+            <div>
+              <button
+                type="button"
+                onClick={() => {
+                  const target = shareRoomModal;
+                  setShareRoomModal(null);
+                  handleRoomCardClick(target);
+                }}
+                className="w-full py-2.5 rounded-xl bg-zinc-900 hover:bg-zinc-850 border border-cyan-500/40 hover:border-cyan-400 text-cyan-300 font-mono text-xs flex items-center justify-center gap-2 transition-all font-bold"
+              >
+                <ExternalLink size={13} />
+                <span>Open & View This Discussion Room</span>
+              </button>
+            </div>
+
             {/* WhatsApp Share Button */}
-            <div className="pt-2">
+            <div className="pt-1">
               <a
                 href={`https://api.whatsapp.com/send?text=${encodeURIComponent(
-                  `Hey! Join our discussion on "${shareRoomModal.title}" at RABINJA Projex Open Café.\n\nPasskey Code: ${shareRoomModal.code}\nOpen discussion directly here: https://rabinjasquad.in/discuss?code=${shareRoomModal.code}`
+                  `Join discussion: "${shareRoomModal.title}" at RABINJA Projex Open Café.\n\nOpen discussion directly here: ${currentOrigin || 'https://rabinjasquad.in'}/discuss?code=${shareRoomModal.code}`
                 )}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-full py-2.5 rounded-xl bg-[#25D366]/20 border border-[#25D366]/40 hover:bg-[#25D366]/30 text-[#25D366] font-mono text-xs font-bold flex items-center justify-center gap-2 transition-colors"
               >
+                <Share2 size={13} />
                 <span>Share with Friends on WhatsApp</span>
-                <ExternalLink size={13} />
               </a>
             </div>
           </div>
@@ -940,6 +969,25 @@ function DiscussionContent() {
                     <span>Private (Passkey shared by friends only)</span>
                   </label>
                 </div>
+
+                {formIsPrivate && (
+                  <div className="pt-2 border-t border-zinc-800 space-y-1">
+                    <label className="block text-[11px] text-rose-400 font-bold font-mono">
+                      SET SECRET PASSKEY FOR FRIENDS:
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={formSecretPasskey}
+                      onChange={(e) => setFormSecretPasskey(e.target.value)}
+                      placeholder="Enter private passkey for your friends"
+                      className="w-full px-3 py-2 bg-zinc-900 border border-rose-500/50 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:border-rose-400 font-mono text-xs uppercase tracking-wider"
+                    />
+                    <p className="text-[10px] text-zinc-500 font-mono">
+                      🔒 Only friends whom you share this secret passkey with can unlock and enter this room.
+                    </p>
+                  </div>
+                )}
               </div>
 
               <button
